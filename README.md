@@ -26,6 +26,9 @@ and then compile:
 scram b -j4
 ```
 
+Go to [Skimmer/data/mvaWeights](Skimmer/data/mvaWeights/) and download the TMVA BDT training weights 
+for the pileup jet ID, as per the instructions in the `README.md`. This is needed for `JMEnanoV1 UL2017` input.
+
 ## Skim NanoAODs
 **:construction: UNDER CONSTRUCTION**
 

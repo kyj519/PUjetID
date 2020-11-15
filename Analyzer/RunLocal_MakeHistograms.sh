@@ -45,13 +45,13 @@ SAMPLES=(
 # Data18D_EGamma
 )
 SAMPLES=(
-# MCUL17_DY_MG
+MCUL17_DY_MG
 # MCUL17_DY_AMCNLO
 # DataUL17B_DoubleMuon
 # DataUL17C_DoubleMuon
 # DataUL17D_DoubleMuon
 # DataUL17E_DoubleMuon
-# DataUL17F_DoubleMuon
+DataUL17F_DoubleMuon
 )
 
 #
