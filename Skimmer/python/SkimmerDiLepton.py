@@ -8,7 +8,7 @@ import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 class SkimmerDiLepton(Module):
-  def __init__(self, isMC, era, isDoubleElecData=False, isDoubleMuonData=False):
+  def __init__(self, isMC, era, isDoubleElecData=False, isDoubleMuonData=False, doOTFPUJetIDBDT=False):
     self.era = era
     self.isMC = isMC
     self.maxNSelJetsSaved=1
@@ -17,6 +17,10 @@ class SkimmerDiLepton(Module):
     if not(self.isMC):
       self.isDoubleElecData=isDoubleElecData
       self.isDoubleMuonData=isDoubleMuonData
+    #
+    # Calculate PU ID BDT on-the-fly (OTF). Can only be done with for JMENano as inputs.
+    #
+    self.doOTFPUJetIDBDT=doOTFPUJetIDBDT 
     #
     # List jet systematics
     #
@@ -36,9 +40,10 @@ class SkimmerDiLepton(Module):
     #
     #
     self.calcBDTDiscOTF = False
-    if self.era == "UL2017": 
-      self.setupTMVAReader()
-      self.calcBDTDiscOTF = True
+    if self.doOTFPUJetIDBDT:
+      if self.era == "UL2017" or self.era == "UL2018": 
+        self.setupTMVAReader()
+        self.calcBDTDiscOTF = True
 
   def setupTMVAReader(self):
     self.tmvaWeightsPath = os.environ['CMSSW_BASE']+"/src/PUjetID/Skimmer/data/mvaWeights/"
@@ -53,6 +58,14 @@ class SkimmerDiLepton(Module):
         self.tmvaWeightsPath+"pileupJetId_UL17_Eta2p5To2p75_chs_BDT.weights.xml",
         self.tmvaWeightsPath+"pileupJetId_UL17_Eta2p75To3p0_chs_BDT.weights.xml",
         self.tmvaWeightsPath+"pileupJetId_UL17_Eta3p0To5p0_chs_BDT.weights.xml",
+      ]
+    # UL 2018 training weights
+    elif self.era == "UL2018": 
+      self.tmvaWeightFilenames = [
+        self.tmvaWeightsPath+"pileupJetId_UL18_Eta0p0To2p5_chs_BDT.weights.xml",
+        self.tmvaWeightsPath+"pileupJetId_UL18_Eta2p5To2p75_chs_BDT.weights.xml",
+        self.tmvaWeightsPath+"pileupJetId_UL18_Eta2p75To3p0_chs_BDT.weights.xml",
+        self.tmvaWeightsPath+"pileupJetId_UL18_Eta3p0To5p0_chs_BDT.weights.xml",
       ]
     #
     # Eta bins
@@ -465,10 +478,8 @@ class SkimmerDiLepton(Module):
       for obj in event.trigObjsAll:
         if not(obj.id == 13):
           continue
-        # if not(obj.filterBits&1): 
-        #   continue   
-        # if not(obj.filterBits&16): 
-        #   continue    
+        if not(obj.filterBits&16): 
+          continue    
         if(event.muonsTight[0].DeltaR(obj) < 0.1): 
           event.passLep0TrigMatch = True
         if(event.muonsTight[1].DeltaR(obj) < 0.1): 
@@ -502,10 +513,8 @@ class SkimmerDiLepton(Module):
       for obj in event.trigObjsAll:
         if not(obj.id == 11):
           continue
-        # if not(obj.filterBits&1): 
-        #   continue   
-        # if not(obj.filterBits&16): 
-        #   continue  
+        if not(obj.filterBits&16): 
+          continue  
         if(event.electronsTight[0].DeltaR(obj) < 0.1): 
           event.passLep0TrigMatch = True
         if(event.electronsTight[1].DeltaR(obj) < 0.1): 
@@ -721,7 +730,7 @@ class SkimmerDiLepton(Module):
       #
       # This is where we calculate the PU BDT discriminant
       #
-      puIdDiscOTF = -9.
+      jetPuIdDiscOTF = -9.
       if self.calcBDTDiscOTF:
         jetPuIdDiscOTF = self.calcPUIDBDTDisc(event, jet)
       self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_puIdDiscOTF",jetPuIdDiscOTF)
@@ -739,19 +748,31 @@ class SkimmerDiLepton(Module):
           self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_partflav", genJet.partonFlavour)
           self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_hadflav",  genJet.hadronFlavour)
 #
-# EOY
+# Pre Ultra-Legacy 2016 (Compatible with NanoAODv7)
 #
 SkimmerDiLepton_2016_data_dielectron = lambda : SkimmerDiLepton(isMC=False, era="2016", isDoubleElecData=True) 
-SkimmerDiLepton_2017_data_dielectron = lambda : SkimmerDiLepton(isMC=False, era="2017", isDoubleElecData=True) 
-SkimmerDiLepton_2018_data_dielectron = lambda : SkimmerDiLepton(isMC=False, era="2018", isDoubleElecData=True) 
 SkimmerDiLepton_2016_data_dimuon = lambda : SkimmerDiLepton(isMC=False, era="2016", isDoubleMuonData=True) 
-SkimmerDiLepton_2017_data_dimuon = lambda : SkimmerDiLepton(isMC=False, era="2017", isDoubleMuonData=True) 
-SkimmerDiLepton_2018_data_dimuon = lambda : SkimmerDiLepton(isMC=False, era="2018", isDoubleMuonData=True)
 SkimmerDiLepton_2016_mc = lambda : SkimmerDiLepton(isMC=True,  era="2016") 
+#
+# Pre Ultra-Legacy 2017 (Compatible with NanoAODv7)
+#
+SkimmerDiLepton_2017_data_dielectron = lambda : SkimmerDiLepton(isMC=False, era="2017", isDoubleElecData=True) 
+SkimmerDiLepton_2017_data_dimuon = lambda : SkimmerDiLepton(isMC=False, era="2017", isDoubleMuonData=True) 
 SkimmerDiLepton_2017_mc = lambda : SkimmerDiLepton(isMC=True,  era="2017") 
+#
+# Pre Ultra-Legacy 2018 (Compatible with NanoAODv7)
+#
+SkimmerDiLepton_2018_data_dielectron = lambda : SkimmerDiLepton(isMC=False, era="2018", isDoubleElecData=True) 
+SkimmerDiLepton_2018_data_dimuon = lambda : SkimmerDiLepton(isMC=False, era="2018", isDoubleMuonData=True)
 SkimmerDiLepton_2018_mc = lambda : SkimmerDiLepton(isMC=True,  era="2018") 
 #
-# Ultra-Legacy
+# Ultra-Legacy 2017 (Compatible with JMENanoV1)
+#
+SkimmerDiLepton_UL2017_JMENanoV1_data_dielectron = lambda : SkimmerDiLepton(isMC=False, era="UL2017", isDoubleElecData=True, doOTFPUJetIDBDT=True)
+SkimmerDiLepton_UL2017_JMENanoV1_data_dimuon = lambda : SkimmerDiLepton(isMC=False, era="UL2017", isDoubleMuonData=True, doOTFPUJetIDBDT=True) 
+SkimmerDiLepton_UL2017_JMENanoV1_mc = lambda : SkimmerDiLepton(isMC=True,  era="UL2017", doOTFPUJetIDBDT=True) 
+#
+# Ultra-Legacy 2017 (Compatible with ULNanoAODv2 aka NanoAODv8)
 #
 SkimmerDiLepton_UL2017_data_dielectron = lambda : SkimmerDiLepton(isMC=False, era="UL2017", isDoubleElecData=True)
 SkimmerDiLepton_UL2017_data_dimuon = lambda : SkimmerDiLepton(isMC=False, era="UL2017", isDoubleMuonData=True) 
