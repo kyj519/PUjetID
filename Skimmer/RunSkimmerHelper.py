@@ -16,28 +16,52 @@ def GetSelection(era):
   trigSel2018 = "(Alt$(HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8,0) || Alt$(HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL,0))"
 
   selection = ""
+
+  #
+  # preUL
+  #
   if era == "2016":
     selection = " && ".join((objectSel,trigSel2016))
   elif era == "2017":
     selection = " && ".join((objectSel,trigSel2017))
   elif era == "2018":
     selection = " && ".join((objectSel,trigSel2018))
+  #
+  # UL
+  #
+  elif era == "UL2016preVFP":
+    selection = " && ".join((objectSel,trigSel2016))
+  elif era == "UL2016postVFP":
+    selection = " && ".join((objectSel,trigSel2016))
   elif era == "UL2017":
     selection = " && ".join((objectSel,trigSel2017))
+  elif era == "UL2018":
+    selection = " && ".join((objectSel,trigSel2018))
 
   return selection
  
 def GetJSON(era):
   jsonInput=""
-
+  #
+  # preUL
+  #
   if era == "2016":
     jsonInput="/src/PUjetID/Skimmer/data/lumi/Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt"
   elif era == "2017":
     jsonInput="/src/PUjetID/Skimmer/data/lumi/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"
   elif era == "2018":
     jsonInput="/src/PUjetID/Skimmer/data/lumi/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt"
+  #
+  # UL
+  #
+  elif era == "UL2016preVFP":
+    jsonInput="/src/PUjetID/Skimmer/data/lumi/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"
+  elif era == "UL2016postVFP":
+    jsonInput="/src/PUjetID/Skimmer/data/lumi/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"
   elif era == "UL2017":
     jsonInput="/src/PUjetID/Skimmer/data/lumi/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt"
+  elif era == "UL2018":
+    jsonInput="/src/PUjetID/Skimmer/data/lumi/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"
 
   return jsonInput
 
@@ -87,7 +111,7 @@ def GetModules(era, isMC, dataStream):
   #
   #============================================
   #
-  # EOY 2016
+  # PreUL 2016
   #
   if era == "2016":
     if isMC: 
@@ -98,7 +122,7 @@ def GetModules(era, isMC, dataStream):
       elif "DoubleEG" in dataStream:
         modules=[SkimmerDiLepton_2016_data_dielectron()]
   #
-  # EOY 2017
+  # PreUL 2017
   #
   elif era == "2017":
     if isMC: 
@@ -109,7 +133,7 @@ def GetModules(era, isMC, dataStream):
       elif "DoubleEG" in dataStream:
         modules=[SkimmerDiLepton_2017_data_dielectron()]
   #
-  # EOY 2018
+  # PreUL 2018
   #
   elif era == "2018":
     if isMC: 
@@ -125,7 +149,6 @@ def GetModules(era, isMC, dataStream):
   elif era == "UL2017":
     if isMC: 
       modules=[jetCorr_AK4_MCUL17(), SkimmerDiLepton_UL2017_mc()]
-      # modules=[SkimmerDiLepton_UL2017_mc()]
     else:              
       if "DoubleMuon" in dataStream:
         modules=[SkimmerDiLepton_UL2017_data_dimuon()]
