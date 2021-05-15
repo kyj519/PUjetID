@@ -15,6 +15,9 @@ keep fixedGridRhoFastjet*
 keep Pileup_*
 keep PV_*
 #
+keep MET_*
+keep RawMET_*
+#
 keep nMuon
 keep Muon_*
 keep nElectron
@@ -25,6 +28,8 @@ keep nGenJet
 keep GenJet_*
 keep nTrigObj
 keep TrigObj_*
+keep nCorrT1METJet
+keep CorrT1METJet_*
 #
 keep HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ
 keep HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL
