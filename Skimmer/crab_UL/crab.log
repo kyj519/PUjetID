@@ -1,0 +1,4 @@
+DEBUG 2021-05-15 17:42:12.911 UTC: 	 CRAB Client version: v3.210323
+DEBUG 2021-05-15 17:42:12.912 UTC: 	 Running on: Linux lxplus747.cern.ch 3.10.0-1160.24.1.el7.x86_64 #1 SMP Thu Apr 8 19:51:47 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux - CentOS Linux 7 (Core)
+DEBUG 2021-05-15 17:42:12.912 UTC: 	 Executing command: 'submit'
+DEBUG 2021-05-15 17:42:12.912 UTC: 	 Found CRAB cache file /afs/cern.ch/user/n/nbinnorj/.crab3
