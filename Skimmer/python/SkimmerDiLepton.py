@@ -478,8 +478,8 @@ class SkimmerDiLepton(Module):
       for obj in event.trigObjsAll:
         if not(obj.id == 13):
           continue
-        if not(obj.filterBits&16): 
-          continue    
+        # if not(obj.filterBits&16): 
+        #   continue    
         if(event.muonsTight[0].DeltaR(obj) < 0.1): 
           event.passLep0TrigMatch = True
         if(event.muonsTight[1].DeltaR(obj) < 0.1): 
@@ -513,8 +513,8 @@ class SkimmerDiLepton(Module):
       for obj in event.trigObjsAll:
         if not(obj.id == 11):
           continue
-        if not(obj.filterBits&16): 
-          continue  
+        # if not(obj.filterBits&16): 
+        #   continue  
         if(event.electronsTight[0].DeltaR(obj) < 0.1): 
           event.passLep0TrigMatch = True
         if(event.electronsTight[1].DeltaR(obj) < 0.1): 
