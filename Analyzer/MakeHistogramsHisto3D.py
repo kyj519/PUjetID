@@ -152,7 +152,6 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
       df = df.Define("passNJetSel","(nJetSel>=1)&&(nJetSelPt30Eta5p0<=1)&&(nJetSelPt20Eta2p4<=1)")
     else:
       df = df.Define(systStr+"passNJetSel","("+systStrPre+"nJetSel>=1)&&("+systStrPre+"nJetSelPt30Eta5p0<=1)&&("+systStrPre+"nJetSelPt20Eta2p4<=1)")
-  
   #
   # Define flags for lepton channels if need to check by channel
   #
@@ -166,15 +165,19 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   df = df.Define("probeJet_eta",            probeJetStr+"_eta")
   df = df.Define("probeJet_abseta",         "fabs("+probeJetStr+"_eta)")
   df = df.Define("probeJet_phi",            probeJetStr+"_phi")
+  df = df.Define("probeJet_dilep_dphi",     probeJetStr+"_dilep_dphi")
   df = df.Define("probeJet_puIdDisc",       probeJetStr+"_puIdDisc")
+  #
+  # Guide on how to read the pileup ID bitmap variable: 
+  # https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJetID#miniAOD_and_nanoAOD
+  #
   df = df.Define("probeJet_puIdFlag_Loose", probeJetStr+"_puId & (1 << 2)")
   df = df.Define("probeJet_puIdFlag_Medium",probeJetStr+"_puId & (1 << 1)")
   df = df.Define("probeJet_puIdFlag_Tight", probeJetStr+"_puId & (1 << 0)")
-  df = df.Define("probeJet_dilep_dphi",     probeJetStr+"_dilep_dphi")
-  if isMC:
-    df = df.Define("probeJet_passGenMatch", probeJetStr+"_gen_match")
   if isUL:
     df = df.Define("probeJet_puIdDiscOTF",  probeJetStr+"_puIdDiscOTF")
+  if isMC:
+    df = df.Define("probeJet_passGenMatch", probeJetStr+"_gen_match")
   #
   #
   #
@@ -185,8 +188,6 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #
   if not isUL: #EOY
     #
-    # Guide on how to read the pileup ID bitmap variable: 
-    # https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJetID#miniAOD_and_nanoAOD
     # NOTE: The pileup ID decision flag stored in NanoAOD (v7 and earlier) is based on 
     # the 80X BDT training and working point (as in the parent MiniAOD).
     #
@@ -205,11 +206,13 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
       df = df.Define("probeJet_puIdMedium_pass", "PUJetID_80XCut_WPMedium("+argStr+")")
       df = df.Define("probeJet_puIdTight_pass",  "PUJetID_80XCut_WPTight("+argStr+")")
   else: #UL
-    if useNewTraining:
-      argStr = "probeJet_pt,probeJet_eta,probeJet_puIdDiscOTF"
-      df = df.Define("probeJet_puIdLoose_pass",  "PUJetID_106XUL17Cut_WPLoose("+argStr+")")
-      df = df.Define("probeJet_puIdMedium_pass", "PUJetID_106XUL17Cut_WPMedium("+argStr+")")
-      df = df.Define("probeJet_puIdTight_pass",  "PUJetID_106XUL17Cut_WPTight("+argStr+")")
+    #
+    # NOTE: In ULNanoAODv2 UL17, the pileup jet ID flag is based on the UL17 training
+    # and cut values.
+    #
+    df = df.Define("probeJet_puIdLoose_pass",  "probeJet_puIdFlag_Loose")
+    df = df.Define("probeJet_puIdMedium_pass", "probeJet_puIdFlag_Medium")
+    df = df.Define("probeJet_puIdTight_pass",  "probeJet_puIdFlag_Tight")
   #
   #
   #
@@ -394,10 +397,10 @@ if __name__== "__main__":
   ak4Systematics=[]
   if isMC:
     ak4Systematics=[
-      # "jesTotalUp",
-      # "jesTotalDown",
-      # "jerUp",
-      # "jerDown"
+      "jesTotalUp",
+      "jesTotalDown",
+      "jerUp",
+      "jerDown"
     ]
   # Don't do ak4Systematics for MG+HW and AMCNLO
   if "MG_HW" in args.sample: ak4Systematics=[]

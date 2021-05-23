@@ -102,15 +102,20 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   df = df.Define("probeJet_eta",            probeJetStr+"_eta")
   df = df.Define("probeJet_abseta",         "fabs("+probeJetStr+"_eta)")
   df = df.Define("probeJet_phi",            probeJetStr+"_phi")
+  df = df.Define("probeJet_dilep_dphi",     probeJetStr+"_dilep_dphi")
   df = df.Define("probeJet_puIdDisc",       probeJetStr+"_puIdDisc")
+  #
+  # Guide on how to read the pileup ID bitmap variable: 
+  # https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJetID#miniAOD_and_nanoAOD
+  #
   df = df.Define("probeJet_puIdFlag_Loose", probeJetStr+"_puId & (1 << 2)")
   df = df.Define("probeJet_puIdFlag_Medium",probeJetStr+"_puId & (1 << 1)")
   df = df.Define("probeJet_puIdFlag_Tight", probeJetStr+"_puId & (1 << 0)")
-  df = df.Define("probeJet_dilep_dphi",     probeJetStr+"_dilep_dphi")
-  if isMC:
-    df = df.Define("probeJet_passGenMatch",probeJetStr+"_gen_match")
   if isUL:
     df = df.Define("probeJet_puIdDiscOTF",  probeJetStr+"_puIdDiscOTF")
+  if isMC:
+    df = df.Define("probeJet_passGenMatch",probeJetStr+"_gen_match")
+
   #
   #
   #
@@ -121,8 +126,6 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   # 
   if not isUL: #EOY
     #
-    # Guide on how to read the pileup ID bitmap variable: 
-    # https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJetID#miniAOD_and_nanoAOD
     # NOTE: The pileup ID decision flag stored in NanoAOD (v7 and earlier) is based on 
     # the 80X BDT training and working point (as in the parent MiniAOD).
     #
@@ -141,10 +144,14 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
       df = df.Define("probeJet_puIdMedium_pass", "PUJetID_80XCut_WPMedium("+argStr+")")
       df = df.Define("probeJet_puIdTight_pass",  "PUJetID_80XCut_WPTight("+argStr+")")
   else: #UL
-      argStr = "probeJet_pt,probeJet_eta,probeJet_puIdDiscOTF"
-      df = df.Define("probeJet_puIdLoose_pass",  "PUJetID_106XUL17Cut_WPLoose("+argStr+")")
-      df = df.Define("probeJet_puIdMedium_pass", "PUJetID_106XUL17Cut_WPMedium("+argStr+")")
-      df = df.Define("probeJet_puIdTight_pass",  "PUJetID_106XUL17Cut_WPTight("+argStr+")")
+    #
+    # NOTE: In ULNanoAODv2 UL17, the pileup jet ID flag is based on the UL17 training
+    # and cut values.
+    #
+    if not useNewTraining:
+      df = df.Define("probeJet_puIdLoose_pass",  "probeJet_puIdFlag_Loose")
+      df = df.Define("probeJet_puIdMedium_pass", "probeJet_puIdFlag_Medium")
+      df = df.Define("probeJet_puIdTight_pass",  "probeJet_puIdFlag_Tight")
   #
   #
   #

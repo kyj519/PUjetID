@@ -43,7 +43,9 @@ print "isDoubleMuonData = ", isDoubleMuonData
 if isMC and (isDoubleElecData or isDoubleMuonData):
   raise Exception('isMC flag cannot be set to true with isDoubleMuonData or isDoubleElecData. Please check! (isMC={},isDoubleMuonData={},isDoubleElecData={})'.format(isMC,isDoubleMuonData,isDoubleElecData))
 
+CMSXROOTD="root://xrootd-cms.infn.it/"
 files=[]
+
 if era == "2016":
   if isMC:
     files = [
@@ -58,21 +60,19 @@ if era == "2016":
       files = [
         "/store/data/Run2016H/DoubleEG/NANOAOD/02Apr2020-v1/250000/47FD42C2-6583-D941-95F4-1BFF0061C7D5.root",
       ]
-  CMSXROOTD="root://xrootd-cms.infn.it/"
   files = [CMSXROOTD+file for file in files]
 elif era == "UL2017":
   if isMC:
     files = [
-      "/eos/cms/store/group/phys_jetmet/JMEnanoV01/UL17/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer19UL17JMEnanoV1-106X_mc2017_realistic_v6-v2/201026_101150/0000/step1_NANO_1.root"
+      "/store/mc/RunIISummer20UL17NanoAODv2/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/106X_mc2017_realistic_v8-v1/260000/135273C9-F6AB-444E-B7C2-8AFE427CB644.root"
     ]
   else:
     if isDoubleMuonData:
       files = [
-        "/eos/cms/store/group/phys_jetmet/JMEnanoV01/UL17/DoubleMuon/Run2017B-09Aug2019_UL2017-v1_JMEnanoV1/201026_100435/0000/step1_NANO_1.root",
+        "/store/data/Run2017F/DoubleMuon/NANOAOD/UL2017_MiniAODv1_NanoAODv2-v1/280000/E9587C57-2425-0F4F-821E-E671B13B1C2F.root",
       ]
     elif isDoubleElecData:
       files = []
-  CMSXROOTD="root://eoscms.cern.ch/"
   files = [CMSXROOTD+file for file in files]
 
 varTxtFileIn="./script/branches_in.txt"
