@@ -2,10 +2,21 @@ import collections
 import ROOT
 import os
 
-def main(version="results", year="2016"):
+def main():
 
-  inDir="../"+version
+  version="results_ULNanoV2_v1p1"
+  year="UL2017" 
 
+  outFileName="DumpPlots_PUIDSF_"+version+"_Baseline_"+year
+  inDir="../"+version+"/Baseline/"
+  CompilePlots(inDir, version, year, outFileName)
+
+  outFileName="DumpPlots_PUIDSF_"+version+"_NLO_"+year
+  inDir="../"+version+"/NLO/"
+  CompilePlots(inDir, version, year, outFileName)
+
+def CompilePlots(inDir, version, year, ):
+  
   ptBins = [
     ("20To25", "$20 < p_{T} < 25$"),
     ("25To30", "$25 < p_{T} < 30$"),
@@ -63,8 +74,13 @@ def main(version="results", year="2016"):
       (inDir+"/2018_WPMedium", "2018_Medium", "2018 Medium WP"),
       (inDir+"/2018_WPTight",  "2018_Tight",  "2018 Tight WP"),
     ]
+  elif year == "UL2017":
+    WPYearList = [
+      (inDir+"/UL2017_WPLoose",  "UL2017_Loose",  "UL 2017 Loose WP"),
+      (inDir+"/UL2017_WPMedium", "UL2017_Medium", "UL 2017 Medium WP"),
+      (inDir+"/UL2017_WPTight",  "UL2017_Tight",  "UL 2017 Tight WP"),
+    ]
 
-  outFileName="DumpPlots_PUIDSF_"+version+"_"+year
   outFile = open(outFileName+".tex","w")
 
   makeHeader(outFile)
@@ -179,7 +195,39 @@ def makeTemplates(outFile):
   outFile.write("\\end{figure}\n")
   outFile.write("\\end{frame}\n")
   outFile.write("}\n")
-  outFile.write("\n\n")
+  outFile.write("\n\n\n")
+  outFile.write("\\newcommand{\\PlotsEffMistagSFSlices}[3]\n")
+  outFile.write("{\n")
+  outFile.write("\\begin{frame}\n")
+  outFile.write("\\frametitle{Efficiency (Data, MC, SF) (#3)}\n")
+  outFile.write("\\begin{figure}[ht]\n")
+  outFile.write("\\begin{minipage}[b]{0.31\\linewidth}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_eff_data_#2_ptBins_eta}\n")
+  outFile.write("\\end{minipage}\n")
+  outFile.write("\\begin{minipage}[b]{0.31\\linewidth}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_eff_mc_#2_ptBins_eta}\n")
+  outFile.write("\\end{minipage}\n")
+  outFile.write("\\begin{minipage}[b]{0.31\\linewidth}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_eff_sf_#2_ptBins_eta}\n")
+  outFile.write("\\end{minipage}\n")
+  outFile.write("\\end{figure}\n")
+  outFile.write("\\end{frame}\n")
+  outFile.write("\\begin{frame}\n")
+  outFile.write("\\frametitle{Mistag (Data, MC, SF) (#3)}\n")
+  outFile.write("\\begin{figure}[ht]\n")
+  outFile.write("\\begin{minipage}[b]{0.31\\linewidth}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_mistag_data_#2_ptBins_eta}\n")
+  outFile.write("\\end{minipage}\n")
+  outFile.write("\\begin{minipage}[b]{0.31\\linewidth}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_mistag_mc_#2_ptBins_eta}\n")
+  outFile.write("\\end{minipage}\n")
+  outFile.write("\\begin{minipage}[b]{0.31\\linewidth}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_mistag_sf_#2_ptBins_eta}\n")
+  outFile.write("\\end{minipage}\n")
+  outFile.write("\\end{figure}\n")
+  outFile.write("\\end{frame}\n")
+  outFile.write("}\n")
+  outFile.write("\n\n\n")
 
 def makeBeginDocument(outFile):
   outFile.write("\\begin{document}\n")
@@ -191,6 +239,7 @@ def makeMainContent(outFile,WPYearList,binList):
   for WPYear in WPYearList:
     outFile.write("\\section{%s}\n" %WPYear[2])
     outFile.write("\\PlotsEffMistagSF{%s}{%s}{%s}\n" %(WPYear[0],WPYear[1],WPYear[2]))
+    outFile.write("\\PlotsEffMistagSFSlices{%s}{%s}{%s}\n" %(WPYear[0],WPYear[1],WPYear[2]))
     for binEntry in binList:
       outFile.write("\\PlotsForEachBinDataAndMC{%s}{%s}{%s, %s}\n" %(WPYear[0],binEntry[0],binEntry[1],WPYear[2]))
 
@@ -198,9 +247,7 @@ def makeEndDocument(outFile):
   outFile.write("\\end{document}\n")
 
 if __name__ == "__main__":
+  main()
   
-  version="results_vp41"
-  main(version,"2016")
-  main(version,"2017")
-  main(version,"2018")
+
 
