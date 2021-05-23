@@ -2,4 +2,4 @@
 
 cd REPLACEME
 source ./sourceRecentROOT.sh
-python MakeHistograms.py --sample ${1} --cores ${2} --useSkimNtuples --useNewTraining
+python MakeHistogramsHisto3D.py --sample ${1} --cores ${2} --useSkimNtuples --useNewTraining
