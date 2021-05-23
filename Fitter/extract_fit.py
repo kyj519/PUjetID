@@ -5,6 +5,7 @@ import ROOT
 import math
 from array import array
 import numpy as np
+import collections
 
 ROOT.gROOT.SetBatch(True)
 
@@ -494,10 +495,15 @@ def main():
         mc_filename   = inputDir+"/Histo_MC18_DY_MG.root"
         if useNLO:    mc_filename   = inputDir+"/Histo_MC18_DY_AMCNLO.root"
         if useHerwig: mc_filename   = inputDir+"/Histo_MC18_DY_MG_HW.root"
+    elif year == "UL2017":
+        data_filename = inputDir+"/Histo_DataUL17.root"
+        mc_filename   = inputDir+"/Histo_MCUL17_DY_MG.root"
+        if useNLO:    mc_filename   = inputDir+"/Histo_MCUL17_DY_AMCNLO.root"
+        if useHerwig: mc_filename   = inputDir+"/Histo_MCUL17_DY_MG_HW.root"
   
     ROOT.gStyle.SetOptStat(0)
     ROOT.gStyle.SetMarkerSize(0.5)
-    ROOT.gStyle.SetOptLogx()
+    # ROOT.gStyle.SetOptLogx()
 
     f_data = ROOT.TFile(data_filename,"READ")
     f_mc   = ROOT.TFile(mc_filename,  "READ")
@@ -688,6 +694,66 @@ def main():
     hmistagdata.GetXaxis().SetTitle(xname)
     hmistagdata.GetXaxis().SetMoreLogLabels()
 
+    def PlotPtSlices(ptBins, h2, hNamePrefix, pdfName):
+        h2C = h2.Clone(h2.GetName()+"Clone")
+        #
+        # Get Eff/Mistag/SF vs eta in pt slices 
+        #
+        histoDict = collections.OrderedDict()
+        for i in range(0,len(_pt)):
+            iBin = i+1
+            hName = hNamePrefix+"_pt"+ptBins[i]+"_eta"
+            histoDict[hName] = h2.ProjectionY(hName, iBin, iBin)
+
+        canv   = ROOT.TCanvas("canv","canv",600,600)
+        legend = None
+        ymin   = None 
+        ymax   = None
+        doLogY = False
+        if "mistag_mc" in h2.GetName() or "mistag_data" in h2.GetName():
+            legend = ROOT.TLegend(0.40,0.72,0.60,0.88)
+            ymin = 0.001
+            ymax = 6.000
+            doLogY = True
+        if "eff_mc" in h2.GetName() or "eff_data" in h2.GetName():
+            legend = ROOT.TLegend(0.40,0.72,0.60,0.88)
+            ymin = 0.20
+            ymax = 1.40
+        if "eff_sf" in h2.GetName():
+            legend = ROOT.TLegend(0.40,0.72,0.60,0.88)
+            ymin = 0.65
+            ymax = 1.35
+        if "mistag_sf" in h2.GetName():
+            legend = ROOT.TLegend(0.68,0.72,0.88,0.88)
+            ymin = 0.0
+            ymax = 2.5
+        legend.SetFillColor(0)
+        legend.SetLineColor(0)
+
+        marker = [ROOT.kOpenCircle, ROOT.kOpenSquare, 
+            ROOT.kOpenTriangleUp, ROOT.kOpenDiamond
+        ]
+
+        for iH, hName in enumerate(histoDict):
+            h = histoDict[hName]
+            h.SetMinimum(ymin)
+            h.SetMaximum(ymax)
+            h.SetMarkerSize(1.5)
+            h.SetMarkerColor(ROOT.kRed+iH)
+            h.SetMarkerStyle(marker[iH])
+            h.SetLineColor(ROOT.kRed+iH)
+            h.SetLineWidth(2)
+            legend.AddEntry(h,(ptBins[iH].replace("To"," < pT < "))+" GeV", "lp")
+            if iH == 0:
+              h.Draw("PE0")
+            else:
+              h.Draw("PE0SAME")
+            legend.Draw("same")
+        if doLogY:
+            canv.SetLogy()
+        canv.SaveAs(pdfName)
+        del canv
+
     textsize=1
    
     c2 = ROOT.TCanvas("c2","c2",600,600)
@@ -699,6 +765,7 @@ def main():
     if printPNG: c2.SaveAs(os.path.join(outputDir, "h2_eff_mc_"+year+"_"+workingpoint+".png"))
     heffmc.SetName("h2_eff_mc"+year+"_"+workingpoint)
     heffmc.SaveAs(os.path.join(outputDir, "h2_eff_mc_"+year+"_"+workingpoint+".root"))
+    PlotPtSlices(_pt, heffmc, "h_eff_mc_"+year+"_"+workingpoint, os.path.join(outputDir, "h_eff_mc_"+year+"_"+workingpoint+"_ptBins_eta.pdf"))
 
     c3 = ROOT.TCanvas("c3","c3",600,600)
     heffdata.SetMinimum(0.4)
@@ -709,6 +776,7 @@ def main():
     if printPNG: c3.SaveAs(os.path.join(outputDir, "h2_eff_data_"+year+"_"+workingpoint+".png"))
     heffdata.SetName("h2_eff_data"+year+"_"+workingpoint)
     heffdata.SaveAs(os.path.join(outputDir, "h2_eff_data_"+year+"_"+workingpoint+".root"))
+    PlotPtSlices(_pt, heffdata, "h_eff_data_"+year+"_"+workingpoint, os.path.join(outputDir, "h_eff_data_"+year+"_"+workingpoint+"_ptBins_eta.pdf"))
 
     c4 = ROOT.TCanvas("c4","c4",600,600)
     heffdata.Sumw2()
@@ -723,6 +791,7 @@ def main():
     if printPNG: c4.SaveAs(os.path.join(outputDir, "h2_eff_sf_"+year+"_"+workingpoint+".png"))
     heffdata.SetName("h2_eff_sf"+year+"_"+workingpoint)
     heffdata.SaveAs(os.path.join(outputDir, "h2_eff_sf_"+year+"_"+workingpoint+".root"))
+    PlotPtSlices(_pt, heffdata, "h_eff_sf_"+year+"_"+workingpoint, os.path.join(outputDir, "h_eff_sf_"+year+"_"+workingpoint+"_ptBins_eta.pdf"))
 
     c6 = ROOT.TCanvas("c6","c6",600,600)
     hmistagmc.SetMinimum(0.0)
@@ -733,6 +802,7 @@ def main():
     if printPNG: c6.SaveAs(os.path.join(outputDir, "h2_mistag_mc_"+year+"_"+workingpoint+".png"))
     hmistagmc.SetName("h2_mistag_mc"+year+"_"+workingpoint)
     hmistagmc.SaveAs(os.path.join(outputDir, "h2_mistag_mc_"+year+"_"+workingpoint+".root"))
+    PlotPtSlices(_pt, hmistagmc, "h_mistag_mc_"+year+"_"+workingpoint, os.path.join(outputDir, "h_mistag_mc_"+year+"_"+workingpoint+"_ptBins_eta.pdf"))
 
     c7 = ROOT.TCanvas("c7","c7",600,600)
     hmistagdata.SetMinimum(0.0)
@@ -743,6 +813,7 @@ def main():
     if printPNG: c7.SaveAs(os.path.join(outputDir, "h2_mistag_data_"+year+"_"+workingpoint+".png"))
     hmistagdata.SetName("h2_mistag_data"+year+"_"+workingpoint)
     hmistagdata.SaveAs(os.path.join(outputDir, "h2_mistag_data_"+year+"_"+workingpoint+".root"))
+    PlotPtSlices(_pt, hmistagdata, "h_mistag_data_"+year+"_"+workingpoint, os.path.join(outputDir, "h_mistag_data_"+year+"_"+workingpoint+"_ptBins_eta.pdf"))
 
     c8 = ROOT.TCanvas("c8","c8",600,600)
     hmistagdata.Sumw2()
@@ -757,6 +828,7 @@ def main():
     if printPNG: c8.SaveAs(os.path.join(outputDir, "h2_mistag_sf_"+year+"_"+workingpoint+".png"))
     hmistagdata.SetName("h2_mistag_sf"+year+"_"+workingpoint)
     hmistagdata.SaveAs(os.path.join(outputDir, "h2_mistag_sf_"+year+"_"+workingpoint+".root"))
+    PlotPtSlices(_pt, hmistagdata, "h_mistag_sf_"+year+"_"+workingpoint, os.path.join(outputDir, "h_mistag_sf_"+year+"_"+workingpoint+"_ptBins_eta.pdf"))
         
     del c2, c3, c4, c6, c7, c8
     
