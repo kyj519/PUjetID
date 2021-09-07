@@ -5,7 +5,7 @@ import helpers
 crab_common.config.JobType.maxJobRuntimeMin = 240
 
 def GetDataStream(name):
-  if "DoubleEG" in name:   return "DoubleEG"
+  if "EGamma" in name: return "EGamma"
   if "DoubleMuon" in name: return "DoubleMuon"
 
 if __name__ == '__main__':
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     #
     dataStreamName=GetDataStream(dataset)
     crab_common.config.JobType.scriptArgs = [
-      'era=UL2017',
+      'era=UL2018',
       'isMC=0',
       'dataStream='+dataStreamName,
     ]
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     # TO DO: Fix This
     #
     secondaryName = dataset.split('/')[2]
-    secondaryName = secondaryName.replace("UL2017_MiniAODv2_NanoAODv9","DataUL17NanoAODv9") #CHECK
+    secondaryName = secondaryName.replace("UL2018_MiniAODv2_NanoAODv9","DataUL18NanoAODv9") #CHECK
     secondaryName = secondaryName.replace("-v1","") #CHECK
     secondaryName = secondaryName.replace("-v2","") #CHECK
     secondaryName = secondaryName.replace("-v3","") #CHECK

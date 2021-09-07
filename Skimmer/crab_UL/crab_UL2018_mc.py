@@ -5,7 +5,7 @@ import helpers
 crab_common.config.JobType.maxJobRuntimeMin = 480
 
 crab_common.config.JobType.scriptArgs = [
-  'era=UL2017',
+  'era=UL2018',
   'isMC=1',
   'dataStream=MC',
 ]
@@ -37,8 +37,8 @@ if __name__ == '__main__':
     # TO DO: Fix This
     #
     secondaryName = dataset.split('/')[2]
-    secondaryName = secondaryName.replace("RunIISummer20UL17NanoAODv9-","MCUL17NanoAODv9")#RENAME CAMPAIGN. CHECK ITS UPDATED
-    secondaryName = secondaryName.replace("106X_mc2017_realistic_v9","") #REMOVE GT. CHECK ITS UPDATED
+    secondaryName = secondaryName.replace("RunIISummer20UL18NanoAODv9-","MCUL18NanoAODv9")#RENAME CAMPAIGN. CHECK ITS UPDATED
+    secondaryName = secondaryName.replace("106X_upgrade2018_realistic_v16_L1v1","") #REMOVE GT. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("-v1","")# 
     secondaryName = secondaryName.replace("-v2","")# 
     secondaryName = secondaryName.replace("-v3","")#

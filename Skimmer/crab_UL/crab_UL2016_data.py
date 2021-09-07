@@ -29,7 +29,7 @@ if __name__ == '__main__':
     #
     dataStreamName=GetDataStream(dataset)
     crab_common.config.JobType.scriptArgs = [
-      'era=UL2017',
+      'era=UL2016',
       'isMC=0',
       'dataStream='+dataStreamName,
     ]
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     # TO DO: Fix This
     #
     secondaryName = dataset.split('/')[2]
-    secondaryName = secondaryName.replace("UL2017_MiniAODv2_NanoAODv9","DataUL17NanoAODv9") #CHECK
+    secondaryName = secondaryName.replace("UL2016_MiniAODv2_NanoAODv9","DataUL16NanoAODv9") #CHECK
     secondaryName = secondaryName.replace("-v1","") #CHECK
     secondaryName = secondaryName.replace("-v2","") #CHECK
     secondaryName = secondaryName.replace("-v3","") #CHECK

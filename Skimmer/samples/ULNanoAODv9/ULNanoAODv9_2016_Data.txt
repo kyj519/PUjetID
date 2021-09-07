@@ -1,0 +1,9 @@
+#
+# Missing 2016H
+#
+/DoubleMuon/Run2016F-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD
+/DoubleMuon/Run2016G-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD
+#
+# Missing 2016G and 2016H
+#
+/DoubleEG/Run2016F-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD

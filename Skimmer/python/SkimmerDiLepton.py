@@ -10,6 +10,7 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 class SkimmerDiLepton(Module):
   def __init__(self, isMC, era, isDoubleElecData=False, isDoubleMuonData=False, doOTFPUJetIDBDT=False):
     self.era = era
+    self.isULNano = True if "UL" in self.era else False
     self.isMC = isMC
     self.maxNSelJetsSaved=1
     self.isDoubleElecData=False
@@ -41,7 +42,7 @@ class SkimmerDiLepton(Module):
     #
     self.calcBDTDiscOTF = False
     if self.doOTFPUJetIDBDT:
-      if self.era == "UL2017" or self.era == "UL2018": 
+      if self.era == "UL2017" or self.era == "UL2018" or self.era == "UL2016APV" or self.era == "UL2016": 
         self.setupTMVAReader()
         self.calcBDTDiscOTF = True
 
@@ -66,6 +67,22 @@ class SkimmerDiLepton(Module):
         self.tmvaWeightsPath+"pileupJetId_UL18_Eta2p5To2p75_chs_BDT.weights.xml",
         self.tmvaWeightsPath+"pileupJetId_UL18_Eta2p75To3p0_chs_BDT.weights.xml",
         self.tmvaWeightsPath+"pileupJetId_UL18_Eta3p0To5p0_chs_BDT.weights.xml",
+      ]
+    # UL 2016APV training weights
+    elif self.era == "UL2016APV": 
+      self.tmvaWeightFilenames = [
+        self.tmvaWeightsPath+"pileupJetId_UL16APV_Eta0p0To2p5_chs_BDT.weights.xml",
+        self.tmvaWeightsPath+"pileupJetId_UL16APV_Eta2p5To2p75_chs_BDT.weights.xml",
+        self.tmvaWeightsPath+"pileupJetId_UL16APV_Eta2p75To3p0_chs_BDT.weights.xml",
+        self.tmvaWeightsPath+"pileupJetId_UL16APV_Eta3p0To5p0_chs_BDT.weights.xml",
+      ]
+    # UL 2016 training weights
+    elif self.era == "UL2016": 
+      self.tmvaWeightFilenames = [
+        self.tmvaWeightsPath+"pileupJetId_UL16_Eta0p0To2p5_chs_BDT.weights.xml",
+        self.tmvaWeightsPath+"pileupJetId_UL16_Eta2p5To2p75_chs_BDT.weights.xml",
+        self.tmvaWeightsPath+"pileupJetId_UL16_Eta2p75To3p0_chs_BDT.weights.xml",
+        self.tmvaWeightsPath+"pileupJetId_UL16_Eta3p0To5p0_chs_BDT.weights.xml",
       ]
     #
     # Eta bins
@@ -149,6 +166,7 @@ class SkimmerDiLepton(Module):
         #
         # Book BDT
         #
+        print("Setup BDT with weight file: "+self.tmvaWeightFilenames[i])
         self.tmva_readers[i].BookMVA("BDT", self.tmvaWeightFilenames[i])
     else:
       raise ValueError("ERROR: eta_bins length not the same as tmvaWeightFilenames length. Please check!")
@@ -196,11 +214,11 @@ class SkimmerDiLepton(Module):
 
   def endJob(self):
     Module.endJob(self)
-    print "SkimmerDiLepton module ended successfully"
+    print("SkimmerDiLepton module ended successfully")
     pass
 
   def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-    print "File closed successfully"
+    print("File closed successfully")
     pass
 
   def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -243,6 +261,7 @@ class SkimmerDiLepton(Module):
         self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_puIdDisc",   "F")# Starting from NanoAODv7
         self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_puIdDiscOTF","F")
         self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_qgl",        "F")
+        self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_btagDeepFlavQG", "F") # Starting from (UL)NanoAODv9
         self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_nConst",     "I")
         self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_chEmEF",     "F")
         self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_chHEF",      "F")
@@ -342,16 +361,13 @@ class SkimmerDiLepton(Module):
     #############################
     event.passElectronTrig=False
 
-    if self.era == "2016":
+    if (self.era == "2016" or self.era == "UL2016APV" or self.era == "UL2016"):
       if hasattr(event, 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'):
         event.passElectronTrig |= event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
-    elif self.era == "2017":
+    elif (self.era == "2017" or self.era == "UL2017"):
       if hasattr(event, 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'):
         event.passElectronTrig |= event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
-    elif self.era == "2018":
-      if hasattr(event, 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'):
-        event.passElectronTrig |= event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
-    elif self.era == "UL2017":
+    elif (self.era == "2018" or self.era == "UL2018"):
       if hasattr(event, 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'):
         event.passElectronTrig |= event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
     
@@ -365,22 +381,20 @@ class SkimmerDiLepton(Module):
     ############################
     event.passMuonTrig=False
 
-    if self.era == "2016":
+    if (self.era == "2016" or self.era == "UL2016APV" or self.era == "UL2016"):
       if hasattr(event, 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'):
         event.passMuonTrig |= event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ
       if hasattr(event, 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL'):
         event.passMuonTrig |= event.HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL
       if hasattr(event, 'HLT_TkMu17_TrkIsoVVL_TkMu8_TrkIsoVVL'):
         event.passMuonTrig |= event.HLT_TkMu17_TrkIsoVVL_TkMu8_TrkIsoVVL
-    elif self.era == "2017":
+    elif (self.era == "2017" or self.era == "UL2017"):
       if hasattr(event, 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8'):
         event.passMuonTrig |= event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8
-    elif self.era == "2018":
+    elif (self.era == "2018" or self.era == "UL2018"):
       if hasattr(event, 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8'):
         event.passMuonTrig |= event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
-    elif self.era == "UL2017":
-      if hasattr(event, 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8'):
-        event.passMuonTrig |= event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8
+
     
     return True if event.passMuonTrig else False
  
@@ -478,8 +492,8 @@ class SkimmerDiLepton(Module):
       for obj in event.trigObjsAll:
         if not(obj.id == 13):
           continue
-        # if not(obj.filterBits&16): 
-        #   continue    
+        if not(obj.filterBits&16): 
+          continue    
         if(event.muonsTight[0].DeltaR(obj) < 0.1): 
           event.passLep0TrigMatch = True
         if(event.muonsTight[1].DeltaR(obj) < 0.1): 
@@ -513,8 +527,8 @@ class SkimmerDiLepton(Module):
       for obj in event.trigObjsAll:
         if not(obj.id == 11):
           continue
-        # if not(obj.filterBits&16): 
-        #   continue  
+        if not(obj.filterBits&16): 
+          continue  
         if(event.electronsTight[0].DeltaR(obj) < 0.1): 
           event.passLep0TrigMatch = True
         if(event.electronsTight[1].DeltaR(obj) < 0.1): 
@@ -727,6 +741,8 @@ class SkimmerDiLepton(Module):
       self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_neHEF",   jet.neHEF)
       self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_muEF",    jet.muEF)
       self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_dilep_dphi",event.dilep_p4.DeltaPhi(jet.p4()))
+      if self.isULNano:
+        self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_btagDeepFlavQG",jet.btagDeepFlavQG)
       #
       # This is where we calculate the PU BDT discriminant
       #
@@ -772,8 +788,26 @@ SkimmerDiLepton_UL2017_JMENanoV1_data_dielectron = lambda : SkimmerDiLepton(isMC
 SkimmerDiLepton_UL2017_JMENanoV1_data_dimuon = lambda : SkimmerDiLepton(isMC=False, era="UL2017", isDoubleMuonData=True, doOTFPUJetIDBDT=True) 
 SkimmerDiLepton_UL2017_JMENanoV1_mc = lambda : SkimmerDiLepton(isMC=True,  era="UL2017", doOTFPUJetIDBDT=True) 
 #
-# Ultra-Legacy 2017 (Compatible with ULNanoAODv2 aka NanoAODv8)
+# Ultra-Legacy 2017 (Compatible with ULNanoAODv9)
 #
 SkimmerDiLepton_UL2017_data_dielectron = lambda : SkimmerDiLepton(isMC=False, era="UL2017", isDoubleElecData=True)
 SkimmerDiLepton_UL2017_data_dimuon = lambda : SkimmerDiLepton(isMC=False, era="UL2017", isDoubleMuonData=True) 
 SkimmerDiLepton_UL2017_mc = lambda : SkimmerDiLepton(isMC=True,  era="UL2017") 
+#
+# Ultra-Legacy 2018 (Compatible with ULNanoAODv9)
+#
+SkimmerDiLepton_UL2018_data_dielectron = lambda : SkimmerDiLepton(isMC=False, era="UL2018", isDoubleElecData=True)
+SkimmerDiLepton_UL2018_data_dimuon = lambda : SkimmerDiLepton(isMC=False, era="UL2018", isDoubleMuonData=True) 
+SkimmerDiLepton_UL2018_mc = lambda : SkimmerDiLepton(isMC=True,  era="UL2018") 
+#
+# Ultra-Legacy 2016APV (Compatible with ULNanoAODv9)
+#
+SkimmerDiLepton_UL2016APV_data_dielectron = lambda : SkimmerDiLepton(isMC=False, era="UL2016APV", isDoubleElecData=True)
+SkimmerDiLepton_UL2016APV_data_dimuon = lambda : SkimmerDiLepton(isMC=False, era="UL2016APV", isDoubleMuonData=True) 
+SkimmerDiLepton_UL2016APV_mc = lambda : SkimmerDiLepton(isMC=True,  era="UL2016APV") 
+#
+# Ultra-Legacy 2016 (Compatible with ULNanoAODv9)
+#
+SkimmerDiLepton_UL2016_data_dielectron = lambda : SkimmerDiLepton(isMC=False, era="UL2016", isDoubleElecData=True)
+SkimmerDiLepton_UL2016_data_dimuon = lambda : SkimmerDiLepton(isMC=False, era="UL2016", isDoubleMuonData=True) 
+SkimmerDiLepton_UL2016_mc = lambda : SkimmerDiLepton(isMC=True,  era="UL2016") 

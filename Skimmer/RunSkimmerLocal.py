@@ -46,34 +46,26 @@ if isMC and (isDoubleElecData or isDoubleMuonData):
 CMSXROOTD="root://xrootd-cms.infn.it/"
 files=[]
 
-if era == "2016":
+if era == "UL2017":
   if isMC:
-    files = [
-      "/store/mc/RunIISummer16NanoAODv7/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/NANOAODSIM/PUMoriond17_Nano02Apr2020_102X_mcRun2_asymptotic_v8_ext2-v1/120000/0643F6C0-C42B-564C-A9BD-161948BBFB81.root"
-    ]
+    files = ["/store/mc/RunIISummer20UL17NanoAODv9/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/106X_mc2017_realistic_v9-v1/70000/96891E58-6248-4046-8701-CDC485783799.root"]
   else:
-    if isDoubleMuonData:
-      files = [
-        "/store/data/Run2016H/DoubleMuon/NANOAOD/02Apr2020-v1/250000/24C37CC0-C415-5F43-96A6-F5D37E30B79B.root",
-      ]
-    elif isDoubleElecData:
-      files = [
-        "/store/data/Run2016H/DoubleEG/NANOAOD/02Apr2020-v1/250000/47FD42C2-6583-D941-95F4-1BFF0061C7D5.root",
-      ]
-  files = [CMSXROOTD+file for file in files]
-elif era == "UL2017":
+    if isDoubleMuonData: files = ["/store/data/Run2017F/DoubleMuon/NANOAOD/UL2017_MiniAODv2_NanoAODv9-v1/120000/16F764BE-E96D-A44D-B252-272721365F16.root"]
+    elif isDoubleElecData: files = ["/store/data/Run2017F/DoubleEG/NANOAOD/UL2017_MiniAODv2_NanoAODv9-v1/270000/0F4C5317-F7FD-3C4C-AC79-231630A7E4E1.root"]
+elif era == "UL2018":
   if isMC:
-    files = [
-      "/store/mc/RunIISummer20UL17NanoAODv2/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/106X_mc2017_realistic_v8-v1/260000/135273C9-F6AB-444E-B7C2-8AFE427CB644.root"
-    ]
+    files = ["/store/mc/RunIISummer20UL18NanoAODv9/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/106X_upgrade2018_realistic_v16_L1v1-v1/120000/0CF0CDED-7582-7A49-84CD-0E5F73DE27B0.root"]
   else:
-    if isDoubleMuonData:
-      files = [
-        "/store/data/Run2017F/DoubleMuon/NANOAOD/UL2017_MiniAODv1_NanoAODv2-v1/280000/E9587C57-2425-0F4F-821E-E671B13B1C2F.root",
-      ]
-    elif isDoubleElecData:
-      files = []
-  files = [CMSXROOTD+file for file in files]
+    if isDoubleMuonData: files = ["/store/data/Run2018C/DoubleMuon/NANOAOD/UL2018_MiniAODv2_NanoAODv9-v1/130000/66302C54-6134-EF49-A766-A9A47B406837.root"]
+    elif isDoubleElecData: files = ["/store/data/Run2018C/EGamma/NANOAOD/UL2018_MiniAODv2_NanoAODv9-v1/250000/EA38CB63-D226-8E4C-A396-176C62A66CC8.root"]
+elif era == "UL2016APV":
+  if isMC:
+    files = ["/store/mc/RunIISummer20UL16NanoAODAPVv9/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/106X_mcRun2_asymptotic_preVFP_v11-v1/280000/E9B9F84B-B094-504F-967E-CC85267C7F21.root"]
+  else:
+    if isDoubleMuonData: files = ["/store/data/Run2016E/DoubleMuon/NANOAOD/HIPM_UL2016_MiniAODv2_NanoAODv9-v1/70000/CEFE6A03-BC80-5D41-AA6D-756D57739CE1.root"]
+    elif isDoubleElecData: files = ["/store/data/Run2016E/DoubleEG/NANOAOD/HIPM_UL2016_MiniAODv2_NanoAODv9-v1/120000/AE3D102E-2535-B941-A7B5-AE4FB44E5B29.root"]
+
+files = [CMSXROOTD+file for file in files]
 
 varTxtFileIn="./script/branches_in.txt"
 varTxtFileOut="./script/branches_out.txt"

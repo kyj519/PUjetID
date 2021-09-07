@@ -1,31 +1,5 @@
 #
-# EOY 2016
-#
-# MAX_EVENTS=50000
-# python RunSkimmerLocal.py \
-# --era="2016" \
-# --maxEvents=${MAX_EVENTS} \
-# --outDir="./MC16_DYJetsToLL_NLO" \
-# --isMC=1 \
-# --dataStream="MC"
-# #
-# MAX_EVENTS=50000
-# python RunSkimmerLocal.py \
-# --era="2016" \
-# --maxEvents=${MAX_EVENTS} \
-# --outDir="./Data16_DoubleMuon" \
-# --isMC=0 \
-# --dataStream="DoubleMuon"
-# #
-# MAX_EVENTS=50000
-# python RunSkimmerLocal.py \
-# --era="2016" \
-# --maxEvents=${MAX_EVENTS} \
-# --outDir="./Data16_DoubleEG" \
-# --isMC=0 \
-# --dataStream="DoubleEG"
-#
-# ULNanoAODv2 UL2017 
+# ULNanoAODv9 UL2017 
 #
 # MAX_EVENTS=20000
 # python RunSkimmerLocal.py \
@@ -42,3 +16,69 @@
 # --outDir="./DataUL17_DoubleMuon" \
 # --isMC=0 \
 # --dataStream="DoubleMuon"
+#
+# MAX_EVENTS=20000
+# python RunSkimmerLocal.py \
+# --era="UL2017" \
+# --maxEvents=${MAX_EVENTS} \
+# --outDir="./DataUL17_DoubleEG" \
+# --isMC=0 \
+# --dataStream="DoubleEG"
+#
+#
+#
+#
+# ULNanoAODv9 UL2018
+#
+# MAX_EVENTS=20000
+# python RunSkimmerLocal.py \
+# --era="UL2018" \
+# --maxEvents=${MAX_EVENTS} \
+# --outDir="./MCUL18_DYJetsToLL_LO" \
+# --isMC=1 \
+# --dataStream="MC"
+#
+# MAX_EVENTS=20000
+# python RunSkimmerLocal.py \
+# --era="UL2018" \
+# --maxEvents=${MAX_EVENTS} \
+# --outDir="./DataUL18_DoubleMuon" \
+# --isMC=0 \
+# --dataStream="DoubleMuon"
+#
+# MAX_EVENTS=20000
+# python RunSkimmerLocal.py \
+# --era="UL2018" \
+# --maxEvents=${MAX_EVENTS} \
+# --outDir="./DataUL18_EGamma" \
+# --isMC=0 \
+# --dataStream="EGamma"
+#
+#
+# ULNanoAODv9 UL2016APV
+#
+# MAX_EVENTS=20000
+# python RunSkimmerLocal.py \
+# --era="UL2016APV" \
+# --maxEvents=${MAX_EVENTS} \
+# --outDir="./MCUL16APV_DYJetsToLL_LO" \
+# --isMC=1 \
+# --dataStream="MC"
+#
+# MAX_EVENTS=20000
+# python RunSkimmerLocal.py \
+# --era="UL2016APV" \
+# --maxEvents=${MAX_EVENTS} \
+# --outDir="./DataUL16APV_DoubleMuon" \
+# --isMC=0 \
+# --dataStream="DoubleMuon"
+#
+# MAX_EVENTS=20000
+# python RunSkimmerLocal.py \
+# --era="UL2016APV" \
+# --maxEvents=${MAX_EVENTS} \
+# --outDir="./DataUL16APV_DoubleEG" \
+# --isMC=0 \
+# --dataStream="DoubleEG"
+
+

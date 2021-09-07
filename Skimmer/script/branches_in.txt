@@ -10,6 +10,13 @@ keep luminosityBlock
 keep event
 keep genWeight
 #
+keep nLHEPdfWeight
+keep LHEPdfWeight
+keep nLHEScaleWeight
+keep LHEScaleWeight
+keep nPSWeight
+keep PSWeight
+#
 keep fixedGridRhoFastjet*
 #
 keep Pileup_*
@@ -17,6 +24,7 @@ keep PV_*
 #
 keep MET_*
 keep RawMET_*
+keep PuppiMET_*
 #
 keep nMuon
 keep Muon_*

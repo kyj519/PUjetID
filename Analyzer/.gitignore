@@ -3,3 +3,6 @@ MakeHistosAtBatch.sh
 MakeHistosAtBatch.sh.sub
 SkimNtuplesAtBatch.sh
 SkimNtuplesAtBatch.sh.sub
+histos/
+histos3D/
+BatchLog/

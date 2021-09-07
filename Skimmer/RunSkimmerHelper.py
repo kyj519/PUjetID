@@ -17,25 +17,11 @@ def GetSelection(era):
 
   selection = ""
 
-  #
-  # preUL
-  #
-  if era == "2016":
+  if (era == "2016" or era == "UL2016APV" or era == "UL2016"):
     selection = " && ".join((objectSel,trigSel2016))
-  elif era == "2017":
+  elif (era == "2017" or era == "UL2017"):
     selection = " && ".join((objectSel,trigSel2017))
-  elif era == "2018":
-    selection = " && ".join((objectSel,trigSel2018))
-  #
-  # UL
-  #
-  elif era == "UL2016preVFP":
-    selection = " && ".join((objectSel,trigSel2016))
-  elif era == "UL2016postVFP":
-    selection = " && ".join((objectSel,trigSel2016))
-  elif era == "UL2017":
-    selection = " && ".join((objectSel,trigSel2017))
-  elif era == "UL2018":
+  elif (era == "2018" or era == "UL2018"):
     selection = " && ".join((objectSel,trigSel2018))
 
   return selection
@@ -54,9 +40,7 @@ def GetJSON(era):
   #
   # UL
   #
-  elif era == "UL2016preVFP":
-    jsonInput="/src/PUjetID/Skimmer/data/lumi/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"
-  elif era == "UL2016postVFP":
+  elif (era == "UL2016APV" or era == "UL2016"):
     jsonInput="/src/PUjetID/Skimmer/data/lumi/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt"
   elif era == "UL2017":
     jsonInput="/src/PUjetID/Skimmer/data/lumi/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt"
@@ -78,6 +62,15 @@ from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_2018_data_dimuon
 from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2017_mc
 from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2017_data_dielectron
 from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2017_data_dimuon 
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2018_mc
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2018_data_dielectron
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2018_data_dimuon 
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016APV_mc
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016APV_data_dielectron
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016APV_data_dimuon 
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016_mc
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016_data_dielectron
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016_data_dimuon 
 
 from PUjetID.Skimmer.PUIDCalculator import PUIDCalculator_UL2017 
 
@@ -85,6 +78,9 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2 impor
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import puWeight_2016
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import puWeight_2017
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import puWeight_2018
+from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import puWeight_UL2017
+from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import puWeight_UL2018
+from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import puWeight_UL2016
 
 def GetModules(era, isMC, dataStream):
   modules = []
@@ -94,16 +90,25 @@ def GetModules(era, isMC, dataStream):
   applyJetPtSmearing=True
   if era == "2016":
     if isMC: 
-      jetCorr_AK4_MC16 = createJMECorrector(isMC=True, dataYear="2016", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_2016_mc = createJMECorrector(isMC=True, dataYear="2016", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
   elif era == "2017":
     if isMC: 
-      jetCorr_AK4_MC17 = createJMECorrector(isMC=True, dataYear="2017", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_2017_mc = createJMECorrector(isMC=True, dataYear="2017", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
   elif era == "2018":
     if isMC: 
-      jetCorr_AK4_MC18 = createJMECorrector(isMC=True, dataYear="2018", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_2018_mc = createJMECorrector(isMC=True, dataYear="2018", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
   elif era == "UL2017":
     if isMC: 
-      jetCorr_AK4_MCUL17 = createJMECorrector(isMC=True, dataYear="UL2017", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_UL2017_mc = createJMECorrector(isMC=True, dataYear="UL2017", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+  elif era == "UL2018":
+    if isMC: 
+      jetCorr_AK4_UL2018_mc = createJMECorrector(isMC=True, dataYear="UL2018", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+  elif era == "UL2016APV":
+    if isMC: 
+      jetCorr_AK4_UL2016APV_mc = createJMECorrector(isMC=True, dataYear="UL2016_preVFP", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+  elif era == "UL2016":
+    if isMC: 
+      jetCorr_AK4_UL2016_mc = createJMECorrector(isMC=True, dataYear="UL2016", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
 
   #===========================================
   #
@@ -115,7 +120,7 @@ def GetModules(era, isMC, dataStream):
   #
   if era == "2016":
     if isMC: 
-      modules=[puWeight_2016(), jetCorr_AK4_MC16(), SkimmerDiLepton_2016_mc()]
+      modules=[puWeight_2016(), jetCorr_AK4_2016_mc(), SkimmerDiLepton_2016_mc()]
     else:
       if "DoubleMuon" in dataStream:
         modules=[SkimmerDiLepton_2016_data_dimuon()]
@@ -126,7 +131,7 @@ def GetModules(era, isMC, dataStream):
   #
   elif era == "2017":
     if isMC: 
-      modules=[puWeight_2017(), jetCorr_AK4_MC17(), SkimmerDiLepton_2017_mc()]
+      modules=[puWeight_2017(), jetCorr_AK4_2017_mc(), SkimmerDiLepton_2017_mc()]
     else:              
       if "DoubleMuon" in dataStream:
         modules=[SkimmerDiLepton_2017_data_dimuon()]
@@ -137,7 +142,7 @@ def GetModules(era, isMC, dataStream):
   #
   elif era == "2018":
     if isMC: 
-      modules=[puWeight_2018(), jetCorr_AK4_MC18(), SkimmerDiLepton_2018_mc()]
+      modules=[puWeight_2018(), jetCorr_AK4_2018_mc(), SkimmerDiLepton_2018_mc()]
     else:              
       if "DoubleMuon" in dataStream:
         modules=[SkimmerDiLepton_2018_data_dimuon()]
@@ -148,12 +153,45 @@ def GetModules(era, isMC, dataStream):
   #
   elif era == "UL2017":
     if isMC: 
-      modules=[jetCorr_AK4_MCUL17(), SkimmerDiLepton_UL2017_mc()]
+      modules=[puWeight_UL2017(), jetCorr_AK4_UL2017_mc(), SkimmerDiLepton_UL2017_mc()]
     else:              
       if "DoubleMuon" in dataStream:
         modules=[SkimmerDiLepton_UL2017_data_dimuon()]
       elif "DoubleEG" in dataStream:
         modules=[SkimmerDiLepton_UL2017_data_dielectron()]
+  #
+  # UL 2018
+  #
+  elif era == "UL2018":
+    if isMC: 
+      modules=[puWeight_UL2018(), jetCorr_AK4_UL2018_mc(), SkimmerDiLepton_UL2018_mc()]
+    else:              
+      if "DoubleMuon" in dataStream:
+        modules=[SkimmerDiLepton_UL2018_data_dimuon()]
+      elif "EGamma" in dataStream:
+        modules=[SkimmerDiLepton_UL2018_data_dielectron()]
+  #
+  # UL 2016APV
+  #
+  elif era == "UL2016APV":
+    if isMC: 
+      modules=[puWeight_UL2016(), jetCorr_AK4_UL2016APV_mc(), SkimmerDiLepton_UL2016APV_mc()]
+    else:              
+      if "DoubleMuon" in dataStream:
+        modules=[SkimmerDiLepton_UL2016APV_data_dimuon()]
+      elif "DoubleEG" in dataStream:
+        modules=[SkimmerDiLepton_UL2016APV_data_dielectron()]
+  #
+  # UL 2016
+  #
+  elif era == "UL2016":
+    if isMC: 
+      modules=[puWeight_UL2016(), jetCorr_AK4_UL2016_mc(), SkimmerDiLepton_UL2016_mc()]
+    else:              
+      if "DoubleMuon" in dataStream:
+        modules=[SkimmerDiLepton_UL2016_data_dimuon()]
+      elif "DoubleEG" in dataStream:
+        modules=[SkimmerDiLepton_UL2016_data_dielectron()]
 
   return modules
 
