@@ -6,8 +6,8 @@ Setup a CMSSW release:
 ```
 mkdir PileUpJetIDSF
 cd PileUpJetIDSF
-cmsrel CMSSW_10_6_25
-cd CMSSW_10_6_25/src
+cmsrel CMSSW_10_6_26
+cd CMSSW_10_6_26/src
 cmsenv
 ```
 Checkout [nanoAOD-tools](https://github.com/cms-nanoAOD/nanoAOD-tools):
