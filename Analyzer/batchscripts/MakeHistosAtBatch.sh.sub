@@ -6,27 +6,16 @@ log                   = BatchLog/Histo.$(ClusterId).log
 stream_output         = True
 stream_error          = True
 
-############################
-#
-# UL
-#
-############################
-
 +JobFlavour  = "microcentury"
 request_cpus = 4
 arguments    = $(SAMPLE) 4
 queue SAMPLE from (
 MCUL17_DY_MG
+MCUL18_DY_MG
+MCUL16APV_DY_MG
 )
 
-+JobFlavour  = "microcentury"
-request_cpus = 4
-arguments    = $(SAMPLE) 4
-queue SAMPLE from (
-MCUL17_DY_AMCNLO
-)
-
-+JobFlavour  = "microcentury"
++JobFlavour  = "espresso"
 request_cpus = 4
 arguments    = $(SAMPLE) 4
 queue SAMPLE from (
@@ -35,86 +24,13 @@ DataUL17C_DoubleMuon
 DataUL17D_DoubleMuon
 DataUL17E_DoubleMuon
 DataUL17F_DoubleMuon
-DataUL17B_DoubleEG
-DataUL17C_DoubleEG
-DataUL17D_DoubleEG
-DataUL17E_DoubleEG
-DataUL17F_DoubleEG
+DataUL18A_DoubleMuon
+DataUL18B_DoubleMuon
+DataUL18C_DoubleMuon
+DataUL18D_DoubleMuon
+DataUL16APVB_DoubleMuon
+DataUL16APVC_DoubleMuon
+DataUL16APVD_DoubleMuon
+DataUL16APVE_DoubleMuon
+DataUL16APVF_DoubleMuon
 )
-
-############################
-#
-# EOY
-#
-############################
-
-#+JobFlavour  = "longlunch"
-#request_cpus = 4
-#arguments    = $(SAMPLE) 4
-#queue SAMPLE from (
-#MC16_DY_MG
-#MC17_DY_MG
-#MC18_DY_MG
-#)
-
-#+JobFlavour  = "microcentury"
-#request_cpus = 4
-#arguments    = $(SAMPLE) 4
-#queue SAMPLE from (
-#MC16_DY_AMCNLO
-#MC17_DY_AMCNLO
-#MC18_DY_AMCNLO
-#)
-
-#+JobFlavour  = "microcentury"
-#request_cpus = 4
-#arguments    = $(SAMPLE) 4
-#queue SAMPLE from (
-#MC16_DY_MG_HW
-#MC17_DY_MG_HW
-#MC18_DY_MG_HW
-#)
-
-#+JobFlavour  = "espresso"
-#request_cpus = 4
-#arguments    = $(SAMPLE) 4
-#queue SAMPLE from (
-#Data16B_DoubleMuon
-#Data16C_DoubleMuon
-#Data16D_DoubleMuon
-#Data16E_DoubleMuon
-#Data16F_DoubleMuon
-#Data16G_DoubleMuon
-#Data16H_DoubleMuon
-#Data17B_DoubleMuon
-#Data17C_DoubleMuon
-#Data17D_DoubleMuon
-#Data17E_DoubleMuon
-#Data17F_DoubleMuon
-#Data18A_DoubleMuon
-#Data18B_DoubleMuon
-#Data18C_DoubleMuon
-#Data18D_DoubleMuon
-#)
-
-#+JobFlavour  = "espresso"
-#request_cpus = 4
-#arguments    = $(SAMPLE) 4
-#queue SAMPLE from (
-#Data16B_DoubleEG
-#Data16C_DoubleEG
-#Data16D_DoubleEG
-#Data16E_DoubleEG
-#Data16F_DoubleEG
-#Data16G_DoubleEG
-#Data16H_DoubleEG
-#Data17B_DoubleEG
-#Data17C_DoubleEG
-#Data17D_DoubleEG
-#Data17E_DoubleEG
-#Data17F_DoubleEG
-#Data18A_EGamma
-#Data18B_EGamma
-#Data18C_EGamma
-#Data18D_EGamma
-#)

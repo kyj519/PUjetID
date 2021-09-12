@@ -4,18 +4,24 @@ import os
 
 def main():
 
-  version="results_ULNanoV2_v1p1"
-  year="UL2017" 
+  version="results_ULNanoV9_v1p1"
 
-  outFileName="DumpPlots_PUIDSF_"+version+"_Baseline_"+year
-  inDir="../"+version+"/Baseline/"
-  CompilePlots(inDir, version, year, outFileName)
+  eras = [
+    # "UL2017",
+    # "UL2018",
+    "UL2016APV"
+  ]
 
-  outFileName="DumpPlots_PUIDSF_"+version+"_NLO_"+year
-  inDir="../"+version+"/NLO/"
-  CompilePlots(inDir, version, year, outFileName)
+  for year in eras:
+    outFileName="DumpPlots_PUIDSF_"+version+"_Baseline_"+year
+    inDir="../"+version+"/Baseline/"
+    CompilePlots(inDir, version, year, outFileName)
 
-def CompilePlots(inDir, version, year, ):
+    # outFileName="DumpPlots_PUIDSF_"+version+"_NLO_"+year
+    # inDir="../"+version+"/NLO/"
+    # CompilePlots(inDir, version, year, outFileName)
+
+def CompilePlots(inDir, version, year, outFileName):
   
   ptBins = [
     ("20To25", "$20 < p_{T} < 25$"),
@@ -76,9 +82,27 @@ def CompilePlots(inDir, version, year, ):
     ]
   elif year == "UL2017":
     WPYearList = [
-      (inDir+"/UL2017_WPLoose",  "UL2017_Loose",  "UL 2017 Loose WP"),
-      (inDir+"/UL2017_WPMedium", "UL2017_Medium", "UL 2017 Medium WP"),
-      (inDir+"/UL2017_WPTight",  "UL2017_Tight",  "UL 2017 Tight WP"),
+      (inDir+"/UL2017_WPLoose",  "UL2017_Loose",  "UL2017 Loose WP"),
+      (inDir+"/UL2017_WPMedium", "UL2017_Medium", "UL2017 Medium WP"),
+      (inDir+"/UL2017_WPTight",  "UL2017_Tight",  "UL2017 Tight WP"),
+    ]
+  elif year == "UL2018":
+    WPYearList = [
+      (inDir+"/UL2018_WPLoose",  "UL2018_Loose",  "UL2018 Loose WP"),
+      (inDir+"/UL2018_WPMedium", "UL2018_Medium", "UL2018 Medium WP"),
+      (inDir+"/UL2018_WPTight",  "UL2018_Tight",  "UL2018 Tight WP"),
+    ]
+  elif year == "UL2016APV":
+    WPYearList = [
+      (inDir+"/UL2016APV_WPLoose",  "UL2016APV_Loose",  "UL2016 APV Loose WP"),
+      (inDir+"/UL2016APV_WPMedium", "UL2016APV_Medium", "UL2016 APV Medium WP"),
+      (inDir+"/UL2016APV_WPTight",  "UL2016APV_Tight",  "UL2016 APV Tight WP"),
+    ]
+  elif year == "UL2016":
+    WPYearList = [
+      (inDir+"/UL2016_WPLoose",  "UL2016_Loose",  "UL2016 nonAPV Loose WP"),
+      (inDir+"/UL2016_WPMedium", "UL2016_Medium", "UL2016 nonAPV Medium WP"),
+      (inDir+"/UL2016_WPTight",  "UL2016_Tight",  "UL2016 nonAPV Tight WP"),
     ]
 
   outFile = open(outFileName+".tex","w")

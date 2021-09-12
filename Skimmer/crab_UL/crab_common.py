@@ -3,7 +3,7 @@ config = config()
 #
 # Set version number (CHECK)
 #
-version="DiLeptonSkim_ULNanoV9_v1p0"
+version="DiLeptonSkim_ULNanoV9_v1p1"
 #
 # Set request name prefx
 #

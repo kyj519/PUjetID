@@ -104,14 +104,14 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   FileList = []
 
   if useSkimNtuples:
-    print "Globbing File Paths:"
+    print("Globbing File Paths:")
     for files in ntupleFiles:
-      print files
+      print(files)
       FileList += [EOSURL+f for f in glob.glob(files)]
   else:
     print "Globbing File Paths:"
     for files in crabFiles:
-      print files
+      print(files)
       FileList += [EOSURL+f for f in glob.glob(files)]
   
   # Creating std::vector as filelist holder to be plugged into RDataFrame
@@ -171,11 +171,20 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   # Guide on how to read the pileup ID bitmap variable: 
   # https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJetID#miniAOD_and_nanoAOD
   #
-  df = df.Define("probeJet_puIdFlag_Loose", probeJetStr+"_puId & (1 << 2)")
-  df = df.Define("probeJet_puIdFlag_Medium",probeJetStr+"_puId & (1 << 1)")
-  df = df.Define("probeJet_puIdFlag_Tight", probeJetStr+"_puId & (1 << 0)")
-  if isUL:
-    df = df.Define("probeJet_puIdDiscOTF",  probeJetStr+"_puIdDiscOTF")
+  # Note: For ULNanoAODv9 UL2016 APV and nonAPV, there is a bug where Tight and Loose WP cuts were 
+  # switched (https://github.com/cms-sw/cmssw/blob/CMSSW_10_6_26/RecoJets/JetProducers/python/PileupJetIDCutParams_cfi.py#L82-L101)
+  # so the bit ordering has to be reversed
+  #
+  if "DataUL16" in sample_name or "MCUL16" in sample_name:
+    df = df.Define("probeJet_puIdFlag_Loose", probeJetStr+"_puId & (1 << 0)")
+    df = df.Define("probeJet_puIdFlag_Medium",probeJetStr+"_puId & (1 << 1)")
+    df = df.Define("probeJet_puIdFlag_Tight", probeJetStr+"_puId & (1 << 2)")
+  else:
+    df = df.Define("probeJet_puIdFlag_Loose", probeJetStr+"_puId & (1 << 2)")
+    df = df.Define("probeJet_puIdFlag_Medium",probeJetStr+"_puId & (1 << 1)")
+    df = df.Define("probeJet_puIdFlag_Tight", probeJetStr+"_puId & (1 << 0)")
+  # if isUL: # For JMENano
+  #   df = df.Define("probeJet_puIdDiscOTF",  probeJetStr+"_puIdDiscOTF")
   if isMC:
     df = df.Define("probeJet_passGenMatch", probeJetStr+"_gen_match")
   #
@@ -207,8 +216,8 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
       df = df.Define("probeJet_puIdTight_pass",  "PUJetID_80XCut_WPTight("+argStr+")")
   else: #UL
     #
-    # NOTE: In ULNanoAODv2 UL17, the pileup jet ID flag is based on the UL17 training
-    # and cut values.
+    # For ULNanoAODv9, each era year has its own BDT training included in its own production.
+    # Just use the decision as stored in the bitmap variable
     #
     df = df.Define("probeJet_puIdLoose_pass",  "probeJet_puIdFlag_Loose")
     df = df.Define("probeJet_puIdMedium_pass", "probeJet_puIdFlag_Medium")
@@ -224,7 +233,7 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #
   #############################################
   df_filters  = OrderedDict()
-  df_filters["passNJetSel"] = df.Filter("passOS").Filter(systStrPre+"passNJetSel")
+  df_filters["passNJetSel"] = df.Filter("passOS").Filter(systStrPre+"passNJetSel").Filter("isMuMu") #Only muon channel at the moment
 
   #
   # Choose column used for PU Id cuts
@@ -302,6 +311,51 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #   Histograms3D[histoNameFinal] = df_filters[cutLevel].Histo3D(histoInfo, "probeJet_pt","probeJet_abseta","probeJet_dilep_dphi_norm", weightName)
 
   print("Number of 3D histos: %s " %len(Histograms3D))
+  #####################################################
+  #
+  # For Gen-based Efficiency, Mistag and Purity studies
+  #
+  #####################################################
+  selGenNames = []
+  if isMC:
+    for puIDCut in puIDCuts:
+      #
+      # PassGenMatch
+      #
+      cutNameStr = "passNJetSel_probeJet_" + puIDCut + "_passGenMatch"
+      filterStr  = ptBalanceCuts[ptBalCut] + " && " + puIDCuts[puIDCut] + " && (probeJet_passGenMatch)"
+      df_filters[cutNameStr] = df_filters["passNJetSel"].Filter(filterStr)
+      selGenNames.append(cutNameStr)
+      #
+      # FailGenMatch
+      #
+      cutNameStr = "passNJetSel_probeJet_" + puIDCut + "_failGenMatch"
+      filterStr  = ptBalanceCuts[ptBalCut] + " && " + puIDCuts[puIDCut] + " && (!probeJet_passGenMatch)"
+      df_filters[cutNameStr] = df_filters["passNJetSel"].Filter(filterStr)
+      selGenNames.append(cutNameStr)
+
+  cutLevels = []
+  cutLevels += selGenNames
+  ##############################################
+  #
+  # Make the 2D histograms
+  #
+  ###############################################
+  Histograms2D = OrderedDict()
+  #
+  # etaBins
+  #
+  for cutLevel in cutLevels:
+    histoNameFinal  = "h2_%s_probeJet_pt_eta_count%s" %(cutLevel,systStrPost)
+    histoInfo = ROOT.RDF.TH2DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray)
+    Histograms2D[histoNameFinal] = df_filters[cutLevel].Histo2D(histoInfo, "probeJet_pt","probeJet_eta", weightName)
+
+  print("Number of 2D histos: %s " %len(Histograms2D))
+  ##############################################
+  #
+  # This will trigger the lazy actions
+  #
+  ###############################################
   numOfEvents = df.Count()
   print("Number of events in sample: %s " %numOfEvents.GetValue())
 
@@ -339,7 +393,7 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   
   Histograms = OrderedDict()
   #
-  # Loop over cutLevels
+  # Loop over TH3s
   #
   for hist3DName in Histograms3D:
     Histograms = ProjectTH3(Histograms3D[hist3DName].GetValue(), Histograms, systStrPost)
@@ -364,6 +418,10 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   for hist3DName in Histograms3D:
     Histograms3D[hist3DName].Write()
 
+  # Loop over the Histograms2D dictionary and store TH2 in ROOT file
+  for hist2DName in Histograms2D:
+    Histograms2D[hist2DName].Write()
+
   # Loop over the Histograms1D dictionary and store TH1 in ROOT file
   for histName in Histograms:
     Histograms[histName].Write()
@@ -382,10 +440,10 @@ if __name__== "__main__":
   parser.add_argument('--useNewTraining', dest='useNewTraining', action='store_true')
 
   args = parser.parse_args()
-  print "sample = %s" %(args.sample)
-  print "ncores = %d" %(args.cores)
-  print "useSkimNtuples = %r" %(args.useSkimNtuples)
-  print "useNewTraining = %r" %(args.useNewTraining)
+  print("sample = %s" %(args.sample))
+  print("ncores = %d" %(args.cores))
+  print("useSkimNtuples = %r" %(args.useSkimNtuples))
+  print("useNewTraining = %r" %(args.useNewTraining))
 
   isMC = False
   if "MC" in args.sample:
@@ -420,4 +478,4 @@ if __name__== "__main__":
   time_end = datetime.datetime.now()
   elapsed = time_end - time_start
   elapsed_str = str(datetime.timedelta(seconds=elapsed.seconds))
-  print("MakeHistograms.py::DONE::Sample("+args.sample+")::Time("+str(time_end)+")::Elapsed("+elapsed_str+")")
+  print("MakeHistogramsHisto3D.py::DONE::Sample("+args.sample+")::Time("+str(time_end)+")::Elapsed("+elapsed_str+")")

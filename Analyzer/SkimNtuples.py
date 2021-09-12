@@ -28,7 +28,7 @@ def main(sample_name):
     EOSDIR=SampleList.EOSDIR
     NTUPDIR=SampleList.NTUPDIR
 
-  print "Globbing File Paths:"
+  print("Globbing File Paths:")
   FileList = []
   for files in crabFiles:
     print files
@@ -37,9 +37,9 @@ def main(sample_name):
   # Creating std::vector as filelist holder to be plugged into RDataFrame
   vec = ROOT.vector('string')()
   
-  print "List of files for the RDataFrame:"
+  print("List of files for the RDataFrame:")
   for f in FileList:
-    print f
+    print(f)
     vec.push_back(f)
   
   # Read all files into RDataFrame
@@ -105,14 +105,16 @@ def main(sample_name):
   #
   #
   initialCount = df.Count()
+  finalCount = df_filters["passNJetSelAll"].Count()
   #
   # Save events with exactly one jet
   #
   outTreeName="Events"
   outTreeFileName = "%sntuple_%s.root" %(prefix,sample_name)
-  print "Save tree %s in file %s" %(outTreeName,outTreeFileName)
+  print("Save tree %s in file %s"%(outTreeName,outTreeFileName))
   df_filters["passNJetSelAll"].Snapshot(outTreeName, outTreeFileName) 
-  print "Initial Events in Tree: ", initialCount.GetValue()
+  print("Initial NEvents in Tree:    "+str(initialCount.GetValue()))
+  print("Final NEvents in Skim Tree: "+str(finalCount.GetValue()))
 
 if __name__== "__main__":
   time_start = datetime.datetime.now()
@@ -123,8 +125,8 @@ if __name__== "__main__":
   parser.add_argument('-c', '--cores',  type=int,  default=4)
 
   args = parser.parse_args()
-  print "sample = %s" %(args.sample)
-  print "ncores = %d" %(args.cores)
+  print("sample = %s"%(args.sample))
+  print("ncores = %d"%(args.cores))
  
   ROOT.ROOT.EnableImplicitMT(args.cores)
   main(args.sample)
