@@ -500,7 +500,23 @@ def main():
         mc_filename   = inputDir+"/Histo_MCUL17_DY_MG.root"
         if useNLO:    mc_filename   = inputDir+"/Histo_MCUL17_DY_AMCNLO.root"
         if useHerwig: mc_filename   = inputDir+"/Histo_MCUL17_DY_MG_HW.root"
+    elif year == "UL2018":
+        data_filename = inputDir+"/Histo_DataUL18.root"
+        mc_filename   = inputDir+"/Histo_MCUL18_DY_MG.root"
+        if useNLO:    mc_filename   = inputDir+"/Histo_MCUL18_DY_AMCNLO.root"
+        if useHerwig: mc_filename   = inputDir+"/Histo_MCUL18_DY_MG_HW.root"
+    elif year == "UL2016APV":
+        data_filename = inputDir+"/Histo_DataUL16APV.root"
+        mc_filename   = inputDir+"/Histo_MCUL16APV_DY_MG.root"
+        if useNLO:    mc_filename   = inputDir+"/Histo_MCUL16APV_DY_AMCNLO.root"
+        if useHerwig: mc_filename   = inputDir+"/Histo_MCUL16APV_DY_MG_HW.root"
+    elif year == "UL2016":
+        data_filename = inputDir+"/Histo_DataUL16.root"
+        mc_filename   = inputDir+"/Histo_MCUL16_DY_MG.root"
+        if useNLO:    mc_filename   = inputDir+"/Histo_MCUL16_DY_AMCNLO.root"
+        if useHerwig: mc_filename   = inputDir+"/Histo_MCUL16_DY_MG_HW.root"
   
+
     ROOT.gStyle.SetOptStat(0)
     ROOT.gStyle.SetMarkerSize(0.5)
     # ROOT.gStyle.SetOptLogx()
