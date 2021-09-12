@@ -33,6 +33,8 @@ if __name__ == '__main__':
     primaryName   = primaryName.replace("_13TeV","")
     primaryName   = primaryName.replace("pythia","py")
     primaryName   = primaryName.replace("herwig","hw")
+    primaryName   = primaryName.replace("powhegMiNNLO","pwhg")
+    primaryName   = primaryName.replace("-photos","")
     #
     # TO DO: Fix This
     #
