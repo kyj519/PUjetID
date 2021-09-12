@@ -35,7 +35,7 @@ def PlotSlices(inFileName):
 
   for i in range(0,len(_pt)):
     iBin = i+1
-    histName = "h_mistag_mcUL2017_Medium_pt"+_pt[i]+"_eta"
+    histName = "h_mistag_mcUL17_Medium_pt"+_pt[i]+"_eta"
     histoDict[histName] = histo2D.ProjectionY(histName,iBin,iBin)
     print i
 
