@@ -6,13 +6,24 @@ log                   = BatchLog/Skim.$(ClusterId).log
 stream_output         = True
 stream_error          = True
 
-+JobFlavour  = "microcentury"
++JobFlavour  = "longlunch"
 request_cpus = 4
 arguments    = $(SAMPLE) 4
 queue SAMPLE from (
 MCUL17_DY_MG
 MCUL18_DY_MG
 MCUL16APV_DY_MG
+)
+
++JobFlavour  = "microcentury"
+request_cpus = 4
+arguments    = $(SAMPLE) 4
+queue SAMPLE from (
+MCUL17_DY_AMCNLO
+MCUL18_DY_AMCNLO
+MCUL16APV_DY_AMCNLO
+MCUL16APV_DYToMuMu_PHG
+MCUL16_DYToMuMu_PHG
 )
 
 +JobFlavour  = "espresso"
@@ -33,4 +44,5 @@ DataUL16APVC_DoubleMuon
 DataUL16APVD_DoubleMuon
 DataUL16APVE_DoubleMuon
 DataUL16APVF_DoubleMuon
-)
+DataUL16F_DoubleMuon
+DataUL16G_DoubleMuon
