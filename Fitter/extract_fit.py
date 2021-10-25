@@ -464,6 +464,9 @@ def main():
     parser.add_argument("--wp",        dest="workingpoint",  help="Loose or Medium or Tight",  type=str)
     parser.add_argument("--useNLO",    default=False,        action='store_true')
     parser.add_argument("--useHerwig", default=False,        action='store_true')
+    parser.add_argument("--usePowheg", default=False,        action='store_true')
+    parser.add_argument("--syst",      dest="syst",          default="", help="jerUp,jerDown,jesTotalUp,jesTotalDown", type=str)
+
     args = parser.parse_args()    
     
     inputDir  = args.input
@@ -472,6 +475,8 @@ def main():
     workingpoint = args.workingpoint
     useNLO = args.useNLO
     useHerwig = args.useHerwig
+    usePowheg = args.usePowheg
+    syst = args.syst
 
     # Make output directory if it does not exist
     if not os.path.exists(outputDir):
@@ -499,23 +504,33 @@ def main():
         data_filename = inputDir+"/Histo_DataUL17.root"
         mc_filename   = inputDir+"/Histo_MCUL17_DY_MG.root"
         if useNLO:    mc_filename   = inputDir+"/Histo_MCUL17_DY_AMCNLO.root"
-        if useHerwig: mc_filename   = inputDir+"/Histo_MCUL17_DY_MG_HW.root"
+        # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL17_DY_MG_HW.root"
+        # if usePowheg: mc_filename   = inputDir+"/Histo_MCUL17_DYToMuMu_PHG.root"
     elif year == "UL2018":
         data_filename = inputDir+"/Histo_DataUL18.root"
         mc_filename   = inputDir+"/Histo_MCUL18_DY_MG.root"
         if useNLO:    mc_filename   = inputDir+"/Histo_MCUL18_DY_AMCNLO.root"
-        if useHerwig: mc_filename   = inputDir+"/Histo_MCUL18_DY_MG_HW.root"
+        # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL18_DY_MG_HW.root"
+        # if usePowheg: mc_filename   = inputDir+"/Histo_MCUL18_DYToMuMu_PHG.root"
     elif year == "UL2016APV":
         data_filename = inputDir+"/Histo_DataUL16APV.root"
         mc_filename   = inputDir+"/Histo_MCUL16APV_DY_MG.root"
         if useNLO:    mc_filename   = inputDir+"/Histo_MCUL16APV_DY_AMCNLO.root"
-        if useHerwig: mc_filename   = inputDir+"/Histo_MCUL16APV_DY_MG_HW.root"
+        # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL16APV_DY_MG_HW.root"
+        if usePowheg: mc_filename   = inputDir+"/Histo_MCUL16APV_DYToMuMu_PHG.root"
     elif year == "UL2016":
         data_filename = inputDir+"/Histo_DataUL16.root"
         mc_filename   = inputDir+"/Histo_MCUL16_DY_MG.root"
         if useNLO:    mc_filename   = inputDir+"/Histo_MCUL16_DY_AMCNLO.root"
-        if useHerwig: mc_filename   = inputDir+"/Histo_MCUL16_DY_MG_HW.root"
-  
+        # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL16_DY_MG_HW.root"
+        if usePowheg: mc_filename   = inputDir+"/Histo_MCUL16_DYToMuMu_PHG.root"
+
+
+    if syst != "":
+        if useNLO or useHerwig or usePowheg:
+            raise Exception("Can't specify systematics for NLO/Herwig/Powheg samples. Only LO sample.")
+        else:
+            mc_filename = mc_filename.replace(".root","_"+syst+".root")
 
     ROOT.gStyle.SetOptStat(0)
     ROOT.gStyle.SetMarkerSize(0.5)
@@ -630,33 +645,37 @@ def main():
                 etaBinStr = "_abseta"+_eta[j]
 
             binStr = etaBinStr+ptBinStr
+
+            systStr=""
+            if syst != "":
+                systStr += "_"+syst
             #
             # Retrieve histograms: PASS ID, GOOD balance
             #
-            h_dphi_mc_genunmatched_PASS = f_mc.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm")
-            h_dphi_mc_genmatched_PASS   = f_mc.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm")
-            h_dphi_mc_PASS              = f_mc.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_dphi_mc_genunmatched_PASS = f_mc.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
+            h_dphi_mc_genmatched_PASS   = f_mc.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
+            h_dphi_mc_PASS              = f_mc.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
             h_dphi_data_PASS            = f_data.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
             #
             # Retrieve histograms: FAIL ID, GOOD balance
             #
-            h_dphi_mc_genunmatched_FAIL = f_mc.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm")
-            h_dphi_mc_genmatched_FAIL   = f_mc.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm")
-            h_dphi_mc_FAIL              = f_mc.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_dphi_mc_genunmatched_FAIL = f_mc.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
+            h_dphi_mc_genmatched_FAIL   = f_mc.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
+            h_dphi_mc_FAIL              = f_mc.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
             h_dphi_data_FAIL            = f_data.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
             #
             # Retrieve histograms: PASS ID, BAD balance
             #
-            h_dphi_mc_genunmatched_PASS_badbalance =  f_mc.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm")
-            h_dphi_mc_genmatched_PASS_badbalance   =  f_mc.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm")
-            h_dphi_mc_PASS_badbalance              =  f_mc.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_dphi_mc_genunmatched_PASS_badbalance =  f_mc.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
+            h_dphi_mc_genmatched_PASS_badbalance   =  f_mc.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
+            h_dphi_mc_PASS_badbalance              =  f_mc.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
             h_dphi_data_PASS_badbalance            =  f_data.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
             #
             # Retrieve histograms: FAIL ID, BAD balance
             #
-            h_dphi_mc_genunmatched_FAIL_badbalance = f_mc.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm")
-            h_dphi_mc_genmatched_FAIL_badbalance   = f_mc.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm")
-            h_dphi_mc_FAIL_badbalance              = f_mc.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_dphi_mc_genunmatched_FAIL_badbalance = f_mc.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
+            h_dphi_mc_genmatched_FAIL_badbalance   = f_mc.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
+            h_dphi_mc_FAIL_badbalance              = f_mc.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
             h_dphi_data_FAIL_badbalance            = f_data.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
             #
             # Perform fit on MC
