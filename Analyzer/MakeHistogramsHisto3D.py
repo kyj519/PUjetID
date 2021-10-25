@@ -171,7 +171,7 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   # Guide on how to read the pileup ID bitmap variable: 
   # https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJetID#miniAOD_and_nanoAOD
   #
-  # Note: For ULNanoAODv9 UL2016 APV and nonAPV, there is a bug where Tight and Loose WP cuts were 
+  # Note: For ULNanoAODv9 UL2016 APV and nonAPV, there is a bug where Tight and Loose WP cuts were
   # switched (https://github.com/cms-sw/cmssw/blob/CMSSW_10_6_26/RecoJets/JetProducers/python/PileupJetIDCutParams_cfi.py#L82-L101)
   # so the bit ordering has to be reversed
   #
@@ -460,9 +460,10 @@ if __name__== "__main__":
       "jerUp",
       "jerDown"
     ]
-  # Don't do ak4Systematics for MG+HW and AMCNLO
+  # Don't do ak4Systematics for MG+HW, AMCNLO and PHG
   if "MG_HW" in args.sample: ak4Systematics=[]
   if "AMCNLO" in args.sample: ak4Systematics=[]
+  if "PHG" in args.sample: ak4Systematics=[]
   
   ROOT.ROOT.EnableImplicitMT(args.cores)
   #
