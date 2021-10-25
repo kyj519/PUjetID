@@ -50,7 +50,10 @@ if era == "UL2017":
   if isMC:
     files = ["/store/mc/RunIISummer20UL17NanoAODv9/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/106X_mc2017_realistic_v9-v1/70000/96891E58-6248-4046-8701-CDC485783799.root"]
   else:
-    if isDoubleMuonData: files = ["/store/data/Run2017F/DoubleMuon/NANOAOD/UL2017_MiniAODv2_NanoAODv9-v1/120000/16F764BE-E96D-A44D-B252-272721365F16.root"]
+    if isDoubleMuonData: files = [
+      # "/store/data/Run2017F/DoubleMuon/NANOAOD/UL2017_MiniAODv2_NanoAODv9-v1/120000/16F764BE-E96D-A44D-B252-272721365F16.root"
+      "/store/data/Run2017B/DoubleMuon/NANOAOD/UL2017_MiniAODv2_NanoAODv9-v1/120000/7CDC57C5-1722-094A-AB1B-00B93B31CA83.root"
+    ]
     elif isDoubleElecData: files = ["/store/data/Run2017F/DoubleEG/NANOAOD/UL2017_MiniAODv2_NanoAODv9-v1/270000/0F4C5317-F7FD-3C4C-AC79-231630A7E4E1.root"]
 elif era == "UL2018":
   if isMC:
