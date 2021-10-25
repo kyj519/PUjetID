@@ -57,11 +57,11 @@ done
 #
 #
 #
-ERAS=(
-UL2016APV
-UL2016
-)
-for YEAR in ${ERAS[@]}
-do
-  RunFitterPowheg ${INDIR} ${OUTDIR} ${YEAR}
-done
+# ERAS=(
+# UL2016APV
+# UL2016
+# )
+# for YEAR in ${ERAS[@]}
+# do
+#   RunFitterPowheg ${INDIR} ${OUTDIR} ${YEAR}
+# done
