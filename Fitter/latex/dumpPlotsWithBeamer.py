@@ -5,23 +5,49 @@ import os
 def main():
 
   version="results_ULNanoV9_v1p1"
+  showFitInEachBin=True
 
   eras = [
-    # "UL2017",
-    # "UL2018",
-    "UL2016APV"
+    "UL2017",
+    "UL2018",
+    "UL2016APV",
   ]
 
   for year in eras:
     outFileName="DumpPlots_PUIDSF_"+version+"_Baseline_"+year
     inDir="../"+version+"/Baseline/"
-    CompilePlots(inDir, version, year, outFileName)
+    CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
-    # outFileName="DumpPlots_PUIDSF_"+version+"_NLO_"+year
-    # inDir="../"+version+"/NLO/"
-    # CompilePlots(inDir, version, year, outFileName)
+    outFileName="DumpPlots_PUIDSF_"+version+"_NLO_"+year
+    inDir="../"+version+"/NLO/"
+    CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
-def CompilePlots(inDir, version, year, outFileName):
+    outFileName="DumpPlots_PUIDSF_"+version+"_jerUp_"+year
+    inDir="../"+version+"/jerUp/"
+    CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
+
+    outFileName="DumpPlots_PUIDSF_"+version+"_jerDown_"+year
+    inDir="../"+version+"/jerDown/"
+    CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
+
+    outFileName="DumpPlots_PUIDSF_"+version+"_jesTotalUp_"+year
+    inDir="../"+version+"/jesTotalUp/"
+    CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
+
+    outFileName="DumpPlots_PUIDSF_"+version+"_jesTotalDown_"+year
+    inDir="../"+version+"/jesTotalDown/"
+    CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
+
+  # eras = [
+  #   "UL2016APV",
+  #   "UL2016",
+  # ]
+  # for year in eras:
+  #   outFileName="DumpPlots_PUIDSF_"+version+"_Powheg_"+year
+  #   inDir="../"+version+"/Powheg/"
+  #   CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
+
+def CompilePlots(inDir, version, year, outFileName, showFitInEachBin=True):
   
   ptBins = [
     ("20To25", "$20 < p_{T} < 25$"),
@@ -110,7 +136,7 @@ def CompilePlots(inDir, version, year, outFileName):
   makeHeader(outFile)
   makeTemplates(outFile)
   makeBeginDocument(outFile)
-  makeMainContent(outFile,WPYearList,binList)
+  makeMainContent(outFile,WPYearList,binList, showFitInEachBin)
   makeEndDocument(outFile)
   outFile.close()
 
@@ -259,13 +285,14 @@ def makeBeginDocument(outFile):
   outFile.write("\\tableofcontents[hideallsubsections]\n")
   outFile.write("\\end{frame}\n")
 
-def makeMainContent(outFile,WPYearList,binList):
+def makeMainContent(outFile,WPYearList,binList,showFitInEachBin=True):
   for WPYear in WPYearList:
     outFile.write("\\section{%s}\n" %WPYear[2])
     outFile.write("\\PlotsEffMistagSF{%s}{%s}{%s}\n" %(WPYear[0],WPYear[1],WPYear[2]))
     outFile.write("\\PlotsEffMistagSFSlices{%s}{%s}{%s}\n" %(WPYear[0],WPYear[1],WPYear[2]))
-    for binEntry in binList:
-      outFile.write("\\PlotsForEachBinDataAndMC{%s}{%s}{%s, %s}\n" %(WPYear[0],binEntry[0],binEntry[1],WPYear[2]))
+    if showFitInEachBin:
+      for binEntry in binList:
+        outFile.write("\\PlotsForEachBinDataAndMC{%s}{%s}{%s, %s}\n" %(WPYear[0],binEntry[0],binEntry[1],WPYear[2]))
 
 def makeEndDocument(outFile):
   outFile.write("\\end{document}\n")
@@ -273,5 +300,3 @@ def makeEndDocument(outFile):
 if __name__ == "__main__":
   main()
   
-
-
