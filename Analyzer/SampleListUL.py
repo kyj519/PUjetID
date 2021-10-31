@@ -1,7 +1,7 @@
 import collections
 from SampleList import Sample
 
-version="DiLeptonSkim_ULNanoV9_v1p1"
+version="DiLeptonSkim_ULNanoV9_v1p3"
 
 EOSURL="root://eoscms.cern.ch/"
 EOSDIR="/eos/cms/store/group/phys_jetmet/nbinnorj/"
@@ -147,6 +147,7 @@ Samples["MCUL18_DY_MG"] = Sample(
   name="MCUL18_DY_MG",
   crabFiles=[
     EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/JetPUId_MCUL18NanoAODv9_"+version+"/*/*/tree_*.root",
+    EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/JetPUId_MCUL18NanoAODv9_ext1_"+version+"/*/*/tree_*.root",
   ],
   ntupleFiles=[
     EOSDIR+NTUPDIR+"ntuple_MCUL18_DY_MG.root"
@@ -335,52 +336,52 @@ Samples["DataUL16APVF_DoubleMuon"] = Sample(
 #
 # Data DoubleEG
 #
-# Samples["DataUL16APVB_DoubleEG"] = Sample(
-#   name="DataUL16APVB_DoubleEG",
-#   crabFiles=[
-#     EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016B-ver1_DataUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
-#     EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016B-ver2_DataUL16APVNanoAODv9_"+version+"/*/*/tree_*.root"
-#   ],
-#   ntupleFiles=[
-#     EOSDIR+NTUPDIR+"ntuple_DataUL16APVB_DoubleEG.root"
-#   ]
-# )
-# Samples["DataUL16APVC_DoubleEG"] = Sample(
-#   name="DataUL16APVC_DoubleEG",
-#   crabFiles=[
-#     EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016C-DataUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
-#   ],
-#   ntupleFiles=[
-#     EOSDIR+NTUPDIR+"ntuple_DataUL16APVC_DoubleEG.root"
-#   ]
-# )
-# Samples["DataUL16APVD_DoubleEG"] = Sample(
-#   name="DataUL16APVD_DoubleEG",
-#   crabFiles=[
-#     EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016D-DataUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
-#   ],
-#   ntupleFiles=[
-#     EOSDIR+NTUPDIR+"ntuple_DataUL16APVD_DoubleEG.root"
-#   ]
-# )
-# Samples["DataUL16APVE_DoubleEG"] = Sample(
-#   name="DataUL16APVE_DoubleEG",
-#   crabFiles=[
-#     EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016E-DataUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
-#   ],
-#   ntupleFiles=[
-#     EOSDIR+NTUPDIR+"ntuple_DataUL16APVE_DoubleEG.root"
-#   ]
-# )
-# Samples["DataUL16APVF_DoubleEG"] = Sample(
-#   name="DataUL16APVF_DoubleEG",
-#   crabFiles=[
-#     EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016F-DataUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
-#   ],
-#   ntupleFiles=[
-#     EOSDIR+NTUPDIR+"ntuple_DataUL16APVF_DoubleEG.root"
-#   ]
-# )
+Samples["DataUL16APVB_DoubleEG"] = Sample(
+  name="DataUL16APVB_DoubleEG",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016B-ver1_DataUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
+    EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016B-ver2_DataUL16APVNanoAODv9_"+version+"/*/*/tree_*.root"
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_DataUL16APVB_DoubleEG.root"
+  ]
+)
+Samples["DataUL16APVC_DoubleEG"] = Sample(
+  name="DataUL16APVC_DoubleEG",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016C-DataUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_DataUL16APVC_DoubleEG.root"
+  ]
+)
+Samples["DataUL16APVD_DoubleEG"] = Sample(
+  name="DataUL16APVD_DoubleEG",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016D-DataUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_DataUL16APVD_DoubleEG.root"
+  ]
+)
+Samples["DataUL16APVE_DoubleEG"] = Sample(
+  name="DataUL16APVE_DoubleEG",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016E-DataUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_DataUL16APVE_DoubleEG.root"
+  ]
+)
+Samples["DataUL16APVF_DoubleEG"] = Sample(
+  name="DataUL16APVF_DoubleEG",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016F-DataUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_DataUL16APVF_DoubleEG.root"
+  ]
+)
 ################################################
 #
 # UL2016
@@ -455,31 +456,31 @@ Samples["DataUL16H_DoubleMuon"] = Sample(
 #
 # Data DoubleEG
 #
-# Samples["DataUL16F_DoubleEG"] = Sample(
-#   name="DataUL16F_DoubleEG",
-#   crabFiles=[
-#     EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016F-DataUL16NanoAODv9_"+version+"/*/*/tree_*.root",
-#   ],
-#   ntupleFiles=[
-#     EOSDIR+NTUPDIR+"ntuple_DataUL16F_DoubleEG.root"
-#   ]
-# )
-# Samples["DataUL16G_DoubleEG"] = Sample(
-#   name="DataUL16G_DoubleEG",
-#   crabFiles=[
-#     EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016G-DataUL16NanoAODv9_"+version+"/*/*/tree_*.root",
-#   ],
-#   ntupleFiles=[
-#     EOSDIR+NTUPDIR+"ntuple_DataUL16G_DoubleEG.root"
-#   ]
-# )
-# Samples["DataUL16H_DoubleEG"] = Sample(
-#   name="DataUL16H_DoubleEG",
-#   crabFiles=[
-#     EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016H-DataUL16NanoAODv9_"+version+"/*/*/tree_*.root",
-#   ],
-#   ntupleFiles=[
-#     EOSDIR+NTUPDIR+"ntuple_DataUL16H_DoubleEG.root"
-#   ]
-# )
+Samples["DataUL16F_DoubleEG"] = Sample(
+  name="DataUL16F_DoubleEG",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016F-DataUL16NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_DataUL16F_DoubleEG.root"
+  ]
+)
+Samples["DataUL16G_DoubleEG"] = Sample(
+  name="DataUL16G_DoubleEG",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016G-DataUL16NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_DataUL16G_DoubleEG.root"
+  ]
+)
+Samples["DataUL16H_DoubleEG"] = Sample(
+  name="DataUL16H_DoubleEG",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DoubleEG/JetPUId_Run2016H-DataUL16NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_DataUL16H_DoubleEG.root"
+  ]
+)
 
