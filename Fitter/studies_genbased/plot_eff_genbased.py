@@ -21,17 +21,17 @@ def main():
   if not os.path.exists(outputDir):
       os.makedirs(outputDir)
 
-  inFileName="../Analyzer/histos3D/Histo_MCUL17_DY_MG.root"
+  inFileName="../../Analyzer/histos3D/Histo_MCUL17_DY_MG.root"
   Plot2DGenEff(inFileName,outputDir,"UL2017","Loose")
   Plot2DGenEff(inFileName,outputDir,"UL2017","Medium")
   Plot2DGenEff(inFileName,outputDir,"UL2017","Tight")
 
-  inFileName="../Analyzer/histos3D/Histo_MCUL18_DY_MG.root"
+  inFileName="../../Analyzer/histos3D/Histo_MCUL18_DY_MG.root"
   Plot2DGenEff(inFileName,outputDir,"UL2018","Loose")
   Plot2DGenEff(inFileName,outputDir,"UL2018","Medium")
   Plot2DGenEff(inFileName,outputDir,"UL2018","Tight")
 
-  inFileName="../Analyzer/histos3D/Histo_MCUL16APV_DY_MG.root"
+  inFileName="../../Analyzer/histos3D/Histo_MCUL16APV_DY_MG.root"
   Plot2DGenEff(inFileName,outputDir,"UL2016APV","Loose")
   Plot2DGenEff(inFileName,outputDir,"UL2016APV","Medium")
   Plot2DGenEff(inFileName,outputDir,"UL2016APV","Tight")
@@ -114,6 +114,8 @@ def Plot2DGenEff(inFileName, outputDir, year="UL17", wp="Loose"):
   ROOT.gStyle.SetPaintTextFormat("4.2f")
   textsize=1
 
+  wpShort=wp[0]
+
   inFile = ROOT.TFile(inFileName)
 
   #
@@ -149,10 +151,10 @@ def Plot2DGenEff(inFileName, outputDir, year="UL17", wp="Loose"):
   h2_eff.SetMarkerSize(textsize)
 
   h2_eff.Draw("colztexterr")
-  c1.SaveAs(outputDir+"h2_gen_eff_mc_"+year+"_"+wp+".pdf")
-  h2_eff.SetName("h2_gen_eff_mc"+year+"_"+wp)
-  h2_eff.SaveAs(outputDir+"h2_gen_eff_mc_"+year+"_"+wp+".root")
-  PlotPtSlices(h2_eff, "h_gen_eff_mc_"+year+"_"+wp, outputDir+"h_gen_eff_mc_"+year+"_"+wp+"_ptBins_eta.pdf")
+  c1.SaveAs(outputDir+"h2_gen_eff_mc_"+year+"_"+wpShort+".pdf")
+  h2_eff.SetName("h2_gen_eff_mc"+year+"_"+wpShort)
+  h2_eff.SaveAs(outputDir+"h2_gen_eff_mc_"+year+"_"+wpShort+".root")
+  PlotPtSlices(h2_eff, "h_gen_eff_mc_"+year+"_"+wpShort, outputDir+"h_gen_eff_mc_"+year+"_"+wpShort+"_ptBins_eta.pdf")
   del c1
 
   #
@@ -177,10 +179,10 @@ def Plot2DGenEff(inFileName, outputDir, year="UL17", wp="Loose"):
   h2_mistag.SetMaximum(1.0)
   h2_mistag.SetMarkerSize(textsize)
   h2_mistag.Draw("colztexterr")
-  c2.SaveAs(outputDir+"h2_gen_mistag_mc_"+year+"_"+wp+".pdf")
-  h2_mistag.SetName("h2_gen_mistag_mc"+year+"_"+wp)
-  h2_mistag.SaveAs(outputDir+"h2_gen_mistag_mc_"+year+"_"+wp+".root")
-  PlotPtSlices(h2_mistag, "h_gen_mistag_mc_"+year+"_"+wp, outputDir+"h_gen_mistag_mc_"+year+"_"+wp+"_ptBins_eta.pdf")
+  c2.SaveAs(outputDir+"h2_gen_mistag_mc_"+year+"_"+wpShort+".pdf")
+  h2_mistag.SetName("h2_gen_mistag_mc"+year+"_"+wpShort)
+  h2_mistag.SaveAs(outputDir+"h2_gen_mistag_mc_"+year+"_"+wpShort+".root")
+  PlotPtSlices(h2_mistag, "h_gen_mistag_mc_"+year+"_"+wpShort, outputDir+"h_gen_mistag_mc_"+year+"_"+wpShort+"_ptBins_eta.pdf")
   del c2
 
   #
@@ -203,8 +205,8 @@ def Plot2DGenEff(inFileName, outputDir, year="UL17", wp="Loose"):
   h2_purity.SetMaximum(1.0)
   h2_purity.SetMarkerSize(textsize)
   h2_purity.Draw("colztexterr")
-  c3.SaveAs(outputDir+"h2_gen_purity_mc_"+year+"_"+wp+".pdf")
-  PlotPtSlices(h2_purity, "h_gen_purity_mc_"+year+"_"+wp, outputDir+"h_gen_purity_mc_"+year+"_"+wp+"_ptBins_eta.pdf")
+  c3.SaveAs(outputDir+"h2_gen_purity_mc_"+year+"_"+wpShort+".pdf")
+  PlotPtSlices(h2_purity, "h_gen_purity_mc_"+year+"_"+wpShort, outputDir+"h_gen_purity_mc_"+year+"_"+wpShort+"_ptBins_eta.pdf")
   del c3
 
   inFile.Close()
