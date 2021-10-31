@@ -52,8 +52,8 @@ def main(sample_name):
     ak4Systematics=[
       "jesTotalUp",
       "jesTotalDown",
-      "jerUp",
-      "jerDown"
+      # "jerUp",
+      # "jerDown"
     ]
   
   #
