@@ -4,8 +4,8 @@ import os
 
 def main():
 
-  version="results_ULNanoV9_v1p1"
-  showFitInEachBin=True
+  version="results_ULNanoV9_v1p3"
+  showFitInEachBin=False
 
   eras = [
     "UL2017",
@@ -20,14 +20,6 @@ def main():
 
     outFileName="DumpPlots_PUIDSF_"+version+"_NLO_"+year
     inDir="../"+version+"/NLO/"
-    CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
-
-    outFileName="DumpPlots_PUIDSF_"+version+"_jerUp_"+year
-    inDir="../"+version+"/jerUp/"
-    CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
-
-    outFileName="DumpPlots_PUIDSF_"+version+"_jerDown_"+year
-    inDir="../"+version+"/jerDown/"
     CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
     outFileName="DumpPlots_PUIDSF_"+version+"_jesTotalUp_"+year
@@ -90,45 +82,45 @@ def CompilePlots(inDir, version, year, outFileName, showFitInEachBin=True):
   WPYearList = []
   if year == "2016":
     WPYearList = [
-      (inDir+"/2016_WPLoose",  "2016_Loose",  "2016 Loose WP"),
-      (inDir+"/2016_WPMedium", "2016_Medium", "2016 Medium WP"),
-      (inDir+"/2016_WPTight",  "2016_Tight",  "2016 Tight WP"),
+      (inDir+"/2016_WPLoose",  "2016_L",  "2016 Loose WP"),
+      (inDir+"/2016_WPMedium", "2016_M",  "2016 Medium WP"),
+      (inDir+"/2016_WPTight",  "2016_T",  "2016 Tight WP"),
     ]
   elif year == "2017":
     WPYearList = [
-      (inDir+"/2017_WPLoose",  "2017_Loose",  "2017 Loose WP"),
-      (inDir+"/2017_WPMedium", "2017_Medium", "2017 Medium WP"),
-      (inDir+"/2017_WPTight",  "2017_Tight",  "2017 Tight WP"),
+      (inDir+"/2017_WPLoose",  "2017_L",  "2017 Loose WP"),
+      (inDir+"/2017_WPMedium", "2017_M",  "2017 Medium WP"),
+      (inDir+"/2017_WPTight",  "2017_T",  "2017 Tight WP"),
     ]
   elif year == "2018":
     WPYearList = [
-      (inDir+"/2018_WPLoose",  "2018_Loose",  "2018 Loose WP"),
-      (inDir+"/2018_WPMedium", "2018_Medium", "2018 Medium WP"),
-      (inDir+"/2018_WPTight",  "2018_Tight",  "2018 Tight WP"),
+      (inDir+"/2018_WPLoose",  "2018_L",  "2018 Loose WP"),
+      (inDir+"/2018_WPMedium", "2018_M",  "2018 Medium WP"),
+      (inDir+"/2018_WPTight",  "2018_T",  "2018 Tight WP"),
     ]
   elif year == "UL2017":
     WPYearList = [
-      (inDir+"/UL2017_WPLoose",  "UL2017_Loose",  "UL2017 Loose WP"),
-      (inDir+"/UL2017_WPMedium", "UL2017_Medium", "UL2017 Medium WP"),
-      (inDir+"/UL2017_WPTight",  "UL2017_Tight",  "UL2017 Tight WP"),
+      (inDir+"/UL2017_WPLoose",  "UL2017_L",  "UL2017 Loose WP"),
+      (inDir+"/UL2017_WPMedium", "UL2017_M",  "UL2017 Medium WP"),
+      (inDir+"/UL2017_WPTight",  "UL2017_T",  "UL2017 Tight WP"),
     ]
   elif year == "UL2018":
     WPYearList = [
-      (inDir+"/UL2018_WPLoose",  "UL2018_Loose",  "UL2018 Loose WP"),
-      (inDir+"/UL2018_WPMedium", "UL2018_Medium", "UL2018 Medium WP"),
-      (inDir+"/UL2018_WPTight",  "UL2018_Tight",  "UL2018 Tight WP"),
+      (inDir+"/UL2018_WPLoose",  "UL2018_L",  "UL2018 Loose WP"),
+      (inDir+"/UL2018_WPMedium", "UL2018_M",  "UL2018 Medium WP"),
+      (inDir+"/UL2018_WPTight",  "UL2018_T",  "UL2018 Tight WP"),
     ]
   elif year == "UL2016APV":
     WPYearList = [
-      (inDir+"/UL2016APV_WPLoose",  "UL2016APV_Loose",  "UL2016 APV Loose WP"),
-      (inDir+"/UL2016APV_WPMedium", "UL2016APV_Medium", "UL2016 APV Medium WP"),
-      (inDir+"/UL2016APV_WPTight",  "UL2016APV_Tight",  "UL2016 APV Tight WP"),
+      (inDir+"/UL2016APV_WPLoose",  "UL2016APV_L",  "UL2016 (early) Loose WP"),
+      (inDir+"/UL2016APV_WPMedium", "UL2016APV_M",  "UL2016 (early) Medium WP"),
+      (inDir+"/UL2016APV_WPTight",  "UL2016APV_T",  "UL2016 (early) Tight WP"),
     ]
   elif year == "UL2016":
     WPYearList = [
-      (inDir+"/UL2016_WPLoose",  "UL2016_Loose",  "UL2016 nonAPV Loose WP"),
-      (inDir+"/UL2016_WPMedium", "UL2016_Medium", "UL2016 nonAPV Medium WP"),
-      (inDir+"/UL2016_WPTight",  "UL2016_Tight",  "UL2016 nonAPV Tight WP"),
+      (inDir+"/UL2016_WPLoose",  "UL2016_L",  "UL2016 (late) Loose WP"),
+      (inDir+"/UL2016_WPMedium", "UL2016_M",  "UL2016 (late) Medium WP"),
+      (inDir+"/UL2016_WPTight",  "UL2016_T",  "UL2016 (late) Tight WP"),
     ]
 
   outFile = open(outFileName+".tex","w")
@@ -136,7 +128,7 @@ def CompilePlots(inDir, version, year, outFileName, showFitInEachBin=True):
   makeHeader(outFile)
   makeTemplates(outFile)
   makeBeginDocument(outFile)
-  makeMainContent(outFile,WPYearList,binList, showFitInEachBin)
+  makeMainContent(outFile,WPYearList,binList,showFitInEachBin)
   makeEndDocument(outFile)
   outFile.close()
 
@@ -213,34 +205,34 @@ def makeTemplates(outFile):
   outFile.write("\\begin{frame}\n")
   outFile.write("\\frametitle{Efficiency SF (#3)}\n")
   outFile.write("\\begin{figure}[ht]\n")
-  outFile.write("\\includegraphics[width=0.72\\textwidth]{#1/h2_eff_sf_#2}\n")
+  outFile.write("\\includegraphics[width=0.72\\textwidth]{#1/h2_eff_sf#2}\n")
   outFile.write("\\end{figure}\n")
   outFile.write("\\end{frame}\n")
   outFile.write("\\begin{frame}\n")
   outFile.write("\\frametitle{Efficiency in Data and MC (#3)}\n")
   outFile.write("\\begin{figure}[ht]\n")
   outFile.write("\\begin{minipage}[b]{0.49\\linewidth}\n")
-  outFile.write("\\includegraphics[width=\\textwidth]{#1/h2_eff_data_#2}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h2_eff_data#2}\n")
   outFile.write("\\end{minipage}\n")
   outFile.write("\\begin{minipage}[b]{0.49\\linewidth}\n")
-  outFile.write("\\includegraphics[width=\\textwidth]{#1/h2_eff_mc_#2}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h2_eff_mc#2}\n")
   outFile.write("\\end{minipage}\n")
   outFile.write("\\end{figure}\n")
   outFile.write("\\end{frame}\n")
   outFile.write("\\begin{frame}\n")
   outFile.write("\\frametitle{Mistag SF (#3)}\n")
   outFile.write("\\begin{figure}[ht]\n")
-  outFile.write("\\includegraphics[width=0.72\\textwidth]{#1/h2_mistag_sf_#2}\n")
+  outFile.write("\\includegraphics[width=0.72\\textwidth]{#1/h2_mistag_sf#2}\n")
   outFile.write("\\end{figure}\n")
   outFile.write("\\end{frame}\n")
   outFile.write("\\begin{frame}\n")
   outFile.write("\\frametitle{Mistag in Data and MC (#3)}\n")
   outFile.write("\\begin{figure}[ht]\n")
   outFile.write("\\begin{minipage}[b]{0.49\\linewidth}\n")
-  outFile.write("\\includegraphics[width=\\textwidth]{#1/h2_mistag_data_#2}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h2_mistag_data#2}\n")
   outFile.write("\\end{minipage}\n")
   outFile.write("\\begin{minipage}[b]{0.49\\linewidth}\n")
-  outFile.write("\\includegraphics[width=\\textwidth]{#1/h2_mistag_mc_#2}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h2_mistag_mc#2}\n")
   outFile.write("\\end{minipage}\n")
   outFile.write("\\end{figure}\n")
   outFile.write("\\end{frame}\n")
@@ -252,13 +244,13 @@ def makeTemplates(outFile):
   outFile.write("\\frametitle{Efficiency (Data, MC, SF) (#3)}\n")
   outFile.write("\\begin{figure}[ht]\n")
   outFile.write("\\begin{minipage}[b]{0.31\\linewidth}\n")
-  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_eff_data_#2_ptBins_eta}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_eff_data#2_ptBins_eta}\n")
   outFile.write("\\end{minipage}\n")
   outFile.write("\\begin{minipage}[b]{0.31\\linewidth}\n")
-  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_eff_mc_#2_ptBins_eta}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_eff_mc#2_ptBins_eta}\n")
   outFile.write("\\end{minipage}\n")
   outFile.write("\\begin{minipage}[b]{0.31\\linewidth}\n")
-  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_eff_sf_#2_ptBins_eta}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_eff_sf#2_ptBins_eta}\n")
   outFile.write("\\end{minipage}\n")
   outFile.write("\\end{figure}\n")
   outFile.write("\\end{frame}\n")
@@ -266,13 +258,13 @@ def makeTemplates(outFile):
   outFile.write("\\frametitle{Mistag (Data, MC, SF) (#3)}\n")
   outFile.write("\\begin{figure}[ht]\n")
   outFile.write("\\begin{minipage}[b]{0.31\\linewidth}\n")
-  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_mistag_data_#2_ptBins_eta}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_mistag_data#2_ptBins_eta}\n")
   outFile.write("\\end{minipage}\n")
   outFile.write("\\begin{minipage}[b]{0.31\\linewidth}\n")
-  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_mistag_mc_#2_ptBins_eta}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_mistag_mc#2_ptBins_eta}\n")
   outFile.write("\\end{minipage}\n")
   outFile.write("\\begin{minipage}[b]{0.31\\linewidth}\n")
-  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_mistag_sf_#2_ptBins_eta}\n")
+  outFile.write("\\includegraphics[width=\\textwidth]{#1/h_mistag_sf#2_ptBins_eta}\n")
   outFile.write("\\end{minipage}\n")
   outFile.write("\\end{figure}\n")
   outFile.write("\\end{frame}\n")

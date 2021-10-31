@@ -17,23 +17,24 @@ def main():
   if not os.path.exists(outputDir):
       os.makedirs(outputDir)
 
-  inDir_eff_fit = "./results_ULNanoV9_v1p1/Baseline/" 
+  inDir_eff_fit = "../results_ULNanoV9_v1p3/Baseline/" 
   inDir_eff_gen = "./results_eff_genbased/" 
 
   for year in ["UL2017","UL2018","UL2016APV"]:
     for wp in ["Loose","Medium","Tight"]:
+      wpShort=wp[0]
 
-      inFile_eff_fit    = ROOT.TFile.Open(inDir_eff_fit+"/"+year+"_WP"+wp+"/h2_eff_mc_"+year+"_"+wp+".root")
-      inFile_eff_gen    = ROOT.TFile.Open(inDir_eff_gen+"/h2_gen_eff_mc_"+year+"_"+wp+".root")
+      inFile_eff_fit    = ROOT.TFile.Open(inDir_eff_fit+"/"+year+"_WP"+wp+"/h2_eff_mc"+year+"_"+wpShort+".root")
+      inFile_eff_gen    = ROOT.TFile.Open(inDir_eff_gen+"/h2_gen_eff_mc"+year+"_"+wpShort+".root")
 
-      inFile_mistag_fit = ROOT.TFile.Open(inDir_eff_fit+"/"+year+"_WP"+wp+"/h2_mistag_mc_"+year+"_"+wp+".root")
-      inFile_mistag_gen = ROOT.TFile.Open(inDir_eff_gen+"/h2_gen_mistag_mc_"+year+"_"+wp+".root")
+      inFile_mistag_fit = ROOT.TFile.Open(inDir_eff_fit+"/"+year+"_WP"+wp+"/h2_mistag_mc"+year+"_"+wpShort+".root")
+      inFile_mistag_gen = ROOT.TFile.Open(inDir_eff_gen+"/h2_gen_mistag_mc"+year+"_"+wpShort+".root")
 
-      h2_eff_fit = inFile_eff_fit.Get("h2_eff_mc"+year+"_"+wp)
-      h2_eff_gen = inFile_eff_gen.Get("h2_gen_eff_mc"+year+"_"+wp)
+      h2_eff_fit = inFile_eff_fit.Get("h2_eff_mc"+year+"_"+wpShort)
+      h2_eff_gen = inFile_eff_gen.Get("h2_gen_eff_mc"+year+"_"+wpShort)
 
-      h2_mistag_fit = inFile_mistag_fit.Get("h2_mistag_mc"+year+"_"+wp)
-      h2_mistag_gen = inFile_mistag_gen.Get("h2_gen_mistag_mc"+year+"_"+wp)
+      h2_mistag_fit = inFile_mistag_fit.Get("h2_mistag_mc"+year+"_"+wpShort)
+      h2_mistag_gen = inFile_mistag_gen.Get("h2_gen_mistag_mc"+year+"_"+wpShort)
 
       Plot2DGenEff(h2_eff_fit, h2_eff_gen, h2_mistag_fit, h2_mistag_gen, outputDir, year, wp)
 

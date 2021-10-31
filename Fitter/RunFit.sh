@@ -5,7 +5,7 @@ INDIR="../Analyzer/histos3D/"
 #
 # Directory path for the output of the fits
 #
-OUTDIR="./results_ULNanoV9_v1p1/"
+OUTDIR="./results_ULNanoV9_v1p3/"
 
 function RunFitter {
   python extract_fit.py --input ${1} --output ${2}/Baseline/${3}_WPLoose/  --year ${3} --wp Loose
@@ -48,8 +48,6 @@ UL2016APV
 for YEAR in ${ERAS[@]}
 do
   RunFitter ${INDIR} ${OUTDIR} ${YEAR}
-  RunFitterSyst ${INDIR} ${OUTDIR} ${YEAR} jerUp
-  RunFitterSyst ${INDIR} ${OUTDIR} ${YEAR} jerDown
   RunFitterSyst ${INDIR} ${OUTDIR} ${YEAR} jesTotalUp
   RunFitterSyst ${INDIR} ${OUTDIR} ${YEAR} jesTotalDown
   RunFitterNLO ${INDIR} ${OUTDIR} ${YEAR}

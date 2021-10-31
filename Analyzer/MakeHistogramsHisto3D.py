@@ -84,6 +84,16 @@ dphiBins =[round(x*dphiBinSize, 2) for x in xrange(0,dphiBinsN+1)]
 dphiBinsArray = array.array('d',dphiBins)
 dphiBinsN = len(dphiBins)-1
 
+
+#
+#
+#
+deltaRBinsN = 200
+deltaRBinSize = 0.02
+deltaRBins =[round(x*deltaRBinSize, 2) for x in xrange(0,deltaRBinsN+1)]
+deltaRBinsArray = array.array('d',deltaRBins)
+deltaRBinsN = len(deltaRBins)-1
+
 def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
 
   isUL=False
@@ -187,6 +197,8 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #   df = df.Define("probeJet_puIdDiscOTF",  probeJetStr+"_puIdDiscOTF")
   if isMC:
     df = df.Define("probeJet_passGenMatch", probeJetStr+"_gen_match")
+    df = df.Define("probeJet_closestgen_dR", probeJetStr+"_closestgen_dR")
+    df = df.Define("probeJet_gen_dR", probeJetStr+"_gen_dR")
   #
   #
   #
@@ -336,21 +348,34 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
 
   cutLevels = []
   cutLevels += selGenNames
-  ##############################################
   #
-  # Make the 2D histograms
+  # Make the 2D histograms. Counts in pt and eta bins
   #
-  ###############################################
   Histograms2D = OrderedDict()
-  #
-  # etaBins
-  #
   for cutLevel in cutLevels:
     histoNameFinal  = "h2_%s_probeJet_pt_eta_count%s" %(cutLevel,systStrPost)
     histoInfo = ROOT.RDF.TH2DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray)
     Histograms2D[histoNameFinal] = df_filters[cutLevel].Histo2D(histoInfo, "probeJet_pt","probeJet_eta", weightName)
 
   print("Number of 2D histos: %s " %len(Histograms2D))
+  #####################################################
+  #
+  # DeltaR between 
+  #
+  #####################################################
+  if isMC:
+    histoNameFinal  = "h3_%s_probeJet_pt_eta_closestgen_dR%s" %("passNJetSel",systStrPost)
+    histoInfo = ROOT.RDF.TH3DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, deltaRBinsN, deltaRBinsArray)
+    Histograms3D[histoNameFinal] = df_filters["passNJetSel"].Histo3D(histoInfo, "probeJet_pt","probeJet_eta","probeJet_closestgen_dR", weightName)
+    #
+    histoNameFinal  = "h3_%s_probeJet_pt_eta_gen_dR%s" %("passNJetSel",systStrPost)
+    histoInfo = ROOT.RDF.TH3DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, deltaRBinsN, deltaRBinsArray)
+    Histograms3D[histoNameFinal] = df_filters["passNJetSel"].Histo3D(histoInfo, "probeJet_pt","probeJet_eta","probeJet_gen_dR", weightName)
+    #
+    histoNameFinal  = "h2_%s_probeJet_pt_closestgen_dR%s" %("passNJetSel",systStrPost)
+    histoInfo = ROOT.RDF.TH2DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, deltaRBinsN, deltaRBinsArray)
+    Histograms2D[histoNameFinal] = df_filters["passNJetSel"].Histo2D(histoInfo, "probeJet_pt","probeJet_closestgen_dR", weightName)
+
   ##############################################
   #
   # This will trigger the lazy actions
@@ -364,17 +389,16 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   # Project the 3D histograms
   #
   ##############################################
-  def ProjectTH3(h3, HistoDict, systStrPost):
-
+  def ProjectTH3(h3, HistoDict, varName, systStrPost):
     h3Name  = h3.GetName()
     selName = h3Name.replace("h3_","")
-    
+
     if "_eta_" in selName:
-      selName  = selName.replace("_probeJet_pt_eta_dilep_dphi_norm","")
+      selName  = selName.replace("_probeJet_pt_eta_%s"%(varName),"")
       nBinsY   = etaBinsN
       yBinsStr = etaBinsStr
     elif "_abseta_" in selName:
-      selName  = selName.replace("_probeJet_pt_abseta_dilep_dphi_norm","")
+      selName  = selName.replace("_probeJet_pt_abseta_%s"%(varName),"")
       nBinsY   = absEtaBinsN
       yBinsStr = absEtaBinsStr
 
@@ -387,16 +411,25 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
     for iBinX in xrange(1,nBinsX+1):
       for iBinY in xrange(1,nBinsY+1):
         binStr   = "%s_%s" %(yBinsStr[iBinY-1], xBinsStr[iBinX-1]) #eta first, then pt
-        histName = "h_%s_%s_probeJet_dilep_dphi_norm%s" %(selName, binStr, systStrPost)
+        histName = "h_%s_%s_probeJet_%s%s" %(selName, binStr, varName, systStrPost)
         HistoDict[histName] = h3.ProjectionZ(histName, iBinX, iBinX, iBinY, iBinY)
     return HistoDict
   
   Histograms = OrderedDict()
+
   #
   # Loop over TH3s
   #
   for hist3DName in Histograms3D:
-    Histograms = ProjectTH3(Histograms3D[hist3DName].GetValue(), Histograms, systStrPost)
+    h3 = Histograms3D[hist3DName].GetValue()
+    h3Name = h3.GetName()
+    if "dilep_dphi_norm" in h3Name:
+      Histograms = ProjectTH3(h3, Histograms, "dilep_dphi_norm", systStrPost)
+    elif "_closestgen_dR" in h3Name:
+      Histograms = ProjectTH3(h3, Histograms, "closestgen_dR", systStrPost)
+    elif "_gen_dR" in h3Name:
+      Histograms = ProjectTH3(h3, Histograms, "gen_dR", systStrPost)
+
   print("Number of 1D histos: %s " %len(Histograms))
   ##############################################
   #
@@ -457,8 +490,8 @@ if __name__== "__main__":
     ak4Systematics=[
       "jesTotalUp",
       "jesTotalDown",
-      "jerUp",
-      "jerDown"
+      # "jerUp",
+      # "jerDown"
     ]
   # Don't do ak4Systematics for MG+HW, AMCNLO and PHG
   if "MG_HW" in args.sample: ak4Systematics=[]
