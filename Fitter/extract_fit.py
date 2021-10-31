@@ -37,13 +37,27 @@ def MakeDPhiFit(
     h_dphi_genunmatched_PASS_badbalance,h_dphi_genmatched_PASS_badbalance,h_dphi_genunmatched_FAIL_badbalance,h_dphi_genmatched_FAIL_badbalance,
     h_dphi_PASS_badbalance,h_dphi_FAIL_badbalance, 
     outputDir, pt, eta, isData=False, doEtaBins=False):
-
-    print "Performing fits to extract efficiency and mistag rate" 
+    
+    print("Performing fits to extract efficiency and mistag rate") 
     print("entries in PASS histos "+str(h_dphi_genunmatched_PASS.GetEntries())+","+str(h_dphi_genmatched_PASS.GetEntries())+","+str(h_dphi_PASS.GetEntries())+","+str(h_dphi_PASS_badbalance.GetEntries()))
     print("entries in FAIL histos "+str(h_dphi_genunmatched_FAIL.GetEntries())+","+str(h_dphi_genmatched_FAIL.GetEntries())+","+str(h_dphi_FAIL.GetEntries())+","+str(h_dphi_FAIL_badbalance.GetEntries()))
     print("ptBin:"+pt) 
     print("etaBin:"+eta) 
     
+    #
+    # 
+    #
+    eff_gen    = -1.0
+    mistag_gen = -1.0
+    if isData == False:
+        n_mc_real_pass = h_dphi_genmatched_PASS.Integral() + h_dphi_genmatched_PASS_badbalance.Integral()
+        n_mc_real_fail = h_dphi_genmatched_FAIL.Integral() + h_dphi_genmatched_FAIL_badbalance.Integral()
+        n_mc_pu_pass   = h_dphi_genunmatched_PASS.Integral() + h_dphi_genunmatched_PASS_badbalance.Integral()
+        n_mc_pu_fail   = h_dphi_genunmatched_FAIL.Integral() + h_dphi_genunmatched_FAIL_badbalance.Integral()
+        eff_gen    = n_mc_real_pass/(n_mc_real_pass+n_mc_real_fail)
+        mistag_gen = n_mc_pu_pass/(n_mc_pu_pass+n_mc_pu_fail)
+ 
+
     #
     #Declare the observable
     #
@@ -451,8 +465,16 @@ def MakeDPhiFit(
         if printPNG: cfitFAIL_badbalance.SaveAs(os.path.join(outputDir, fit_filename+"_FAIL_BADbal_mc.png"))
 
     del cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance
+    
+    print("eff_mc  = " + str(effcy.getVal())) 
+    print("eff_gen = " + str(eff_gen)) 
+    print("mistag_mc  = " + str(mistag.getVal())) 
+    print("mistag_gen = " + str(mistag_gen)) 
 
-    return effcy.getVal(), effcy.getError(), mistag.getVal(), mistag.getError()
+    if isData:
+        return effcy.getVal(), effcy.getError(), mistag.getVal(), mistag.getError()
+    else: 
+        return effcy.getVal(), effcy.getError(), mistag.getVal(), mistag.getError(), eff_gen, mistag_gen
 
 def main():
 
@@ -627,11 +649,15 @@ def main():
     heffmc      = ROOT.TH2F("heffmc",     "PU ID Eff MC, WP " +workingpoint+ ", "+year,     xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
     hmistagdata = ROOT.TH2F("hmistagdata","PU ID Mistag Data, WP " +workingpoint+ ", "+year,xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
     hmistagmc   = ROOT.TH2F("hmistagmc",  "PU ID Mistag MC, WP " +workingpoint+ ", "+year,  xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
+    heffgen     = ROOT.TH2F("heffgen",     "PU ID Eff MC (Gen-Based), WP " +workingpoint+ ", "+year,     xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
+    hmistaggen  = ROOT.TH2F("hmistaggen",  "PU ID Mistag MC (Gen-Based), WP " +workingpoint+ ", "+year,  xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
 
     heffdata.Sumw2()
     heffmc.Sumw2()
     hmistagdata.Sumw2()
     hmistagmc.Sumw2()
+    heffgen.Sumw2()
+    hmistaggen.Sumw2()
 
     ROOT.gStyle.SetOptStat(0)
     ROOT.gStyle.SetPaintTextFormat("4.2f")
@@ -680,7 +706,7 @@ def main():
             #
             # Perform fit on MC
             #
-            eff_mc,eff_mc_err,mistag_mc,mistag_mc_err=MakeDPhiFit(
+            eff_mc,eff_mc_err,mistag_mc,mistag_mc_err,eff_gen,mistag_gen=MakeDPhiFit(
                 h_dphi_mc_genunmatched_PASS,h_dphi_mc_genmatched_PASS,h_dphi_mc_genunmatched_FAIL,h_dphi_mc_genmatched_FAIL,
                 h_dphi_mc_PASS,h_dphi_mc_FAIL, 
                 h_dphi_mc_genunmatched_PASS_badbalance, h_dphi_mc_genmatched_PASS_badbalance, h_dphi_mc_genunmatched_FAIL_badbalance, h_dphi_mc_genmatched_FAIL_badbalance, 
@@ -691,6 +717,8 @@ def main():
             heffmc.SetBinError  (i+1,j+1,    round(float(eff_mc_err),4))
             hmistagmc.SetBinContent(i+1,j+1, round(float(mistag_mc),4))
             hmistagmc.SetBinError(i+1,j+1,   round(float(mistag_mc_err),4))
+            heffgen.SetBinContent(i+1,j+1,    round(float(eff_gen),4))
+            hmistaggen.SetBinContent(i+1,j+1, round(float(mistag_gen),4))
 
             #
             # Perform fit on Data
@@ -729,6 +757,14 @@ def main():
     hmistagdata.GetXaxis().SetTitle(xname)
     hmistagdata.GetXaxis().SetMoreLogLabels()
 
+    heffgen.GetYaxis().SetTitle(yname)    
+    heffgen.GetXaxis().SetTitle(xname)
+    heffgen.GetXaxis().SetMoreLogLabels()
+
+    hmistaggen.GetYaxis().SetTitle(yname)
+    hmistaggen.GetXaxis().SetTitle(xname)
+    hmistaggen.GetXaxis().SetMoreLogLabels()
+
     def PlotPtSlices(ptBins, h2, hNamePrefix, pdfName):
         h2C = h2.Clone(h2.GetName()+"Clone")
         #
@@ -745,20 +781,20 @@ def main():
         ymin   = None 
         ymax   = None
         doLogY = False
-        if "mistag_mc" in h2.GetName() or "mistag_data" in h2.GetName():
+        if "mistag_mc" in h2.GetName() or "mistaggen_mc" in h2.GetName() or "mistag_data" in h2.GetName():
             legend = ROOT.TLegend(0.40,0.72,0.60,0.88)
             ymin = 0.001
             ymax = 6.000
             doLogY = True
-        if "eff_mc" in h2.GetName() or "eff_data" in h2.GetName():
+        if "eff_mc" in h2.GetName() or "effgen_mc" in h2.GetName() or "eff_data" in h2.GetName():
             legend = ROOT.TLegend(0.40,0.72,0.60,0.88)
             ymin = 0.20
             ymax = 1.40
-        if "eff_sf" in h2.GetName():
+        if "eff_sf" in h2.GetName() or "effgen_sf" in h2.GetName():
             legend = ROOT.TLegend(0.40,0.72,0.60,0.88)
             ymin = 0.65
             ymax = 1.35
-        if "mistag_sf" in h2.GetName():
+        if "mistag_sf" in h2.GetName() or "mistaggen_sf" in h2.GetName():
             legend = ROOT.TLegend(0.68,0.72,0.88,0.88)
             ymin = 0.0
             ymax = 2.5
@@ -790,82 +826,138 @@ def main():
         del canv
 
     textsize=1
+
+    wpShort = workingpoint[0]
    
     c2 = ROOT.TCanvas("c2","c2",600,600)
     heffmc.SetMinimum(0.4)
     heffmc.SetMaximum(1.0)
     heffmc.SetMarkerSize(textsize)
     heffmc.Draw("colztexterr")
-    c2.SaveAs(os.path.join(outputDir, "h2_eff_mc_"+year+"_"+workingpoint+".pdf"))
-    if printPNG: c2.SaveAs(os.path.join(outputDir, "h2_eff_mc_"+year+"_"+workingpoint+".png"))
-    heffmc.SetName("h2_eff_mc"+year+"_"+workingpoint)
-    heffmc.SaveAs(os.path.join(outputDir, "h2_eff_mc_"+year+"_"+workingpoint+".root"))
-    PlotPtSlices(_pt, heffmc, "h_eff_mc_"+year+"_"+workingpoint, os.path.join(outputDir, "h_eff_mc_"+year+"_"+workingpoint+"_ptBins_eta.pdf"))
+    c2.SaveAs(os.path.join(outputDir, "h2_eff_mc"+year+"_"+wpShort+".pdf"))
+    if printPNG: c2.SaveAs(os.path.join(outputDir, "h2_eff_mc"+year+"_"+wpShort+".png"))
+    heffmc.SetName("h2_eff_mc"+year+"_"+wpShort)
+    heffmc.SaveAs(os.path.join(outputDir, "h2_eff_mc"+year+"_"+wpShort+".root"))
+    PlotPtSlices(_pt, heffmc, "h_eff_mc"+year+"_"+wpShort, os.path.join(outputDir, "h_eff_mc"+year+"_"+wpShort+"_ptBins_eta.pdf"))
 
     c3 = ROOT.TCanvas("c3","c3",600,600)
     heffdata.SetMinimum(0.4)
     heffdata.SetMaximum(1.0)
     heffdata.SetMarkerSize(textsize)
     heffdata.Draw("colztexterr")
-    c3.SaveAs(os.path.join(outputDir, "h2_eff_data_"+year+"_"+workingpoint+".pdf"))
-    if printPNG: c3.SaveAs(os.path.join(outputDir, "h2_eff_data_"+year+"_"+workingpoint+".png"))
-    heffdata.SetName("h2_eff_data"+year+"_"+workingpoint)
-    heffdata.SaveAs(os.path.join(outputDir, "h2_eff_data_"+year+"_"+workingpoint+".root"))
-    PlotPtSlices(_pt, heffdata, "h_eff_data_"+year+"_"+workingpoint, os.path.join(outputDir, "h_eff_data_"+year+"_"+workingpoint+"_ptBins_eta.pdf"))
+    c3.SaveAs(os.path.join(outputDir, "h2_eff_data"+year+"_"+wpShort+".pdf"))
+    if printPNG: c3.SaveAs(os.path.join(outputDir, "h2_eff_data"+year+"_"+wpShort+".png"))
+    heffdata.SetName("h2_eff_data"+year+"_"+wpShort)
+    heffdata.SaveAs(os.path.join(outputDir, "h2_eff_data"+year+"_"+wpShort+".root"))
+    PlotPtSlices(_pt, heffdata, "h_eff_data"+year+"_"+wpShort, os.path.join(outputDir, "h_eff_data"+year+"_"+wpShort+"_ptBins_eta.pdf"))
 
     c4 = ROOT.TCanvas("c4","c4",600,600)
     heffdata.Sumw2()
     heffmc.Sumw2()
-    heffdata.Divide(heffmc)
-    heffdata.SetNameTitle("effsf","Efficiency SF, WP " +workingpoint+ ", "+year)
-    heffdata.SetMaximum(1.20)
-    heffdata.SetMinimum(0.80)
-    heffdata.SetMarkerSize(textsize)
-    heffdata.Draw("colztexterr")
-    c4.SaveAs(os.path.join(outputDir, "h2_eff_sf_"+year+"_"+workingpoint+".pdf"))
-    if printPNG: c4.SaveAs(os.path.join(outputDir, "h2_eff_sf_"+year+"_"+workingpoint+".png"))
-    heffdata.SetName("h2_eff_sf"+year+"_"+workingpoint)
-    heffdata.SaveAs(os.path.join(outputDir, "h2_eff_sf_"+year+"_"+workingpoint+".root"))
-    PlotPtSlices(_pt, heffdata, "h_eff_sf_"+year+"_"+workingpoint, os.path.join(outputDir, "h_eff_sf_"+year+"_"+workingpoint+"_ptBins_eta.pdf"))
+    heffsf = heffdata.Clone("heffsf")
+    heffsf.Divide(heffmc)
+    heffsf.SetNameTitle("effsf","Efficiency SF, WP " +workingpoint+ ", "+year)
+    heffsf.SetMaximum(1.20)
+    heffsf.SetMinimum(0.80)
+    heffsf.SetMarkerSize(textsize)
+    heffsf.Draw("colztexterr")
+    c4.SaveAs(os.path.join(outputDir, "h2_eff_sf"+year+"_"+wpShort+".pdf"))
+    if printPNG: c4.SaveAs(os.path.join(outputDir, "h2_eff_sf"+year+"_"+wpShort+".png"))
+    heffsf.SetName("h2_eff_sf"+year+"_"+wpShort)
+    heffsf.SaveAs(os.path.join(outputDir, "h2_eff_sf"+year+"_"+wpShort+".root"))
+    PlotPtSlices(_pt, heffsf, "h_eff_sf"+year+"_"+wpShort, os.path.join(outputDir, "h_eff_sf"+year+"_"+wpShort+"_ptBins_eta.pdf"))
 
     c6 = ROOT.TCanvas("c6","c6",600,600)
     hmistagmc.SetMinimum(0.0)
     hmistagmc.SetMaximum(0.5)
     hmistagmc.SetMarkerSize(textsize)
     hmistagmc.Draw("colztexterr")
-    c6.SaveAs(os.path.join(outputDir, "h2_mistag_mc_"+year+"_"+workingpoint+".pdf"))
-    if printPNG: c6.SaveAs(os.path.join(outputDir, "h2_mistag_mc_"+year+"_"+workingpoint+".png"))
-    hmistagmc.SetName("h2_mistag_mc"+year+"_"+workingpoint)
-    hmistagmc.SaveAs(os.path.join(outputDir, "h2_mistag_mc_"+year+"_"+workingpoint+".root"))
-    PlotPtSlices(_pt, hmistagmc, "h_mistag_mc_"+year+"_"+workingpoint, os.path.join(outputDir, "h_mistag_mc_"+year+"_"+workingpoint+"_ptBins_eta.pdf"))
+    c6.SaveAs(os.path.join(outputDir, "h2_mistag_mc"+year+"_"+wpShort+".pdf"))
+    if printPNG: c6.SaveAs(os.path.join(outputDir, "h2_mistag_mc"+year+"_"+wpShort+".png"))
+    hmistagmc.SetName("h2_mistag_mc"+year+"_"+wpShort)
+    hmistagmc.SaveAs(os.path.join(outputDir, "h2_mistag_mc"+year+"_"+wpShort+".root"))
+    PlotPtSlices(_pt, hmistagmc, "h_mistag_mc"+year+"_"+wpShort, os.path.join(outputDir, "h_mistag_mc"+year+"_"+wpShort+"_ptBins_eta.pdf"))
 
     c7 = ROOT.TCanvas("c7","c7",600,600)
     hmistagdata.SetMinimum(0.0)
     hmistagdata.SetMaximum(0.5)
     hmistagdata.SetMarkerSize(textsize)
     hmistagdata.Draw("colztexterr")
-    c7.SaveAs(os.path.join(outputDir, "h2_mistag_data_"+year+"_"+workingpoint+".pdf"))
-    if printPNG: c7.SaveAs(os.path.join(outputDir, "h2_mistag_data_"+year+"_"+workingpoint+".png"))
-    hmistagdata.SetName("h2_mistag_data"+year+"_"+workingpoint)
-    hmistagdata.SaveAs(os.path.join(outputDir, "h2_mistag_data_"+year+"_"+workingpoint+".root"))
-    PlotPtSlices(_pt, hmistagdata, "h_mistag_data_"+year+"_"+workingpoint, os.path.join(outputDir, "h_mistag_data_"+year+"_"+workingpoint+"_ptBins_eta.pdf"))
+    c7.SaveAs(os.path.join(outputDir, "h2_mistag_data"+year+"_"+wpShort+".pdf"))
+    if printPNG: c7.SaveAs(os.path.join(outputDir, "h2_mistag_data"+year+"_"+wpShort+".png"))
+    hmistagdata.SetName("h2_mistag_data"+year+"_"+wpShort)
+    hmistagdata.SaveAs(os.path.join(outputDir, "h2_mistag_data"+year+"_"+wpShort+".root"))
+    PlotPtSlices(_pt, hmistagdata, "h_mistag_data"+year+"_"+wpShort, os.path.join(outputDir, "h_mistag_data"+year+"_"+wpShort+"_ptBins_eta.pdf"))
 
     c8 = ROOT.TCanvas("c8","c8",600,600)
     hmistagdata.Sumw2()
     hmistagmc.Sumw2()
-    hmistagdata.Divide(hmistagmc)
-    hmistagdata.SetNameTitle("mistagsf","Mistag SF, WP " +workingpoint+ ", "+year)
-    hmistagdata.SetMaximum(2.0)
-    hmistagdata.SetMinimum(0.0)
-    hmistagdata.SetMarkerSize(textsize)
-    hmistagdata.Draw("colztexterr")
-    c8.SaveAs(os.path.join(outputDir, "h2_mistag_sf_"+year+"_"+workingpoint+".pdf"))
-    if printPNG: c8.SaveAs(os.path.join(outputDir, "h2_mistag_sf_"+year+"_"+workingpoint+".png"))
-    hmistagdata.SetName("h2_mistag_sf"+year+"_"+workingpoint)
-    hmistagdata.SaveAs(os.path.join(outputDir, "h2_mistag_sf_"+year+"_"+workingpoint+".root"))
-    PlotPtSlices(_pt, hmistagdata, "h_mistag_sf_"+year+"_"+workingpoint, os.path.join(outputDir, "h_mistag_sf_"+year+"_"+workingpoint+"_ptBins_eta.pdf"))
-        
-    del c2, c3, c4, c6, c7, c8
+    hmistagsf = hmistagdata.Clone("hmistagsf")
+    hmistagsf.Divide(hmistagmc)
+    hmistagsf.SetNameTitle("mistagsf","Mistag SF, WP " +workingpoint+ ", "+year)
+    hmistagsf.SetMaximum(2.0)
+    hmistagsf.SetMinimum(0.0)
+    hmistagsf.SetMarkerSize(textsize)
+    hmistagsf.Draw("colztexterr")
+    c8.SaveAs(os.path.join(outputDir, "h2_mistag_sf"+year+"_"+wpShort+".pdf"))
+    if printPNG: c8.SaveAs(os.path.join(outputDir, "h2_mistag_sf"+year+"_"+wpShort+".png"))
+    hmistagsf.SetName("h2_mistag_sf"+year+"_"+wpShort)
+    hmistagsf.SaveAs(os.path.join(outputDir, "h2_mistag_sf"+year+"_"+wpShort+".root"))
+    PlotPtSlices(_pt, hmistagsf, "h_mistag_sf"+year+"_"+wpShort, os.path.join(outputDir, "h_mistag_sf"+year+"_"+wpShort+"_ptBins_eta.pdf"))
+  
+    c9 = ROOT.TCanvas("c9","c9",600,600)
+    heffgen.SetMinimum(0.4)
+    heffgen.SetMaximum(1.0)
+    heffgen.SetMarkerSize(textsize)
+    heffgen.Draw("colztexterr")
+    c9.SaveAs(os.path.join(outputDir, "h2_effgen_mc"+year+"_"+wpShort+".pdf"))
+    if printPNG: c9.SaveAs(os.path.join(outputDir, "h2_effgen_mc"+year+"_"+wpShort+".png"))
+    heffgen.SetName("h2_effgen_mc"+year+"_"+wpShort)
+    heffgen.SaveAs(os.path.join(outputDir, "h2_effgen_mc"+year+"_"+wpShort+".root"))
+    # PlotPtSlices(_pt, heffgen, "h_effgen_mc"+year+"_"+wpShort, os.path.join(outputDir, "h_effgen_mc"+year+"_"+wpShort+"_ptBins_eta.pdf"))
+
+    c10 = ROOT.TCanvas("c10","c10",600,600)
+    hmistaggen.SetMinimum(0.0)
+    hmistaggen.SetMaximum(0.5)
+    hmistaggen.SetMarkerSize(textsize)
+    hmistaggen.Draw("colztexterr")
+    c10.SaveAs(os.path.join(outputDir, "h2_mistaggen_mc"+year+"_"+wpShort+".pdf"))
+    if printPNG: c10.SaveAs(os.path.join(outputDir, "h2_mistaggen_mc"+year+"_"+wpShort+".png"))
+    hmistaggen.SetName("h2_mistaggen_mc"+year+"_"+wpShort)
+    hmistaggen.SaveAs(os.path.join(outputDir, "h2_mistaggen_mc"+year+"_"+wpShort+".root"))
+    # PlotPtSlices(_pt, hmistaggen, "h_mistaggen_mc"+year+"_"+wpShort, os.path.join(outputDir, "h_mistaggen_mc"+year+"_"+wpShort+"_ptBins_eta.pdf"))
+
+    c11 = ROOT.TCanvas("c11","c11",600,600)
+    heffgen.Sumw2()
+    heffgensf = heffdata.Clone("heffgensf")
+    heffgensf.Divide(heffgen)
+    heffgensf.SetNameTitle("effgensf","Efficiency(Gen) SF , WP " +workingpoint+ ", "+year)
+    heffgensf.SetMaximum(1.20)
+    heffgensf.SetMinimum(0.80)
+    heffgensf.SetMarkerSize(textsize)
+    heffgensf.Draw("colztexterr")
+    c11.SaveAs(os.path.join(outputDir, "h2_effgen_sf"+year+"_"+wpShort+".pdf"))
+    if printPNG: c11.SaveAs(os.path.join(outputDir, "h2_effgen_sf"+year+"_"+wpShort+".png"))
+    heffgensf.SetName("h2_effgen_sf"+year+"_"+wpShort)
+    heffgensf.SaveAs(os.path.join(outputDir, "h2_effgen_sf"+year+"_"+wpShort+".root"))
+    # PlotPtSlices(_pt, heffsf, "h_effgen_sf"+year+"_"+wpShort, os.path.join(outputDir, "h_effgen_sf"+year+"_"+wpShort+"_ptBins_eta.pdf"))
+
+    c12 = ROOT.TCanvas("c12","c12",600,600)
+    hmistaggen.Sumw2()
+    hmistaggensf = hmistagdata.Clone("hmistaggesf")
+    hmistaggensf.Divide(hmistaggen)
+    hmistaggensf.SetNameTitle("histaggensf","Mistag(Gen) SF, WP " +workingpoint+ ", "+year)
+    hmistaggensf.SetMaximum(2.0)
+    hmistaggensf.SetMinimum(0.0)
+    hmistaggensf.SetMarkerSize(textsize)
+    hmistaggensf.Draw("colztexterr")
+    c8.SaveAs(os.path.join(outputDir, "h2_mistaggen_sf"+year+"_"+wpShort+".pdf"))
+    if printPNG: c8.SaveAs(os.path.join(outputDir, "h2_mistaggen_sf"+year+"_"+wpShort+".png"))
+    hmistaggensf.SetName("h2_mistaggen_sf"+year+"_"+wpShort)
+    hmistaggensf.SaveAs(os.path.join(outputDir, "h2_mistaggen_sf"+year+"_"+wpShort+".root"))
+    # PlotPtSlices(_pt, hmistaggensf, "h_mistaggen_sf"+year+"_"+wpShort, os.path.join(outputDir, "h_mistaggen_sf"+year+"_"+wpShort+"_ptBins_eta.pdf"))
+
+    del c2, c3, c4, c6, c7, c8, c9, c10, c11, c12
     
 if __name__ == '__main__':
     main()
