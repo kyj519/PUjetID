@@ -87,7 +87,7 @@ def GetModules(era, isMC, dataStream):
   #
   # Modules for jet pt resolution smearing on MC and also to retrieve JEC and JER uncertainties
   #
-  applyJetPtSmearing=True
+  applyJetPtSmearing=False
   if era == "2016":
     if isMC: 
       jetCorr_AK4_2016_mc = createJMECorrector(isMC=True, dataYear="2016", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
