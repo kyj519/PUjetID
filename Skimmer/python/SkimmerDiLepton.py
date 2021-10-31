@@ -28,8 +28,8 @@ class SkimmerDiLepton(Module):
     ak4Systematics=[
       "jesTotalUp",
       "jesTotalDown",
-      "jerUp",
-      "jerDown"
+      # "jerUp",
+      # "jerDown"
     ]
     #
     #
@@ -272,11 +272,13 @@ class SkimmerDiLepton(Module):
         if(self.isMC):
           self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_partflav",     "I")
           self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_hadflav",      "I")
+          self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_closestgen_dR","F")
           self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_gen_match",    "B")
           self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_gen_pt",       "F")
           self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_gen_eta",      "F")
           self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_gen_phi",      "F")
           self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_gen_mass",     "F")
+          self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_gen_dR",       "F")
           self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_gen_partflav", "I")
           self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_gen_hadflav",  "I")
 
@@ -701,11 +703,13 @@ class SkimmerDiLepton(Module):
       if self.isMC:
         self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_partflav",-9)
         self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_hadflav", -9)
+        self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_closestgen_dR", -9.)
         self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_match", False)
         self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_pt",      -9.)
         self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_eta",     -9.)
         self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_phi",     -9.)
         self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_mass",    -9.)
+        self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_dR",      -9.)
         self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_partflav", -9)
         self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_hadflav",  -9)
 
@@ -754,6 +758,19 @@ class SkimmerDiLepton(Module):
       if self.isMC:
         self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_partflav",jet.partonFlavour)
         self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_hadflav", jet.hadronFlavour)
+        #
+        #
+        #
+        closestgen_dR = 999.
+        for gj in event.genJetsAll:
+          jet_gen_dR = jet.p4().DeltaR(gj.p4())
+          if jet_gen_dR < closestgen_dR:
+            closestgen_dR = jet_gen_dR
+        self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_closestgen_dR", closestgen_dR)
+        #
+        #
+        #
+        genJet = None
         genJet = event.pair[jet]
         if not (genJet==None):
           self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_match", True)
@@ -761,6 +778,7 @@ class SkimmerDiLepton(Module):
           self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_eta",  genJet.eta)
           self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_phi",  genJet.phi)
           self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_mass", genJet.mass)
+          self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_dR",   jet.p4().DeltaR(genJet.p4()))
           self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_partflav", genJet.partonFlavour)
           self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_gen_hadflav",  genJet.hadronFlavour)
 #
