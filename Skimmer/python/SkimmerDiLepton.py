@@ -295,18 +295,17 @@ class SkimmerDiLepton(Module):
     jetSystPreFix = "" if jetSyst == "" else jetSyst+"_"
     return jetSystPreFix
 
-  def getJetSystBranchPostfix(self, jetSyst):
-    jetSystPreFix = "" if jetSyst == "" else "_"+jetSyst
-    return jetSystPreFix
-
   def getJetPtAndMassForSyst(self, jetSyst):
-
     if self.isMC:
-      jetPt   = "pt_nom"   if jetSyst == "" else "pt_"+jetSyst    # We use the value from nanoAOD-tools
-      jetMass = "mass_nom" if jetSyst == "" else "mass_"+jetSyst  # because we also smear the jet pt.
+      #NOTE: For MC, we use the value from nanoAOD-tools.
+      #The pt and mass systematic variation branches are saved by nanoAOD-tools.
+      jetPt   = "pt_nom"   if jetSyst == "" else "pt_"+jetSyst    
+      jetMass = "mass_nom" if jetSyst == "" else "mass_"+jetSyst 
     else:
-      jetPt   = "pt"   #NOTE: Just use the value from nanoAODs.
-      jetMass = "mass" #The JECs has been applied at the NanoAOD production level.
+      #NOTE: For data, just use the value from nanoAODs.
+      #The JECs has been applied at the NanoAOD production level.
+      jetPt   = "pt"   
+      jetMass = "mass" 
 
     return jetPt, jetMass
 
@@ -318,22 +317,26 @@ class SkimmerDiLepton(Module):
     
     #
     # Check for trigger selection. Skip event if it doesn't
-    # even pass one of them
+    # even pass any one of them
     #
     passElTrig = self.passElectronTriggerSelection(event)
     passMuTrig = self.passMuonTriggerSelection(event)
 
     if passElTrig is False and passMuTrig is False:
       return False
-
+  
+    #
+    # Reconstruct Z->ll and apply selection
+    #
     if self.passZBosonSelection(event) is False:
       return False 
     
     self.fillZBosonBranches(event)
     
     #
-    # Skip event and don't store in tree if this selection doesn't pass nominal
-    # and any systematic variations
+    # Get AK4 jets. 
+    # Skip event and don't store in tree if this selection 
+    # doesn't pass nominal and any systematic variations
     #
     event.passJetSelNomSyst = False
 
@@ -370,7 +373,7 @@ class SkimmerDiLepton(Module):
     # Di-electron trigger selection
     #
     #############################
-    event.passElectronTrig=False
+    event.passElectronTrig = False
 
     if (self.era == "2016" or self.era == "UL2016APV" or self.era == "UL2016"):
       if hasattr(event, 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'):
@@ -382,7 +385,7 @@ class SkimmerDiLepton(Module):
       if hasattr(event, 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'):
         event.passElectronTrig |= event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
     
-    return True if event.passElectronTrig else False
+    return event.passElectronTrig
       
   def passMuonTriggerSelection(self, event):
     #############################
@@ -390,7 +393,7 @@ class SkimmerDiLepton(Module):
     # Di-muon trigger selection
     #
     ############################
-    event.passMuonTrig=False
+    event.passMuonTrig = False
 
     if (self.era == "2016" or self.era == "UL2016APV" or self.era == "UL2016"):
       if hasattr(event, 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'):
@@ -406,8 +409,7 @@ class SkimmerDiLepton(Module):
       if hasattr(event, 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8'):
         event.passMuonTrig |= event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
 
-    
-    return True if event.passMuonTrig else False
+    return event.passMuonTrig
  
   def passZBosonSelection(self, event):
     #######################
@@ -440,7 +442,8 @@ class SkimmerDiLepton(Module):
     # Tight muon selection
     #
     event.muonsTight  = [x for x in event.muonsVeto
-      if getattr(x, self.muonPtDef) > 20. and x.mediumPromptId and x.pfIsoId >= 4 
+      if getattr(x, self.muonPtDef) > 20. 
+      and x.mediumPromptId and x.pfIsoId >= 4 
     ] 
     event.pass0VetoMuons  = len(event.muonsVeto)  == 0
     event.pass2VetoMuons  = len(event.muonsVeto)  == 2
