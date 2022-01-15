@@ -53,6 +53,8 @@ keep nTrigObj
 keep TrigObj_*
 keep nCorrT1METJet
 keep CorrT1METJet_*
+keep nGenPart
+keep GenPart_*
 #
 keep HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ
 keep HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL

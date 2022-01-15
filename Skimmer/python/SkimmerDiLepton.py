@@ -19,6 +19,15 @@ class SkimmerDiLepton(Module):
       self.isDoubleElecData=isDoubleElecData
       self.isDoubleMuonData=isDoubleMuonData
     #
+    #
+    #
+    self.useMuonRocCor = True
+    self.muonPtDef = "pt"
+    if self.useMuonRocCor:
+      self.muonPtDef = "corrected_pt"
+      print("Use muon pt with rochester corrections applied. Branch:"+self.muonPtDef)
+
+    #
     # Calculate PU ID BDT on-the-fly (OTF). Can only be done with for JMENano as inputs.
     #
     self.doOTFPUJetIDBDT=doOTFPUJetIDBDT 
@@ -421,18 +430,18 @@ class SkimmerDiLepton(Module):
     #
     # Veto muon selection
     #
-    event.muonsVeto  = [x for x in event.muonsAll 
-      if  x.pt > 10. and x.looseId and abs(x.eta) < 2.4 and x.pfIsoId >= 1 and x.isPFcand 
+    event.muonsVeto  = [x for x in event.muonsAll
+      if getattr(x, self.muonPtDef) > 10. and abs(x.eta) < 2.4
+      and x.looseId and x.pfIsoId >= 1 and x.isPFcand
     ]
-    event.muonsVeto.sort(key=lambda x:x.pt,reverse=True)
+    event.muonsVeto.sort(key=lambda x: getattr(x, self.muonPtDef), reverse=True)
 
     #
     # Tight muon selection
     #
-    event.muonsTight  = [x for x in event.muonsVeto 
-      if x.pt > 20. and x.mediumPromptId and x.pfIsoId >= 4 
+    event.muonsTight  = [x for x in event.muonsVeto
+      if getattr(x, self.muonPtDef) > 20. and x.mediumPromptId and x.pfIsoId >= 4 
     ] 
-
     event.pass0VetoMuons  = len(event.muonsVeto)  == 0
     event.pass2VetoMuons  = len(event.muonsVeto)  == 2
     event.pass2TightMuons = len(event.muonsTight) == 2
@@ -447,7 +456,7 @@ class SkimmerDiLepton(Module):
     #
     # Veto electron selection
     #
-    event.electronsVeto  = [x for x in event.electronsAll 
+    event.electronsVeto  = [x for x in event.electronsAll
       if x.pt > 10. and x.cutBased>=1 and abs(x.deltaEtaSC+x.eta) < 2.5
     ]
     event.electronsVeto.sort(key=lambda x:x.pt,reverse=True)
@@ -455,9 +464,9 @@ class SkimmerDiLepton(Module):
     #
     # Tight electron selection
     #
-    event.electronsTight  = [x for x in event.electronsVeto 
-      if x.pt > 20. and x.mvaFall17V2Iso_WP90 
-      and abs(x.deltaEtaSC+x.eta) < 2.5 
+    event.electronsTight  = [x for x in event.electronsVeto
+      if x.pt > 20. and x.mvaFall17V2Iso_WP90
+      and abs(x.deltaEtaSC+x.eta) < 2.5
       and not(abs(x.deltaEtaSC+x.eta)>=1.4442) and (abs(x.deltaEtaSC+x.eta)<1.566) # ignore electrons in gap region
     ]
 
@@ -505,13 +514,13 @@ class SkimmerDiLepton(Module):
       # Could probably already be tighter than it is stated here 
       # but just check it again just to be safe.
       #
-      if event.muonsTight[0].pt > 20: event.passLep0TrigThreshold = True
-      if event.muonsTight[1].pt > 10: event.passLep1TrigThreshold = True
+      if getattr(event.muonsTight[0], self.muonPtDef) > 20: event.passLep0TrigThreshold = True
+      if getattr(event.muonsTight[1], self.muonPtDef) > 10: event.passLep1TrigThreshold = True
       # 
       # Assign lepton p4
       #
-      event.lep0_p4 = event.muonsTight[0].p4()
-      event.lep1_p4 = event.muonsTight[1].p4()
+      event.lep0_p4 = event.muonsTight[0].p4(getattr(event.muonsTight[0], self.muonPtDef))
+      event.lep1_p4 = event.muonsTight[1].p4(getattr(event.muonsTight[1], self.muonPtDef))
       event.lep0_charge = event.muonsTight[0].charge
       event.lep1_charge = event.muonsTight[1].charge
       event.lep0_pdgId = event.muonsTight[0].pdgId
