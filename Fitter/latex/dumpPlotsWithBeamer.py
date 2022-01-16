@@ -4,8 +4,8 @@ import os
 
 def main():
 
-  version="results_ULNanoV9_v1p3"
-  showFitInEachBin=False
+  version="results_ULNanoV9_v1p4"
+  showFitInEachBin=True
 
   eras = [
     "UL2017",
@@ -18,17 +18,17 @@ def main():
     inDir="../"+version+"/Baseline/"
     CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
-    outFileName="DumpPlots_PUIDSF_"+version+"_NLO_"+year
-    inDir="../"+version+"/NLO/"
-    CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
+    # outFileName="DumpPlots_PUIDSF_"+version+"_NLO_"+year
+    # inDir="../"+version+"/NLO/"
+    # CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
-    outFileName="DumpPlots_PUIDSF_"+version+"_jesTotalUp_"+year
-    inDir="../"+version+"/jesTotalUp/"
-    CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
+    # outFileName="DumpPlots_PUIDSF_"+version+"_jesTotalUp_"+year
+    # inDir="../"+version+"/jesTotalUp/"
+    # CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
-    outFileName="DumpPlots_PUIDSF_"+version+"_jesTotalDown_"+year
-    inDir="../"+version+"/jesTotalDown/"
-    CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
+    # outFileName="DumpPlots_PUIDSF_"+version+"_jesTotalDown_"+year
+    # inDir="../"+version+"/jesTotalDown/"
+    # CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
   # eras = [
   #   "UL2016APV",
