@@ -1,7 +1,13 @@
 import collections
-from SampleList import Sample
 
-version="DiLeptonSkim_ULNanoV9_v1p3"
+class Sample:
+  def __init__(self, name="", crabFiles=[], ntupleFiles=[], xs=1.0):
+    self.name  = name
+    self.crabFiles = crabFiles 
+    self.ntupleFiles = ntupleFiles 
+    self.xs = xs
+
+version="DiLeptonSkim_ULNanoV9_v1p4"
 
 EOSURL="root://eoscms.cern.ch/"
 EOSDIR="/eos/cms/store/group/phys_jetmet/nbinnorj/"
@@ -9,6 +15,10 @@ CRABDIR="JetPUId_"+version+"/CRABOUTPUT/"
 NTUPDIR="JetPUId_"+version+"/ntuples_skim/"
 Samples = collections.OrderedDict()
 
+lumi_UL2016APV = 19528.52
+lumi_UL2016 = 16812.15
+lumi_UL2017 = 41479.68
+lumi_UL2018 = 59832.47
 ################################################
 #
 # UL2017
@@ -25,7 +35,8 @@ Samples["MCUL17_DY_MG"] = Sample(
   ],
   ntupleFiles=[
     EOSDIR+NTUPDIR+"ntuple_MCUL17_DY_MG.root"
-  ]
+  ],
+  xs = 5347.0 #pb
 )
 #
 # DY MG5 NLO
@@ -37,7 +48,73 @@ Samples["MCUL17_DY_AMCNLO"] = Sample(
   ],
   ntupleFiles=[
     EOSDIR+NTUPDIR+"ntuple_MCUL17_DY_AMCNLO.root"
-  ]
+  ],
+  xs = 6422.0 #pb
+)
+#
+# DY MG5 NLO
+#
+Samples["MCUL17_DY_AMCNLO"] = Sample(
+  name="MCUL17_DY_AMCNLO",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL17NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL17_TTTo2L2Nu.root"
+  ],
+  xs = 6422.0 #pb
+)
+#
+# TTTo2L2Nu
+#
+Samples["MCUL17_TTTo2L2Nu"] = Sample(
+  name="MCUL17_TTTo2L2Nu",
+  crabFiles=[
+    EOSDIR+CRABDIR+"TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/JetPUId_MCUL17NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL17_TTTo2L2Nu.root"
+  ],
+  xs = 88.29 #pb
+)
+#
+# WW
+#
+Samples["MCUL17_WW"] = Sample(
+  name="MCUL17_WW",
+  crabFiles=[
+    EOSDIR+CRABDIR+"WW_TuneCP5_13TeV-pythia8/JetPUId_MCUL17NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL17_WW.root"
+  ],
+  xs = 75.76 #pb
+)
+#
+# WZ
+#
+Samples["MCUL17_WZ"] = Sample(
+  name="MCUL17_WZ",
+  crabFiles=[
+    EOSDIR+CRABDIR+"WZ_TuneCP5_13TeV-pythia8/JetPUId_MCUL17NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL17_WZ.root"
+  ],
+  xs = 27.51 #pb
+)
+#
+# ZZ
+#
+Samples["MCUL17_ZZ"] = Sample(
+  name="MCUL17_ZZ",
+  crabFiles=[
+    EOSDIR+CRABDIR+"ZZ_TuneCP5_13TeV-pythia8/JetPUId_MCUL17NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL17_ZZ.root"
+  ],
+  xs = 2.748 #pb
 )
 #
 # Data DoubleMuon
@@ -151,7 +228,8 @@ Samples["MCUL18_DY_MG"] = Sample(
   ],
   ntupleFiles=[
     EOSDIR+NTUPDIR+"ntuple_MCUL18_DY_MG.root"
-  ]
+  ],
+  xs = 5347.0 #pb
 )
 #
 # DY MG5 NLO
@@ -163,8 +241,61 @@ Samples["MCUL18_DY_AMCNLO"] = Sample(
   ],
   ntupleFiles=[
     EOSDIR+NTUPDIR+"ntuple_MCUL18_DY_AMCNLO.root"
-  ]
+  ],
+  xs = 6422.0 #pb
 )
+#
+# TTTo2L2Nu
+#
+Samples["MCUL18_TTTo2L2Nu"] = Sample(
+  name="MCUL18_TTTo2L2Nu",
+  crabFiles=[
+    EOSDIR+CRABDIR+"TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/JetPUId_MCUL18NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL18_TTTo2L2Nu.root"
+  ],
+  xs = 88.29 #pb
+)
+#
+# WW
+#
+Samples["MCUL18_WW"] = Sample(
+  name="MCUL18_WW",
+  crabFiles=[
+    EOSDIR+CRABDIR+"WW_TuneCP5_13TeV-pythia8/JetPUId_MCUL18NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL18_WW.root"
+  ],
+  xs = 75.76 #pb
+)
+#
+# WZ
+#
+Samples["MCUL18_WZ"] = Sample(
+  name="MCUL18_WZ",
+  crabFiles=[
+    EOSDIR+CRABDIR+"WZ_TuneCP5_13TeV-pythia8/JetPUId_MCUL18NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL18_WZ.root"
+  ],
+  xs = 27.51 #pb
+)
+# #
+# # ZZ
+# #
+# Samples["MCUL18_ZZ"] = Sample(
+#   name="MCUL18_ZZ",
+#   crabFiles=[
+#     EOSDIR+CRABDIR+"ZZ_TuneCP5_13TeV-pythia8/JetPUId_MCUL18NanoAODv9_"+version+"/*/*/tree_*.root",
+#   ],
+#   ntupleFiles=[
+#     EOSDIR+NTUPDIR+"ntuple_MCUL18_ZZ.root"
+#   ],
+#   xs = 2.748 #pb
+# )
 #
 # Data DoubleMuon
 #
@@ -258,7 +389,8 @@ Samples["MCUL16APV_DY_MG"] = Sample(
   ],
   ntupleFiles=[
     EOSDIR+NTUPDIR+"ntuple_MCUL16APV_DY_MG.root"
-  ]
+  ],
+  xs = 5347.0 #pb
 )
 #
 # DY MG5 NLO
@@ -270,7 +402,8 @@ Samples["MCUL16APV_DY_AMCNLO"] = Sample(
   ],
   ntupleFiles=[
     EOSDIR+NTUPDIR+"ntuple_MCUL16APV_DY_AMCNLO.root"
-  ]
+  ],
+  xs = 6422.0 #pb
 )
 #
 # DYToMumu Powheg
@@ -282,7 +415,60 @@ Samples["MCUL16APV_DYToMuMu_PHG"] = Sample(
   ],
   ntupleFiles=[
     EOSDIR+NTUPDIR+"ntuple_MCUL16APV_DYToMuMu_PHG.root"
-  ]
+  ],
+  xs = (1.0/3.0)*(6077.22),# NNLO https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat13TeV
+)
+#
+# TTTo2L2Nu
+#
+Samples["MCUL16APV_TTTo2L2Nu"] = Sample(
+  name="MCUL16APV_TTTo2L2Nu",
+  crabFiles=[
+    EOSDIR+CRABDIR+"TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/JetPUId_MCUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16APV_TTTo2L2Nu.root"
+  ],
+  xs = 88.29 #pb
+)
+#
+# WW
+#
+Samples["MCUL16APV_WW"] = Sample(
+  name="MCUL16APV_WW",
+  crabFiles=[
+    EOSDIR+CRABDIR+"WW_TuneCP5_13TeV-pythia8/JetPUId_MCUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16APV_WW.root"
+  ],
+  xs = 75.76 #pb
+)
+#
+# WZ
+#
+Samples["MCUL16APV_WZ"] = Sample(
+  name="MCUL16APV_WZ",
+  crabFiles=[
+    EOSDIR+CRABDIR+"WZ_TuneCP5_13TeV-pythia8/JetPUId_MCUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16APV_WZ.root"
+  ],
+  xs = 27.51 #pb
+)
+#
+# ZZ
+#
+Samples["MCUL16APV_ZZ"] = Sample(
+  name="MCUL16APV_ZZ",
+  crabFiles=[
+    EOSDIR+CRABDIR+"ZZ_TuneCP5_13TeV-pythia8/JetPUId_MCUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16APV_ZZ.root"
+  ],
+  xs = 2.748 #pb
 )
 #
 # Data DoubleMuon
@@ -397,7 +583,8 @@ Samples["DataUL16APVF_DoubleEG"] = Sample(
 #   ],
 #   ntupleFiles=[
 #     EOSDIR+NTUPDIR+"ntuple_MCUL16_DY_MG.root"
-#   ]
+#   ],
+#  xs = 5347.0 #pb
 # )
 #
 # DY MG5 NLO
@@ -409,7 +596,8 @@ Samples["DataUL16APVF_DoubleEG"] = Sample(
 #   ],
 #   ntupleFiles=[
 #     EOSDIR+NTUPDIR+"ntuple_MC16_DY_AMCNLO.root"
-#   ]
+#   ],
+#  xs = 6422.0 #pb
 # )
 #
 # DYToMumu Powheg
@@ -421,7 +609,60 @@ Samples["MCUL16_DYToMuMu_PHG"] = Sample(
   ],
   ntupleFiles=[
     EOSDIR+NTUPDIR+"ntuple_MCUL16_DYToMuMu_PHG.root"
-  ]
+  ],
+  xs = (1.0/3.0)*(6077.22), # NNLO https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat13TeV
+)
+#
+# TTTo2L2Nu
+#
+Samples["MCUL16_TTTo2L2Nu"] = Sample(
+  name="MCUL16_TTTo2L2Nu",
+  crabFiles=[
+    EOSDIR+CRABDIR+"TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/JetPUId_MCUL16NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16_TTTo2L2Nu.root"
+  ],
+  xs = 88.29 #pb
+)
+#
+# WW
+#
+Samples["MCUL16_WW"] = Sample(
+  name="MCUL16_WW",
+  crabFiles=[
+    EOSDIR+CRABDIR+"WW_TuneCP5_13TeV-pythia8/JetPUId_MCUL16NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16_WW.root"
+  ],
+  xs = 75.76 #pb
+)
+#
+# WZ
+#
+Samples["MCUL16_WZ"] = Sample(
+  name="MCUL16_WZ",
+  crabFiles=[
+    EOSDIR+CRABDIR+"WZ_TuneCP5_13TeV-pythia8/JetPUId_MCUL16NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16_WZ.root"
+  ],
+  xs = 27.51 #pb
+)
+#
+# ZZ
+#
+Samples["MCUL16_ZZ"] = Sample(
+  name="MCUL16_ZZ",
+  crabFiles=[
+    EOSDIR+CRABDIR+"ZZ_TuneCP5_13TeV-pythia8/JetPUId_MCUL16NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16_ZZ.root"
+  ],
+  xs = 2.748 #pb
 )
 #
 # Data DoubleMuon
@@ -483,4 +724,3 @@ Samples["DataUL16H_DoubleEG"] = Sample(
     EOSDIR+NTUPDIR+"ntuple_DataUL16H_DoubleEG.root"
   ]
 )
-
