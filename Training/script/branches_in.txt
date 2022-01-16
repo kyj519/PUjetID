@@ -1,0 +1,67 @@
+#
+# Drop everything
+#
+drop * 
+#
+# Here we start specifying what we want to store
+#
+keep run
+keep luminosityBlock
+keep event
+keep genWeight
+#
+keep nLHEPdfWeight
+keep LHEPdfWeight
+keep nLHEScaleWeight
+keep LHEScaleWeight
+keep nPSWeight
+keep PSWeight
+#
+keep L1PreFiringWeight_Nom
+keep L1PreFiringWeight_Up
+keep L1PreFiringWeight_Dn
+#
+keep fixedGridRhoFastjet*
+#
+keep Pileup_*
+keep PV_*
+#
+keep MET_*
+keep RawMET_*
+keep PuppiMET_*
+keep Flag_goodVertices
+keep Flag_globalSuperTightHalo2016Filter
+keep Flag_HBHENoiseFilter
+keep Flag_HBHENoiseIsoFilter
+keep Flag_EcalDeadCellTriggerPrimitiveFilter
+keep Flag_BadPFMuonFilter 
+keep Flag_BadPFMuonDzFilter
+keep Flag_hfNoisyHitsFilter
+keep Flag_BadChargedCandidateFilter
+keep Flag_eeBadScFilter
+keep Flag_ecalBadCalibFilter
+#
+keep nMuon
+keep Muon_*
+keep nElectron
+keep Electron_*
+keep nJet
+keep Jet_*
+keep nJetPuppi
+keep JetPuppi_*
+keep nGenJet
+keep GenJet_*
+keep nTrigObj
+keep TrigObj_*
+keep nCorrT1METJet
+keep CorrT1METJet_*
+keep nGenPart
+keep GenPart_*
+#
+keep HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ
+keep HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL
+keep HLT_TkMu17_TrkIsoVVL_TkMu8_TrkIsoVVL
+keep HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8
+keep HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
+keep HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
+keep HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
