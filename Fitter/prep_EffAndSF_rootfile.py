@@ -6,9 +6,9 @@ ROOT.gROOT.SetBatch(True)
 ROOT.gStyle.SetPaintTextFormat("4.3f")
 ROOT.gROOT.SetStyle("Plain")
 
-resultsDir  = "./results_ULNanoV9_v1p3/"
-outputDir   = "./results_final_EffAndSf/"
-outFileName = "PUID_SFAndEff_ULNanoV9_v1p3"
+resultsDir  = "./results_ULNanoV9_v1p4/"
+outputDir   = "./results_final_EffAndSf_ULNanoV9_v1p4/"
+outFileName = "PUID_SFAndEff_ULNanoV9_v1p4"
 printPNG    = False
 #
 #
@@ -62,9 +62,10 @@ def main():
     PlotMap(h2)
 
 def PlotMap(h2):
+  ROOT.gStyle.SetPaintTextFormat("4.4f")
   h2Name = h2.GetName()
   canv = ROOT.TCanvas("canv","canv",600,600)
-  h2.SetMarkerSize(2)
+  h2.SetMarkerSize(1.40)
   h2.Draw("colztext")
   canv.SaveAs(os.path.join(outputDir, h2Name+".pdf"))
   if printPNG: canv.SaveAs(os.path.join(outputDir, h2Name+".png"))
