@@ -151,7 +151,7 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   if "Data" in sample_name:
     df = df.Define("evtWeight","1.0")
   else: #For MC
-    df = df.Define("evtWeight","genWeight")
+    df = df.Define("evtWeight","genWeight*eventWeightScale*puWeight*L1PreFiringWeight_Nom")
 
   # Define name for event weight
   weightName = "evtWeight"
