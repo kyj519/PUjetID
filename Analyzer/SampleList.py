@@ -1,10 +1,11 @@
 import collections
 
 class Sample:
-  def __init__(self, name="", crabFiles=[], ntupleFiles=[]):
+  def __init__(self, name="", crabFiles=[], ntupleFiles=[], xs=1.0):
     self.name  = name
     self.crabFiles = crabFiles 
     self.ntupleFiles = ntupleFiles 
+    self.xs = xs
 
 version="DiLeptonSkim_v4p1"
 

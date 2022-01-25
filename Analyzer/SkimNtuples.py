@@ -22,11 +22,21 @@ def main(sample_name):
     EOSURL=SampleListUL.EOSURL
     EOSDIR=SampleListUL.EOSDIR
     NTUPDIR=SampleListUL.NTUPDIR
+    xs = SampleListUL.Samples[sample_name].xs
+    if "MCUL17" in sample_name:
+      lumi = SampleListUL.lumi_UL2017
+    elif "MCUL18" in sample_name:
+      lumi = SampleListUL.lumi_UL2018
+    elif "MCUL16APV" in sample_name 
+      lumi = SampleListUL.lumi_UL2016APV
+    elif "MCUL16" in sample_name:
+      lumi = SampleListUL.lumi_UL2016
   else:
     crabFiles = SampleList.Samples[sample_name].crabFiles
     EOSURL=SampleList.EOSURL
     EOSDIR=SampleList.EOSDIR
     NTUPDIR=SampleList.NTUPDIR
+    xs = SampleList.Samples[sample_name].xs
 
   print("Globbing File Paths:")
   FileList = []
@@ -41,9 +51,6 @@ def main(sample_name):
   for f in FileList:
     print(f)
     vec.push_back(f)
-  
-  # Read all files into RDataFrame
-  df = ROOT.ROOT.RDataFrame("Events", vec)
 
   isMC = False
   ak4Systematics = []
@@ -55,17 +62,49 @@ def main(sample_name):
       # "jerUp",
       # "jerDown"
     ]
-  
   #
   # Don't do ak4Systematics for MG+HW and AMCNLO
   #
-  if "MG_HW" in sample_name: ak4Systematics=[]
-  if "AMCNLO" in sample_name: ak4Systematics=[]
+  if "DY_MG_HW" in sample_name: ak4Systematics=[]
+  if "DY_AMCNLO" in sample_name: ak4Systematics=[]
+
+  #
+  # Get sample sum of event weights from
+  # Runs TTree. Using a simple pyroot
+  # event looping. Should be quick
+  #
+  genEventCount = 0
+  genEventSumw  = 0.
+  treeRuns = None
+  if isMC:
+    treeRuns =  ROOT.TChain("Runs")
+    for file in FileList: treeRuns.Add(file)
+    nEventsRuns = treeRuns.GetEntries()
+    for i in range(0, nEventsRuns):
+      event = treeRuns.GetEntry(i)
+      genEventCount += treeRuns.genEventCount
+      genEventSumw  += treeRuns.genEventSumw
+    print ("genEventCount: "+str(genEventCount))
+    print ("genEventSumw: "+str(genEventSumw))
+
+  #
+  # Read all files into RDataFrame
+  #
+  df = ROOT.ROOT.RDataFrame("Events", vec)
+
   #############################################
   #
   # Define columns
   #
   #############################################
+  if isMC:
+    eventWeightScaleStr="float((%.5f * %.5f)/%.5f)"%(xs,lumi,genEventSumw)
+    df = df.Define("eventWeightScale",eventWeightScaleStr)
+    df = df.Define("mcXS","%.5f"%(xs))
+    df = df.Define("mcSumOfWeight", "float("+str(genEventSumw)+")")
+  else:
+    df = df.Define("eventWeightScale","1.0")
+
   df = df.Define("passOS","lep0_charge * lep1_charge < 0.0")
   df = df.Define("passNJetSel","(nJetSel>=1)&&(nJetSelPt30Eta5p0<=1)&&(nJetSelPt20Eta2p4<=1)")
   if isMC:
@@ -89,12 +128,7 @@ def main(sample_name):
   #
   # Snapshot tree
   #
-  # TODO: Lazy snapshot seems to be not working
-  # No output rootfile produced
   #############################################
-  # 
-  # snapshotOptions  = ROOT.ROOT.RDF.RSnapshotOptions()
-  # snapshotOptions.fLazy = True
   #
   # Save at EOS
   #

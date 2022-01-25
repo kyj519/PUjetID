@@ -19,6 +19,15 @@ class SkimmerDiLepton(Module):
       self.isDoubleElecData=isDoubleElecData
       self.isDoubleMuonData=isDoubleMuonData
     #
+    #
+    #
+    self.useMuonRocCor = True
+    self.muonPtDef = "pt"
+    if self.useMuonRocCor:
+      self.muonPtDef = "corrected_pt"
+      print("Use muon pt with rochester corrections applied. Branch:"+self.muonPtDef)
+
+    #
     # Calculate PU ID BDT on-the-fly (OTF). Can only be done with for JMENano as inputs.
     #
     self.doOTFPUJetIDBDT=doOTFPUJetIDBDT 
@@ -286,18 +295,17 @@ class SkimmerDiLepton(Module):
     jetSystPreFix = "" if jetSyst == "" else jetSyst+"_"
     return jetSystPreFix
 
-  def getJetSystBranchPostfix(self, jetSyst):
-    jetSystPreFix = "" if jetSyst == "" else "_"+jetSyst
-    return jetSystPreFix
-
   def getJetPtAndMassForSyst(self, jetSyst):
-
     if self.isMC:
-      jetPt   = "pt_nom"   if jetSyst == "" else "pt_"+jetSyst    # We use the value from nanoAOD-tools
-      jetMass = "mass_nom" if jetSyst == "" else "mass_"+jetSyst  # because we also smear the jet pt.
+      #NOTE: For MC, we use the value from nanoAOD-tools.
+      #The pt and mass systematic variation branches are saved by nanoAOD-tools.
+      jetPt   = "pt_nom"   if jetSyst == "" else "pt_"+jetSyst    
+      jetMass = "mass_nom" if jetSyst == "" else "mass_"+jetSyst 
     else:
-      jetPt   = "pt"   #NOTE: Just use the value from nanoAODs.
-      jetMass = "mass" #The JECs has been applied at the NanoAOD production level.
+      #NOTE: For data, just use the value from nanoAODs.
+      #The JECs has been applied at the NanoAOD production level.
+      jetPt   = "pt"   
+      jetMass = "mass" 
 
     return jetPt, jetMass
 
@@ -309,22 +317,26 @@ class SkimmerDiLepton(Module):
     
     #
     # Check for trigger selection. Skip event if it doesn't
-    # even pass one of them
+    # even pass any one of them
     #
     passElTrig = self.passElectronTriggerSelection(event)
     passMuTrig = self.passMuonTriggerSelection(event)
 
     if passElTrig is False and passMuTrig is False:
       return False
-
+  
+    #
+    # Reconstruct Z->ll and apply selection
+    #
     if self.passZBosonSelection(event) is False:
       return False 
     
     self.fillZBosonBranches(event)
     
     #
-    # Skip event and don't store in tree if this selection doesn't pass nominal
-    # and any systematic variations
+    # Get AK4 jets. 
+    # Skip event and don't store in tree if this selection 
+    # doesn't pass nominal and any systematic variations
     #
     event.passJetSelNomSyst = False
 
@@ -361,7 +373,7 @@ class SkimmerDiLepton(Module):
     # Di-electron trigger selection
     #
     #############################
-    event.passElectronTrig=False
+    event.passElectronTrig = False
 
     if (self.era == "2016" or self.era == "UL2016APV" or self.era == "UL2016"):
       if hasattr(event, 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ'):
@@ -373,7 +385,7 @@ class SkimmerDiLepton(Module):
       if hasattr(event, 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'):
         event.passElectronTrig |= event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
     
-    return True if event.passElectronTrig else False
+    return event.passElectronTrig
       
   def passMuonTriggerSelection(self, event):
     #############################
@@ -381,7 +393,7 @@ class SkimmerDiLepton(Module):
     # Di-muon trigger selection
     #
     ############################
-    event.passMuonTrig=False
+    event.passMuonTrig = False
 
     if (self.era == "2016" or self.era == "UL2016APV" or self.era == "UL2016"):
       if hasattr(event, 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ'):
@@ -397,8 +409,7 @@ class SkimmerDiLepton(Module):
       if hasattr(event, 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8'):
         event.passMuonTrig |= event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
 
-    
-    return True if event.passMuonTrig else False
+    return event.passMuonTrig
  
   def passZBosonSelection(self, event):
     #######################
@@ -421,18 +432,19 @@ class SkimmerDiLepton(Module):
     #
     # Veto muon selection
     #
-    event.muonsVeto  = [x for x in event.muonsAll 
-      if  x.pt > 10. and x.looseId and abs(x.eta) < 2.4 and x.pfIsoId >= 1 and x.isPFcand 
+    event.muonsVeto  = [x for x in event.muonsAll
+      if getattr(x, self.muonPtDef) > 10. and abs(x.eta) < 2.4
+      and x.looseId and x.pfIsoId >= 1 and x.isPFcand
     ]
-    event.muonsVeto.sort(key=lambda x:x.pt,reverse=True)
+    event.muonsVeto.sort(key=lambda x: getattr(x, self.muonPtDef), reverse=True)
 
     #
     # Tight muon selection
     #
-    event.muonsTight  = [x for x in event.muonsVeto 
-      if x.pt > 20. and x.mediumPromptId and x.pfIsoId >= 4 
+    event.muonsTight  = [x for x in event.muonsVeto
+      if getattr(x, self.muonPtDef) > 20. 
+      and x.mediumPromptId and x.pfIsoId >= 4 
     ] 
-
     event.pass0VetoMuons  = len(event.muonsVeto)  == 0
     event.pass2VetoMuons  = len(event.muonsVeto)  == 2
     event.pass2TightMuons = len(event.muonsTight) == 2
@@ -447,7 +459,7 @@ class SkimmerDiLepton(Module):
     #
     # Veto electron selection
     #
-    event.electronsVeto  = [x for x in event.electronsAll 
+    event.electronsVeto  = [x for x in event.electronsAll
       if x.pt > 10. and x.cutBased>=1 and abs(x.deltaEtaSC+x.eta) < 2.5
     ]
     event.electronsVeto.sort(key=lambda x:x.pt,reverse=True)
@@ -455,9 +467,9 @@ class SkimmerDiLepton(Module):
     #
     # Tight electron selection
     #
-    event.electronsTight  = [x for x in event.electronsVeto 
-      if x.pt > 20. and x.mvaFall17V2Iso_WP90 
-      and abs(x.deltaEtaSC+x.eta) < 2.5 
+    event.electronsTight  = [x for x in event.electronsVeto
+      if x.pt > 20. and x.mvaFall17V2Iso_WP90
+      and abs(x.deltaEtaSC+x.eta) < 2.5
       and not(abs(x.deltaEtaSC+x.eta)>=1.4442) and (abs(x.deltaEtaSC+x.eta)<1.566) # ignore electrons in gap region
     ]
 
@@ -505,13 +517,13 @@ class SkimmerDiLepton(Module):
       # Could probably already be tighter than it is stated here 
       # but just check it again just to be safe.
       #
-      if event.muonsTight[0].pt > 20: event.passLep0TrigThreshold = True
-      if event.muonsTight[1].pt > 10: event.passLep1TrigThreshold = True
+      if getattr(event.muonsTight[0], self.muonPtDef) > 20: event.passLep0TrigThreshold = True
+      if getattr(event.muonsTight[1], self.muonPtDef) > 10: event.passLep1TrigThreshold = True
       # 
       # Assign lepton p4
       #
-      event.lep0_p4 = event.muonsTight[0].p4()
-      event.lep1_p4 = event.muonsTight[1].p4()
+      event.lep0_p4 = event.muonsTight[0].p4(getattr(event.muonsTight[0], self.muonPtDef))
+      event.lep1_p4 = event.muonsTight[1].p4(getattr(event.muonsTight[1], self.muonPtDef))
       event.lep0_charge = event.muonsTight[0].charge
       event.lep1_charge = event.muonsTight[1].charge
       event.lep0_pdgId = event.muonsTight[0].pdgId

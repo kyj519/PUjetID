@@ -19,6 +19,10 @@ DataUL16APVD_DoubleMuon
 DataUL16APVE_DoubleMuon
 DataUL16APVF_DoubleMuon
 MCUL16APV_DY_MG
+DataUL16F_DoubleMuon
+DataUL16G_DoubleMuon
+DataUL16H_DoubleMuon
+# MCUL16_DY_MG # Still not available on 16/01/2022
 )
 
 #

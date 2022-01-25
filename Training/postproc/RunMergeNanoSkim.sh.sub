@@ -1,0 +1,26 @@
+executable            = RunMergeNanoSkim.sh
+universe              = vanilla
+output                = BatchLog/Merge.$(SAMPLE).$(ClusterId).$(ProcId).out
+error                 = BatchLog/Merge.$(SAMPLE).$(ClusterId).$(ProcId).err
+log                   = BatchLog/Merge.$(ClusterId).log
+stream_output         = True
+stream_error          = True
+
+environment = "JOBWORKDIR=$ENV(PWD)"
+
++JobFlavour  = "microcentury"
+request_cpus = 1
+arguments    = $(SAMPLE)
+queue SAMPLE from (   
+MCUL17_DY_MG
+MCUL18_DY_MG
+)
+
+
++JobFlavour  = "espresso"
+request_cpus = 1
+arguments    = $(SAMPLE)
+queue SAMPLE from (   
+DataUL17_DoubleMuon
+DataUL18_DoubleMuon
+)

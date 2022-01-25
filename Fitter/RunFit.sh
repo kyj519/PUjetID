@@ -5,7 +5,7 @@ INDIR="../Analyzer/histos3D/"
 #
 # Directory path for the output of the fits
 #
-OUTDIR="./results_ULNanoV9_v1p3/"
+OUTDIR="./results_ULNanoV9_v1p4/"
 
 function RunFitter {
   python extract_fit.py --input ${1} --output ${2}/Baseline/${3}_WPLoose/  --year ${3} --wp Loose

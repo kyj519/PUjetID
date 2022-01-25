@@ -1,0 +1,59 @@
+#
+# Drop everything
+#
+drop * 
+#
+# Here we start specifying what we want to store
+#
+keep run
+keep luminosityBlock
+keep event
+keep genWeight
+#
+keep nLHEPdfWeight
+keep LHEPdfWeight
+keep nLHEScaleWeight
+keep LHEScaleWeight
+keep nPSWeight
+keep PSWeight
+#
+keep L1PreFiringWeight_Nom
+keep L1PreFiringWeight_Up
+keep L1PreFiringWeight_Dn
+#
+keep Pileup_*
+keep PV_*
+#
+keep MET_pt
+keep MET_phi
+keep MET_sumEt
+keep PuppiMET_*
+keep Flag_goodVertices
+keep Flag_globalSuperTightHalo2016Filter
+keep Flag_HBHENoiseFilter
+keep Flag_HBHENoiseIsoFilter
+keep Flag_EcalDeadCellTriggerPrimitiveFilter
+keep Flag_BadPFMuonFilter 
+keep Flag_BadPFMuonDzFilter
+keep Flag_hfNoisyHitsFilter
+keep Flag_BadChargedCandidateFilter
+keep Flag_eeBadScFilter
+keep Flag_ecalBadCalibFilter
+#
+# Branches added by user
+#
+keep lep0*
+keep lep1*
+keep dilep*
+#
+#
+keep *nJetSel*
+keep JetSel*
+keep *nJetPuppiSel*
+keep JetPuppiSel*
+keep *nGenJet*
+keep GenJet_*
+#
+# Branches added in output by modules in NanoAOD-tools (ALWAYS CHECK)
+#
+keep puWeight*
