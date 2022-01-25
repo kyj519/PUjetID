@@ -6,8 +6,8 @@ Setup a CMSSW release:
 ```
 mkdir PileUpJetIDSF
 cd PileUpJetIDSF
-cmsrel CMSSW_10_6_26
-cd CMSSW_10_6_26/src
+cmsrel CMSSW_10_6_30
+cd CMSSW_10_6_30/src
 cmsenv
 ```
 Checkout [nanoAOD-tools](https://github.com/cms-nanoAOD/nanoAOD-tools):
@@ -27,8 +27,8 @@ scram b -j4
 ```
 
 Go to [Skimmer/data/mvaWeights](Skimmer/data/mvaWeights/) and download the TMVA BDT training weights 
-for the pileup jet ID, as per the instructions in the `README.md`. This is needed for `JMEnanoV1 UL2017` input 
-and also for any future `JMEnano` production.
+for the pileup jet ID, as per the instructions in the `README.md`. This is needed for any ntuple skim 
+production using `JMENano` as inputs.
 
 ## Skim NanoAODs
 **:construction: UNDER CONSTRUCTION**
@@ -38,8 +38,8 @@ and also for any future `JMEnano` production.
 All the scripts required to make the histogram templates are in the [**Analyzer**](./Analyzer) directory.
 
 >**:exclamation:IMPORTANT** You need to use ROOT version ```6.22``` or later. You can setup the environment 
-to version ```6.22.08``` by sourcing the [```sourceRecentROOT.sh```](./Analyzer/sourceRecentROOT.sh) 
-bash script. The bash script will also unset the CMSSW runtime environment if you had done ```cmsenv```earlier. 
+to the latest version by sourcing the [```sourceRecentROOT.sh```](./Analyzer/sourceRecentROOT.sh) bash script. 
+The bash script will also unset the CMSSW runtime environment if you had done ```cmsenv```earlier. 
 This ensures there are no conflicts between the ROOT version that you have just set up and the version in CMSSW.
 
 Producing the histograms is a two-step process. The steps are:
