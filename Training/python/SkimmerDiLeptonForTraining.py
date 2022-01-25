@@ -100,6 +100,10 @@ class SkimmerDiLeptonForTraining(Module):
     self.out.branch("JetSel_qgl_axis2",      "F", lenVar=lenVarJet)
     self.out.branch("JetSel_qgl_ptD",        "F", lenVar=lenVarJet)
     self.out.branch("JetSel_qgl_mult",       "F", lenVar=lenVarJet)
+    self.out.branch("JetSel_btagDeepFlavQG",            "F", lenVar=lenVarJet)
+    self.out.branch("JetSel_btagDeepFlavUDS",           "F", lenVar=lenVarJet)
+    self.out.branch("JetSel_particleNetAK4_QvsG",       "F", lenVar=lenVarJet)
+    self.out.branch("JetSel_particleNetAK4_puIdDisc",   "F", lenVar=lenVarJet)
     if(self.isMC):
       self.out.branch("JetSel_partflav",     "I", lenVar=lenVarJet)
       self.out.branch("JetSel_hadflav",      "I", lenVar=lenVarJet)
@@ -149,6 +153,11 @@ class SkimmerDiLeptonForTraining(Module):
     self.out.branch("JetPuppiSel_qgl_axis2",      "F", lenVar=lenVarJetPuppi)
     self.out.branch("JetPuppiSel_qgl_ptD",        "F", lenVar=lenVarJetPuppi)
     self.out.branch("JetPuppiSel_qgl_mult",       "F", lenVar=lenVarJetPuppi)
+    self.out.branch("JetPuppiSel_btagDeepFlavQG",            "F", lenVar=lenVarJet)
+    self.out.branch("JetPuppiSel_btagDeepFlavUDS",           "F", lenVar=lenVarJet)
+    self.out.branch("JetPuppiSel_particleNetAK4_QvsG",       "F", lenVar=lenVarJet)
+    self.out.branch("JetPuppiSel_particleNetAK4_puIdDisc",   "F", lenVar=lenVarJet)
+
     if(self.isMC):
       self.out.branch("JetPuppiSel_partflav",     "I", lenVar=lenVarJetPuppi)
       self.out.branch("JetPuppiSel_hadflav",      "I", lenVar=lenVarJetPuppi)
@@ -583,6 +592,10 @@ class SkimmerDiLeptonForTraining(Module):
     self.out.fillBranch(jetColl+"_qgl_axis2",       [])
     self.out.fillBranch(jetColl+"_qgl_ptD",         [])
     self.out.fillBranch(jetColl+"_qgl_mult",        [])
+    self.out.fillBranch(jetColl+"_btagDeepFlavQG",          [])
+    self.out.fillBranch(jetColl+"_btagDeepFlavUDS",         [])
+    self.out.fillBranch(jetColl+"_particleNetAK4_QvsG",     [])
+    self.out.fillBranch(jetColl+"_particleNetAK4_puIdDisc", [])
     if self.isMC:
       self.out.fillBranch(jetColl+"_partflav",      [])
       self.out.fillBranch(jetColl+"_hadflav",       [])
@@ -638,6 +651,11 @@ class SkimmerDiLeptonForTraining(Module):
     jet_qgl_axis2 = []
     jet_qgl_ptD = []
     jet_qgl_mult = []
+
+    jet_btagDeepFlavQG = []
+    jet_btagDeepFlavUDS = []
+    jet_particleNetAK4_QvsG = []
+    jet_particleNetAK4_puIdDisc = []
 
     jet_partonFlavour = []
     jet_hadronFlavour = []
@@ -698,6 +716,10 @@ class SkimmerDiLeptonForTraining(Module):
       jet_qgl_axis2.append(jet.qgl_axis2)
       jet_qgl_ptD.append(jet.qgl_ptD)
       jet_qgl_mult.append(jet.qgl_mult)
+      jet_btagDeepFlavQG.append(jet.btagDeepFlavQG)
+      jet_btagDeepFlavUDS.append(jet.btagDeepFlavUDS)
+      jet_particleNetAK4_QvsG.append(jet.particleNetAK4_QvsG)
+      jet_particleNetAK4_puIdDisc.append(jet.particleNetAK4_puIdDisc)
       
       if self.isMC:
         jet_partonFlavour.append(jet.partonFlavour)
@@ -775,6 +797,10 @@ class SkimmerDiLeptonForTraining(Module):
     self.out.fillBranch(jetColl+"_qgl_axis2",       jet_qgl_axis2)
     self.out.fillBranch(jetColl+"_qgl_ptD",         jet_qgl_ptD)
     self.out.fillBranch(jetColl+"_qgl_mult",        jet_qgl_mult)
+    self.out.fillBranch(jetColl+"_btagDeepFlavQG",          jet_btagDeepFlavQG)
+    self.out.fillBranch(jetColl+"_btagDeepFlavUDS",         jet_btagDeepFlavUDS)
+    self.out.fillBranch(jetColl+"_particleNetAK4_QvsG",     jet_particleNetAK4_QvsG)
+    self.out.fillBranch(jetColl+"_particleNetAK4_puIdDisc", jet_particleNetAK4_puIdDisc)
     if self.isMC:
       self.out.fillBranch(jetColl+"_partflav",      jet_partonFlavour)
       self.out.fillBranch(jetColl+"_hadflav",       jet_hadronFlavour)
