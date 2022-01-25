@@ -4,7 +4,7 @@ import collections
 import array
 import math
 
-def PlotDataMC(canvName, bkgdStack, dataHist, totalBkgd, leg, xaxistitle, yaxistitle, year, lumi, doLogy, pdfName):
+def PlotDataMC(canvName, mcStack, dataHist, mcTotal, leg, xaxistitle, yaxistitle, year, lumi, doLogy, pdfName):
   #
   # Make TCanvas
   #
@@ -50,7 +50,10 @@ def PlotDataMC(canvName, bkgdStack, dataHist, totalBkgd, leg, xaxistitle, yaxist
   
   latex.DrawLatex(0.15, 0.92, Internal );
   latex.SetTextSize( 0.03 );
-  latex.DrawLatex(0.64, 0.98, Lumi+' ('+year+' 13 TeV)');
+  if "early" in year or "late" in year:
+    latex.DrawLatex(0.57, 0.98, Lumi+' ('+year+' 13 TeV)');
+  else:
+    latex.DrawLatex(0.64, 0.98, Lumi+' ('+year+' 13 TeV)');
   latex.SetTextSize( 0.028 );
 
   #
@@ -61,14 +64,14 @@ def PlotDataMC(canvName, bkgdStack, dataHist, totalBkgd, leg, xaxistitle, yaxist
   #
   # backgrounds
   #
-  bkgdStack.Draw("hist")
-  bkgdStack.GetXaxis().SetTitle(xaxistitle)
-  bkgdStack.GetYaxis().SetTitle(yaxistitle)
+  mcStack.Draw("hist")
+  mcStack.GetXaxis().SetTitle(xaxistitle)
+  mcStack.GetYaxis().SetTitle(yaxistitle)
   #
   # Draw Error band of total bkgd
   #
   systematics = [] 
-  Syst = GetSystematicUncertaintyBand(totalBkgd,systematics)
+  Syst = GetSystematicUncertaintyBand(mcTotal,systematics)
   Syst.SetFillColor( ROOT.kBlack )
   Syst.SetFillStyle( 3245 )
   Syst.SetLineColor( ROOT.kWhite )
@@ -83,9 +86,9 @@ def PlotDataMC(canvName, bkgdStack, dataHist, totalBkgd, leg, xaxistitle, yaxist
   # Adjust min and max
   #
   maximum = None 
-  maximum = max(bkgdStack.GetMaximum(),dataHist.GetMaximum())
-  bkgdStack.SetMaximum(maximum * 1.50)
-  bkgdStack.SetMinimum(0.01)
+  maximum = max(mcStack.GetMaximum(),dataHist.GetMaximum())
+  mcStack.SetMaximum(maximum * 1.50)
+  mcStack.SetMinimum(0.01)
   pad1.Update()
   
   #
@@ -101,17 +104,17 @@ def PlotDataMC(canvName, bkgdStack, dataHist, totalBkgd, leg, xaxistitle, yaxist
   leg.Draw("same")
   if doLogy: 
     pad1.SetLogy()
-    bkgdStack.SetMaximum(maximum * 100)
-    bkgdStack.SetMinimum(0.1)
+    mcStack.SetMaximum(maximum * 100)
+    mcStack.SetMinimum(0.1)
     pad1.Update()
   #
   # Go to 2nd pad 
   #
   pad2.cd()
   pad2.SetGridy()
-  Ratio, SystBand = GetRatioHistogram( dataHist, totalBkgd, Syst )
+  Ratio, SystBand = GetRatioHistogram( dataHist, mcTotal, Syst )
   SetDataStyle( Ratio )
-  Ratio.GetXaxis().SetTitle(bkgdStack.GetXaxis().GetTitle())
+  Ratio.GetXaxis().SetTitle(mcStack.GetXaxis().GetTitle())
   #
   # Draw ratio plot
   #
@@ -139,8 +142,12 @@ def PlotDataMC(canvName, bkgdStack, dataHist, totalBkgd, leg, xaxistitle, yaxist
   Ratio.Draw( 'same' )      
   canv.Print( pdfName + ".pdf")
 
+  mcStack.GetHists().Delete()
+  del mcStack
+  del dataHist
+  del mcTotal
   del canv
-
+  
 def GetSystematicUncertaintyBand(nom,systematics):
   
   from ROOT import TGraphAsymmErrors
