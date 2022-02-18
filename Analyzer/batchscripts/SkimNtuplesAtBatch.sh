@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd REPLACEME
+cd ${JOBWORKDIR}
 source ./sourceRecentROOT.sh
 python SkimNtuples.py --sample ${1} --cores ${2}
