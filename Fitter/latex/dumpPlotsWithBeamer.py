@@ -8,36 +8,24 @@ def main():
   showFitInEachBin=True
 
   eras = [
-    "UL2017",
     "UL2018",
+    "UL2017",
+    "UL2016",
     "UL2016APV",
   ]
 
   for year in eras:
-    outFileName="DumpPlots_PUIDSF_"+version+"_Baseline_"+year
-    inDir="../"+version+"/Baseline/"
+    outFileName="DumpPlots_PUIDSF_"+version+"_NLO_"+year
+    inDir="../"+version+"/NLO/"
     CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
-    # outFileName="DumpPlots_PUIDSF_"+version+"_NLO_"+year
-    # inDir="../"+version+"/NLO/"
-    # CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
-
-    # outFileName="DumpPlots_PUIDSF_"+version+"_jesTotalUp_"+year
+    # outFileName="DumpPlots_PUIDSF_"+version+"_NLO_jesTotalUp_"+year
     # inDir="../"+version+"/jesTotalUp/"
     # CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
-    # outFileName="DumpPlots_PUIDSF_"+version+"_jesTotalDown_"+year
+    # outFileName="DumpPlots_PUIDSF_"+version+"_NLO_jesTotalDown_"+year
     # inDir="../"+version+"/jesTotalDown/"
     # CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
-
-  # eras = [
-  #   "UL2016APV",
-  #   "UL2016",
-  # ]
-  # for year in eras:
-  #   outFileName="DumpPlots_PUIDSF_"+version+"_Powheg_"+year
-  #   inDir="../"+version+"/Powheg/"
-  #   CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
 def CompilePlots(inDir, version, year, outFileName, showFitInEachBin=True):
   

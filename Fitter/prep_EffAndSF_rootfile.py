@@ -15,8 +15,9 @@ printPNG    = False
 #
 def main():
   eras = [
-    "UL2017",
     "UL2018",
+    "UL2017",
+    "UL2016",
     "UL2016APV",
   ]
   wps = [
@@ -84,107 +85,107 @@ def MakeMaps(resultsDir,era,wp):
     inFile.Close()
     return hC
 
-  def MakeMapSystFit(hBase):
-    h2_syst = hBase.Clone("h2_syst")
+  def MakeMapSystFit(hNominal):
+    h2_syst = hNominal.Clone("h2_syst")
     h2_syst.Reset()
     h2_syst.SetMaximum(0.100)
     h2_syst.SetMinimum(0.000)
 
-    h2_syst_frac = hBase.Clone("h2_syst_frac")
+    h2_syst_frac = hNominal.Clone("h2_syst_frac")
     h2_syst_frac.Reset()
     h2_syst_frac.SetMaximum(0.100)
     h2_syst_frac.SetMinimum(0.000)
 
-    nbinsX = hBase.GetNbinsX()
-    nbinsY = hBase.GetNbinsY()
+    nbinsX = hNominal.GetNbinsX()
+    nbinsY = hNominal.GetNbinsY()
 
     for iBinX in range(1,nbinsX+1):
       for iBinY in range(1,nbinsY+1):
-        valBase = hBase.GetBinContent(iBinX,iBinY)
-        valSyst = hBase.GetBinError(iBinX,iBinY)
+        valNominal = hNominal.GetBinContent(iBinX,iBinY)
+        valSyst = hNominal.GetBinError(iBinX,iBinY)
         h2_syst.SetBinContent(iBinX,iBinY,valSyst)
-        if valBase > 0:
-          h2_syst_frac.SetBinContent(iBinX,iBinY,(valSyst/valBase))
+        if valNominal > 0:
+          h2_syst_frac.SetBinContent(iBinX,iBinY,(valSyst/valNominal))
         else:
           h2_syst_frac.SetBinContent(iBinX,iBinY,0)
     return h2_syst, h2_syst_frac
 
-  def MakeMapSystOneSided(hBase, hSyst):
-    h2_syst = hBase.Clone("h2_syst")
+  def MakeMapSystOneSided(hNominal, hSyst):
+    h2_syst = hNominal.Clone("h2_syst")
     h2_syst.Reset()
     h2_syst.SetMaximum(0.100)
     h2_syst.SetMinimum(0.000)
 
-    h2_syst_frac = hBase.Clone("h2_syst_frac")
+    h2_syst_frac = hNominal.Clone("h2_syst_frac")
     h2_syst_frac.Reset()
     h2_syst_frac.SetMaximum(0.100)
     h2_syst_frac.SetMinimum(0.000)
 
-    nbinsX = hBase.GetNbinsX()
-    nbinsY = hBase.GetNbinsY()
+    nbinsX = hNominal.GetNbinsX()
+    nbinsY = hNominal.GetNbinsY()
 
     for iBinX in range(1,nbinsX+1):
       for iBinY in range(1,nbinsY+1):
-        valBase =  hBase.GetBinContent(iBinX,iBinY)
+        valNominal =  hNominal.GetBinContent(iBinX,iBinY)
         valSyst =  hSyst.GetBinContent(iBinX,iBinY)
-        absDiff = abs(valBase-valSyst)
+        absDiff = abs(valNominal-valSyst)
         h2_syst.SetBinContent(iBinX,iBinY,absDiff)
-        if valBase > 0:
-          absDiffFrac = absDiff/valBase
+        if valNominal > 0:
+          absDiffFrac = absDiff/valNominal
         else:
           absDiffFrac = 0
         h2_syst_frac.SetBinContent(iBinX,iBinY,absDiffFrac)
 
     return h2_syst, h2_syst_frac
 
-  def MakeMapSystTwoSided(hBase, hSystUp, hSystDown):
-    h2_syst = hBase.Clone("h2_syst")
+  def MakeMapSystTwoSided(hNominal, hSystUp, hSystDown):
+    h2_syst = hNominal.Clone("h2_syst")
     h2_syst.Reset()
     h2_syst.SetMaximum(0.100)
     h2_syst.SetMinimum(0.000)
 
-    h2_syst_frac = hBase.Clone("h2_syst_frac")
+    h2_syst_frac = hNominal.Clone("h2_syst_frac")
     h2_syst_frac.Reset()
     h2_syst_frac.SetMaximum(0.100)
     h2_syst_frac.SetMinimum(0.000)
 
-    nbinsX = hBase.GetNbinsX()
-    nbinsY = hBase.GetNbinsY()
+    nbinsX = hNominal.GetNbinsX()
+    nbinsY = hNominal.GetNbinsY()
 
     for iBinX in range(1,nbinsX+1):
       for iBinY in range(1,nbinsY+1):
-        valBase = hBase.GetBinContent(iBinX,iBinY)
+        valNominal = hNominal.GetBinContent(iBinX,iBinY)
         valSystUp = hSystUp.GetBinContent(iBinX,iBinY)
         valSystDown = hSystDown.GetBinContent(iBinX,iBinY)
-        absDiff_SystUp   = abs(valBase - valSystUp)
-        absDiff_SystDown = abs(valBase - valSystDown)
+        absDiff_SystUp   = abs(valNominal - valSystUp)
+        absDiff_SystDown = abs(valNominal - valSystDown)
         absDiff = max(absDiff_SystUp,absDiff_SystDown)
         h2_syst.SetBinContent(iBinX,iBinY,absDiff)
-        if valBase > 0:
-          absDiffFrac = absDiff/valBase
+        if valNominal > 0:
+          absDiffFrac = absDiff/valNominal
         else:
           absDiffFrac = 0
         h2_syst_frac.SetBinContent(iBinX,iBinY,absDiffFrac)
 
     return h2_syst, h2_syst_frac
 
-  def MakeMapSystTotal(hBase, hSystList=[]):
-    h2_syst = hBase.Clone("h2_syst")
+  def MakeMapSystTotal(hNominal, hSystList=[]):
+    h2_syst = hNominal.Clone("h2_syst")
     h2_syst.Reset()
     h2_syst.SetMaximum(0.100)
     h2_syst.SetMinimum(0.000)
 
-    h2_syst_frac = hBase.Clone("h2_syst_frac")
+    h2_syst_frac = hNominal.Clone("h2_syst_frac")
     h2_syst_frac.Reset()
     h2_syst_frac.SetMaximum(0.100)
     h2_syst_frac.SetMinimum(0.000)
 
-    nbinsX = hBase.GetNbinsX()
-    nbinsY = hBase.GetNbinsY()
+    nbinsX = hNominal.GetNbinsX()
+    nbinsY = hNominal.GetNbinsY()
 
     for iBinX in range(1,nbinsX+1):
       for iBinY in range(1,nbinsY+1):
-        valBase =  hBase.GetBinContent(iBinX,iBinY)
+        valNominal =  hNominal.GetBinContent(iBinX,iBinY)
         #
         #
         #
@@ -194,36 +195,37 @@ def MakeMaps(resultsDir,era,wp):
           valSystTotal += (valSyst*valSyst)
         valSystTotal = math.sqrt(valSystTotal)
         h2_syst.SetBinContent(iBinX,iBinY,valSystTotal)
-        if valBase > 0:
-          absDiffFrac = valSystTotal/valBase
+        if valNominal > 0:
+          absDiffFrac = valSystTotal/valNominal
         else:
           absDiffFrac = 0
         h2_syst_frac.SetBinContent(iBinX,iBinY,absDiffFrac)
 
     return h2_syst, h2_syst_frac
-
-
-  inDir_Base = resultsDir + "/Baseline/%s_WP%s/" %(era,wp)
-  inDir_jesTotalUp = resultsDir + "/jesTotalUp/%s_WP%s/" %(era,wp)
-  inDir_jesTotalDown= resultsDir + "/jesTotalDown/%s_WP%s/" %(era,wp)
-  inDir_NLO = resultsDir + "/NLO/%s_WP%s/" %(era,wp)
+  
+  #
+  # Use NLO sample as Nominal.
+  #
+  inDir_Nominal      = resultsDir + "/NLO/%s_WP%s/" %(era,wp)
+  inDir_jesTotalUp   = resultsDir + "/NLO_jesTotalUp/%s_WP%s/" %(era,wp)
+  inDir_jesTotalDown = resultsDir + "/NLO_jesTotalDown/%s_WP%s/" %(era,wp)
 
   #
   # MC Eff & MC Mistag
   #
   print("Retrieving MC Eff and Mistag for "+ wp +" WP and era " + era)
-  h2_eff_mc    = GetHistoFromFile(inDir_Base, "%s%s_%s"%("h2_eff_mc",eraStr,wpStr))
-  h2_mistag_mc = GetHistoFromFile(inDir_Base, "%s%s_%s"%("h2_mistag_mc",eraStr,wpStr))
+  h2_eff_mc    = GetHistoFromFile(inDir_Nominal, "%s%s_%s"%("h2_eff_mc",eraStr,wpStr))
+  h2_mistag_mc = GetHistoFromFile(inDir_Nominal, "%s%s_%s"%("h2_mistag_mc",eraStr,wpStr))
 
   #
   # SF Eff & SF Mistag
   #
   print("Retrieving SF Eff and Mistag for "+ wp +" WP and era " + era)
-  h2_eff_sf    = GetHistoFromFile(inDir_Base, "%s%s_%s"%("h2_eff_sf",eraStr,wpStr))
-  h2_mistag_sf = GetHistoFromFile(inDir_Base, "%s%s_%s"%("h2_mistag_sf",eraStr,wpStr))
+  h2_eff_sf    = GetHistoFromFile(inDir_Nominal, "%s%s_%s"%("h2_eff_sf",eraStr,wpStr))
+  h2_mistag_sf = GetHistoFromFile(inDir_Nominal, "%s%s_%s"%("h2_mistag_sf",eraStr,wpStr))
 
   #
-  # SF Eff & SF Mistag fit uncertainty 
+  # SF Eff & SF Mistag (Fit Uncertainty)
   #
   print("Retrieving Fit Uncertainty for SF Eff and Mistag for "+ wp +" WP and era " + era)
   h2_eff_sf_syst_fit, h2_eff_sf_fracsyst_fit = MakeMapSystFit(h2_eff_sf)
@@ -235,23 +237,23 @@ def MakeMaps(resultsDir,era,wp):
   h2_mistag_sf_fracsyst_fit.SetNameTitle("%s%s_%s_%s"%("h2_mistag_sf",eraStr,wpStr,"FracSystuncty_Fit"),"Efficiency SF Fractional Unc (Fit), WP " +wp+ ", "+era)
 
   #
-  # SF Eff & SF Mistag uncertainty due to difference wrt to Gen-based info eff and Mistag 
+  # SF Eff & SF Mistag (Uncertainty due to difference wrt to Gen-based info Efficiency and Mistag)
   #
   print("Retrieving Gen Uncertainty for SF Eff and Mistag for "+ wp +" WP and era " + era)
-  h2_effgen_sf       = GetHistoFromFile(inDir_Base, "%s%s_%s"%("h2_effgen_sf",eraStr,wpStr))
+  h2_effgen_sf       = GetHistoFromFile(inDir_Nominal, "%s%s_%s"%("h2_effgen_sf",eraStr,wpStr))
 
   h2_eff_sf_syst_gen, h2_eff_sf_fracsyst_gen = MakeMapSystOneSided(h2_eff_sf,h2_effgen_sf)
   h2_eff_sf_syst_gen.SetNameTitle("%s%s_%s_%s"%("h2_eff_sf",eraStr,wpStr,"Systuncty_Gen"),"Efficiency SF Unc (Gen), WP " +wp+ ", "+era)
   h2_eff_sf_fracsyst_gen.SetNameTitle("%s%s_%s_%s"%("h2_eff_sf",eraStr,wpStr,"FracSystuncty_Gen"),"Efficiency SF Fractional Unc (Gen), WP " +wp+ ", "+era)
 
-  h2_mistaggen_sf = GetHistoFromFile(inDir_Base, "%s%s_%s"%("h2_mistaggen_sf",eraStr,wpStr))
+  h2_mistaggen_sf = GetHistoFromFile(inDir_Nominal, "%s%s_%s"%("h2_mistaggen_sf",eraStr,wpStr))
 
   h2_mistag_sf_syst_gen, h2_mistag_sf_fracsyst_gen = MakeMapSystOneSided(h2_mistag_sf,h2_mistaggen_sf)
   h2_mistag_sf_syst_gen.SetNameTitle("%s%s_%s_%s"%("h2_mistag_sf",eraStr,wpStr,"Systuncty_Gen"),"Mistag SF Unc (Gen), WP " +wp+ ", "+era)
   h2_mistag_sf_fracsyst_gen.SetNameTitle("%s%s_%s_%s"%("h2_mistag_sf",eraStr,wpStr,"FracSystuncty_Gen"),"Mistag SF Fractional Unc (Gen), WP " +wp+ ", "+era)
 
   #
-  # SF Eff & SF Mistag using Gen-based info
+  # SF Eff & SF Mistag (Uncertainty due JES)
   #
   print("Retrieving JES Uncertainty for SF Eff and Mistag for "+ wp +" WP and era " + era)
   h2_eff_sf_jesUp    = GetHistoFromFile(inDir_jesTotalUp, "%s%s_%s"%("h2_eff_sf",eraStr,wpStr))

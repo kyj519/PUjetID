@@ -549,8 +549,8 @@ def main():
 
 
     if syst != "":
-        if useNLO or useHerwig or usePowheg:
-            raise Exception("Can't specify systematics for NLO/Herwig/Powheg samples. Only LO sample.")
+        if  useHerwig or usePowheg:
+            raise Exception("Can't specify systematics for Herwig/Powheg samples. Only LO and NLO samples.")
         else:
             mc_filename = mc_filename.replace(".root","_"+syst+".root")
 
