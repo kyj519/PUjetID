@@ -2,10 +2,12 @@
 # Directory path containing all the histogram rootfiles
 #
 INDIR="../Analyzer/histos3D/"
+
 #
 # Directory path for the output of the fits
 #
 OUTDIR="./results_ULNanoV9_v1p4/"
+
 
 #############################################################################
 #
@@ -13,9 +15,9 @@ OUTDIR="./results_ULNanoV9_v1p4/"
 #
 #############################################################################
 function RunFitterNLO {
-  python extract_fit_v2.py --useNLO --input ${1} --output ${2}/NLO/${3}_WPLoose/  --year ${3} --wp Loose
-  python extract_fit_v2.py --useNLO --input ${1} --output ${2}/NLO/${3}_WPMedium/ --year ${3} --wp Medium
-  python extract_fit_v2.py --useNLO --input ${1} --output ${2}/NLO/${3}_WPTight/  --year ${3} --wp Tight
+  python extract_fit.py --useNLO --input ${1} --output ${2}/NLO/${3}_WPLoose/  --year ${3} --wp Loose
+  python extract_fit.py --useNLO --input ${1} --output ${2}/NLO/${3}_WPMedium/ --year ${3} --wp Medium
+  python extract_fit.py --useNLO --input ${1} --output ${2}/NLO/${3}_WPTight/  --year ${3} --wp Tight
 }
 
 function RunFitterNLOSyst {
