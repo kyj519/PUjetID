@@ -16,8 +16,7 @@ def main():
 
   for year in eras:
     outFileName="DumpPlots_PUIDSF_"+version+"_NLO_"+year
-    # inDir="../"+version+"/NLO/"
-    inDir="../../../../../Backup_ULNanoV9_v1p4/"+version+"/NLO/"
+    inDir="../"+version+"/NLO/"
     CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
     # outFileName="DumpPlots_PUIDSF_"+version+"_NLO_jesTotalUp_"+year
