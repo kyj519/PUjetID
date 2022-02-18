@@ -1,5 +1,5 @@
 EOSURL      = "root://eoscms.cern.ch/"
-prod_tag    = "DiLeptonSkim_JMENanoV9_v1p2"
+prod_tag    = "DiLepSkim_JMENanoV9_v1p2"
 path_inDir  = "/eos/cms/store/group/phys_jetmet/nbinnorj/JetPUIdTrain_"+prod_tag+"/CRABOUTPUT/"
 path_outDir = "/eos/cms/store/group/phys_jetmet/nbinnorj/JetPUIdTrain_"+prod_tag+"/MERGED/"
 
@@ -20,7 +20,12 @@ for era in eraListForMC:
     ],
     "xsec": 5347.0,
   }
-
+  samplesInfoDict["MC"+era+"_TTTo2L2Nu"] = {
+    "path": [
+      "TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/JetPUIdTrain_MC"+era+"JMENanoAODv9_"+prod_tag+"*/*/*/tree_*.root"
+    ],
+    "xsec": 88.29, #pb
+  }
 
 #
 # UL2017 Lumi: 41479.68 picobarns

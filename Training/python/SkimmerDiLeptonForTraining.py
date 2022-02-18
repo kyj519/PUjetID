@@ -117,6 +117,7 @@ class SkimmerDiLeptonForTraining(Module):
       self.out.branch("JetSel_gen_partflav", "I", lenVar=lenVarJet)
       self.out.branch("JetSel_gen_hadflav",  "I", lenVar=lenVarJet)
       self.out.branch("JetSel_gen_idx",      "I", lenVar=lenVarJet)
+  
     #
     # AK4 Puppi jets
     #
@@ -153,10 +154,10 @@ class SkimmerDiLeptonForTraining(Module):
     self.out.branch("JetPuppiSel_qgl_axis2",      "F", lenVar=lenVarJetPuppi)
     self.out.branch("JetPuppiSel_qgl_ptD",        "F", lenVar=lenVarJetPuppi)
     self.out.branch("JetPuppiSel_qgl_mult",       "F", lenVar=lenVarJetPuppi)
-    self.out.branch("JetPuppiSel_btagDeepFlavQG",            "F", lenVar=lenVarJet)
-    self.out.branch("JetPuppiSel_btagDeepFlavUDS",           "F", lenVar=lenVarJet)
-    self.out.branch("JetPuppiSel_particleNetAK4_QvsG",       "F", lenVar=lenVarJet)
-    self.out.branch("JetPuppiSel_particleNetAK4_puIdDisc",   "F", lenVar=lenVarJet)
+    self.out.branch("JetPuppiSel_btagDeepFlavQG",            "F", lenVar=lenVarJetPuppi)
+    self.out.branch("JetPuppiSel_btagDeepFlavUDS",           "F", lenVar=lenVarJetPuppi)
+    self.out.branch("JetPuppiSel_particleNetAK4_QvsG",       "F", lenVar=lenVarJetPuppi)
+    self.out.branch("JetPuppiSel_particleNetAK4_puIdDisc",   "F", lenVar=lenVarJetPuppi)
 
     if(self.isMC):
       self.out.branch("JetPuppiSel_partflav",     "I", lenVar=lenVarJetPuppi)
@@ -171,6 +172,7 @@ class SkimmerDiLeptonForTraining(Module):
       self.out.branch("JetPuppiSel_gen_partflav", "I", lenVar=lenVarJetPuppi)
       self.out.branch("JetPuppiSel_gen_hadflav",  "I", lenVar=lenVarJetPuppi)
       self.out.branch("JetPuppiSel_gen_idx",      "I", lenVar=lenVarJetPuppi)
+
 
   def analyze(self, event):
     """process event, return True (go to next module) or False (fail, go to next event)"""
@@ -199,9 +201,9 @@ class SkimmerDiLeptonForTraining(Module):
     # Get AK4 jets. 
     #
     self.resetJetBranches(event,"JetSel")
-    self.resetJetBranches(event,"JetPuppiSel")
- 
     passAK4CHSJetSel   = self.passAK4CHSJetSelection(event)
+
+    self.resetJetBranches(event,"JetPuppiSel")
     passAK4PuppiJetSel = self.passAK4PuppiJetSelection(event)
 
     if passAK4CHSJetSel or passAK4PuppiJetSel:

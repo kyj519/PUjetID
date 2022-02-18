@@ -6,12 +6,14 @@ log                   = BatchLog/Skim.$(ClusterId).log
 stream_output         = True
 stream_error          = True
 
-+JobFlavour  = "longlunch"
+environment = "JOBWORKDIR=$ENV(PWD)"
+
++JobFlavour  = "microcentury"
 request_cpus = 4
 arguments    = $(SAMPLE) 4
 queue SAMPLE from (
-MCUL17_DY_MG
 MCUL18_DY_MG
+MCUL17_DY_MG
 MCUL16APV_DY_MG
 )
 
@@ -19,9 +21,16 @@ MCUL16APV_DY_MG
 request_cpus = 4
 arguments    = $(SAMPLE) 4
 queue SAMPLE from (
-MCUL17_DY_AMCNLO
 MCUL18_DY_AMCNLO
+MCUL17_DY_AMCNLO
+MCUL16_DY_AMCNLO
 MCUL16APV_DY_AMCNLO
+)
+
++JobFlavour  = "microcentury"
+request_cpus = 4
+arguments    = $(SAMPLE) 4
+queue SAMPLE from (
 MCUL16APV_DYToMuMu_PHG
 MCUL16_DYToMuMu_PHG
 )
@@ -30,21 +39,49 @@ MCUL16_DYToMuMu_PHG
 request_cpus = 4
 arguments    = $(SAMPLE) 4
 queue SAMPLE from (
+DataUL18A_DoubleMuon
+DataUL18B_DoubleMuon
+DataUL18C_DoubleMuon
+DataUL18D_DoubleMuon
 DataUL17B_DoubleMuon
 DataUL17C_DoubleMuon
 DataUL17D_DoubleMuon
 DataUL17E_DoubleMuon
 DataUL17F_DoubleMuon
-DataUL18A_DoubleMuon
-DataUL18B_DoubleMuon
-DataUL18C_DoubleMuon
-DataUL18D_DoubleMuon
+DataUL16F_DoubleMuon
+DataUL16G_DoubleMuon
+DataUL16H_DoubleMuon
 DataUL16APVB_DoubleMuon
 DataUL16APVC_DoubleMuon
 DataUL16APVD_DoubleMuon
 DataUL16APVE_DoubleMuon
 DataUL16APVF_DoubleMuon
-DataUL16F_DoubleMuon
-DataUL16G_DoubleMuon
-DataUL16H_DoubleMuon
 )
+
+#+JobFlavour  = "microcentury"
+#request_cpus = 4
+#arguments    = $(SAMPLE) 4
+#queue SAMPLE from (
+#MCUL18_TTTo2L2Nu
+#MCUL17_TTTo2L2Nu
+#MCUL16_TTTo2L2Nu
+#MCUL16APV_TTTo2L2Nu
+#)
+
+#+JobFlavour  = "espresso"
+#request_cpus = 4
+#arguments    = $(SAMPLE) 4
+#queue SAMPLE from (
+#MCUL17_WW
+#MCUL17_WZ
+#MCUL17_ZZ
+#MCUL18_WW
+#MCUL18_WZ
+#####MCUL18_ZZ
+#MCUL16APV_WW
+#MCUL16APV_WZ
+#MCUL16APV_ZZ
+#MCUL16_WW
+#MCUL16_WZ
+#MCUL16_ZZ
+#)

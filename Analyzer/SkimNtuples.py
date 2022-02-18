@@ -27,7 +27,7 @@ def main(sample_name):
       lumi = SampleListUL.lumi_UL2017
     elif "MCUL18" in sample_name:
       lumi = SampleListUL.lumi_UL2018
-    elif "MCUL16APV" in sample_name 
+    elif "MCUL16APV" in sample_name:
       lumi = SampleListUL.lumi_UL2016APV
     elif "MCUL16" in sample_name:
       lumi = SampleListUL.lumi_UL2016
@@ -63,10 +63,9 @@ def main(sample_name):
       # "jerDown"
     ]
   #
-  # Don't do ak4Systematics for MG+HW and AMCNLO
+  # Don't do ak4Systematics for MG+HW
   #
   if "DY_MG_HW" in sample_name: ak4Systematics=[]
-  if "DY_AMCNLO" in sample_name: ak4Systematics=[]
 
   #
   # Get sample sum of event weights from
