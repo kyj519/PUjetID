@@ -43,6 +43,9 @@ def main():
   elif era  == "UL18":
     yearStr = "UL2018" 
     lumiStr = "59.8"
+  elif era  == "UL16":
+    yearStr = "UL2016late" 
+    lumiStr = "16.8"
   elif era  == "UL16APV":
     yearStr = "UL2016early" 
     lumiStr = "19.5"
@@ -79,9 +82,19 @@ def MakeValidation(era,yearStr,lumiStr):
       # path_inDir+"ntuple_MC"+era+"_ZZ.root"
     ],
   }
-  samples["Data"] = {
-    "files": [f for f in glob.glob(path_inDir+"ntuple_Data"+era+"*_DoubleMuon.root")],
-  }
+
+  if era == "UL16":
+    samples["Data"] = {
+      "files": [
+        path_inDir+"ntuple_DataUL16F_DoubleMuon.root",
+        path_inDir+"ntuple_DataUL16G_DoubleMuon.root",
+        path_inDir+"ntuple_DataUL16H_DoubleMuon.root",
+      ],
+    }
+  else:
+    samples["Data"] = {
+      "files": [f for f in glob.glob(path_inDir+"ntuple_Data"+era+"*_DoubleMuon.root")],
+    }
 
   colorsDict = {
     "DY": ROOT.kGreen+1,
@@ -212,15 +225,19 @@ def MakeValidation(era,yearStr,lumiStr):
   ######################################################
   ROOT.gROOT.LoadMacro("./modules/Helpers.h")
   ROOT.gROOT.LoadMacro("./modules/SFProducerPUJetId.h")
-
+  
+  ##
+  ## Need to compile first in "./modules" directory 
+  ## to use these
+  ##
   # ROOT.gSystem.Load("modules/Helpers_h.so")
   # ROOT.gSystem.Load("modules/SFProducerPUJetId_h.so")
 
   def SetupSFProducerPUJetId(fileSF, era):
     eraName = ""
     if era == "UL18": eraName = "UL2018"
-    elif era == "UL17":eraName = "UL2017"
-    elif era == "UL16":eraName = "UL2016"
+    elif era == "UL17": eraName = "UL2017"
+    elif era == "UL16": eraName = "UL2016"
     elif era == "UL16APV": eraName = "UL2016APV"
 
     ROOT.gInterpreter.Declare('std::unique_ptr<SFProducerPUJetId> puIdSF_Loose(new SFProducerPUJetId(\"'+eraName+'\",\"'+fileSF+'\",\"L\"));')
@@ -232,7 +249,7 @@ def MakeValidation(era,yearStr,lumiStr):
     ROOT.gInterpreter.Declare('std::unique_ptr<SFProducerPUJetId> puIdSF_Tight(new SFProducerPUJetId(\"'+eraName+'\",\"'+fileSF+'\",\"T\"));')
     ROOT.gInterpreter.ProcessLine('puIdSF_Tight->LoadSF();')
 
-  SetupSFProducerPUJetId("data/PUID_SFAndEff_ULNanoV9_v1p4.root",era)
+  SetupSFProducerPUJetId("data/PUID_SFAndEff_ULNanoV9_v1p4_NLO.root",era)
 
   def ApplyBaselineSelection(df, era, isMC=True):
     #

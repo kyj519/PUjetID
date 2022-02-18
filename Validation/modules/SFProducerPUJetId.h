@@ -122,10 +122,14 @@ float SFProducerPUJetId::Get_EffMC_PUID(float pt, float eta){
 //
 //
 float SFProducerPUJetId::Get_MistagSF_PUID(float pt, float eta, bool isHSJet){
+  float sf = 1.;
   if (pt < 50. && (!isHSJet)){ // Hardcoded here
-    return GetTH2DBinContent(m_Hist_Mistag_SF, pt, eta);
+    sf = GetTH2DBinContent(m_Hist_Mistag_SF, pt, eta);
+    if (sf < 0.0001){ // For bins with SF == 0. TO DO: Should really check why its 0.
+      sf = 1.0;
+    }
   }
-  return 1.;
+  return sf;
 }
 float SFProducerPUJetId::Get_MistagSFUnc_PUID(float pt, float eta){
   return GetTH2DBinContent(m_Hist_Mistag_SFUnc, pt, eta);
