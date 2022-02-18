@@ -36,17 +36,22 @@ def MakeDPhiFit(
     h_dphi_PASS,h_dphi_FAIL, 
     h_dphi_genunmatched_PASS_badbalance,h_dphi_genmatched_PASS_badbalance,h_dphi_genunmatched_FAIL_badbalance,h_dphi_genmatched_FAIL_badbalance,
     h_dphi_PASS_badbalance,h_dphi_FAIL_badbalance, 
-    outputDir, pt, eta, cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance, iBinCount, iBinTotal,
+    outputDir, pt, eta, cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance, 
+    iBinCount, iBinTotal,
     isData=False, doEtaBins=False):
-    
-    print("Performing fits to extract efficiency and mistag rate") 
+
+    print("------------------------------------------------------------------")
+    if isData:
+        print("Performing fits to extract efficiency and mistag rate in DATA") 
+    else:
+        print("Performing fits to extract efficiency and mistag rate in MC") 
+    print("ptBin:"+ pt + ", etaBin:"+eta) 
+    print("------------------------------------------------------------------")
     print("entries in PASS histos "+str(h_dphi_genunmatched_PASS.GetEntries())+","+str(h_dphi_genmatched_PASS.GetEntries())+","+str(h_dphi_PASS.GetEntries())+","+str(h_dphi_PASS_badbalance.GetEntries()))
     print("entries in FAIL histos "+str(h_dphi_genunmatched_FAIL.GetEntries())+","+str(h_dphi_genmatched_FAIL.GetEntries())+","+str(h_dphi_FAIL.GetEntries())+","+str(h_dphi_FAIL_badbalance.GetEntries()))
-    print("ptBin:"+pt) 
-    print("etaBin:"+eta) 
     
     #
-    # 
+    # Calculate MC efficiency using gen-level information
     #
     eff_gen    = -1.0
     mistag_gen = -1.0
@@ -60,7 +65,7 @@ def MakeDPhiFit(
  
 
     #
-    #Declare the observable
+    # Declare the observable
     #
     dphiZjet = ROOT.RooRealVar("dphiZjet","#Delta#phi(Z,jet)/#pi",0., 2.)
     #
@@ -350,32 +355,28 @@ def MakeDPhiFit(
     framePASS_badbalance.addObject(chi2_text_badbalance)
     frameFAIL_badbalance.addObject(chi2_text_badbalance)
 
+    latexBinStr = ""
+    latexBinStr += pt.split("To")[0]+" GeV < pT_{jet} < "+ pt.split("To")[1]+" GeV, "
+    if doEtaBins:
+        latexBinStr += eta.split("To")[0].replace("neg","-").replace("pos","+").replace("p",".")+" < #eta_{jet} < "+eta.split("To")[1].replace("neg","-").replace("pos","+").replace("p",".")
+    else:
+        latexBinStr += eta.split("To")[0].replace("p",".")+" < |#eta_{jet}| < "+eta.split("To")[1].replace("p",".")
+    latexBinStr += ", Data" if isData else ", MC"     
+
     #
     #
     #
-    # cfitPASS = ROOT.TCanvas("cfitPASS","cfitPASS",600,600)
-    # cfitPASS.SetLogx(False)
     cfitPASS.cd()
     cfitPASS.Clear()
     framePASS.Draw()
-
+                                        
     latex2 = ROOT.TLatex()
     latex2.SetNDC()
     latex2.SetTextSize(0.3*cfitPASS.GetTopMargin())
     latex2.SetTextFont(42)
-    latex2.SetTextAlign(31) # align right                                                     
+    latex2.SetTextAlign(31) # align right   
 
-    if doEtaBins:
-        if isData:        
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("neg","-").replace("pos","+").replace("p",".")+" < #eta_{jet} < "+eta.split("To")[1].replace("neg","-").replace("pos","+").replace("p",".")+ ", Data")
-        else:
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("neg","-").replace("pos","+").replace("p",".")+" < #eta_{jet} < "+eta.split("To")[1].replace("neg","-").replace("pos","+").replace("p",".")+ ", MC")
-    else:
-        if isData:        
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("p",".")+" < |#eta_{jet}| < "+eta.split("To")[1].replace("p",".")+ ", Data")
-        else:
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("p",".")+" < |#eta_{jet}| < "+eta.split("To")[1].replace("p",".")+ ", MC")
-
+    latex2.DrawLatex(0.89, 0.915, latexBinStr)
     latex2.Draw("same")
     framePASS.Print()
  
@@ -390,16 +391,8 @@ def MakeDPhiFit(
     cfitFAIL.cd()
     cfitFAIL.Clear()
     frameFAIL.Draw()
-    if doEtaBins:
-        if isData:        
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("neg","-").replace("pos","+").replace("p",".")+" < #eta_{jet} < "+eta.split("To")[1].replace("neg","-").replace("pos","+").replace("p",".")+ ", Data")
-        else:
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("neg","-").replace("pos","+").replace("p",".")+" < #eta_{jet} < "+eta.split("To")[1].replace("neg","-").replace("pos","+").replace("p",".")+ ", MC")
-    else:
-        if isData:        
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("p",".")+" < |#eta_{jet}| < "+eta.split("To")[1].replace("p",".")+ ", Data")
-        else:
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("p",".")+" < |#eta_{jet}| < "+eta.split("To")[1].replace("p",".")+ ", MC")
+
+    latex2.DrawLatex(0.89, 0.915, latexBinStr)
     latex2.Draw("same")
     frameFAIL.Print()
 
@@ -411,16 +404,8 @@ def MakeDPhiFit(
     cfitPASS_badbalance.cd()
     cfitPASS_badbalance.Clear()
     framePASS_badbalance.Draw()
-    if doEtaBins:
-        if isData:        
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("neg","-").replace("pos","+").replace("p",".")+" < |#eta_{jet}| < "+eta.split("To")[1].replace("neg","-").replace("pos","+").replace("p",".")+ ", Data")
-        else:
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("neg","-").replace("pos","+").replace("p",".")+" < |#eta_{jet}| < "+eta.split("To")[1].replace("neg","-").replace("pos","+").replace("p",".")+ ", MC")
-    else:
-        if isData:        
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("p",".")+" < |#eta_{jet}| < "+eta.split("To")[1].replace("p",".")+ ", Data")
-        else:
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("p",".")+" < |#eta_{jet}| < "+eta.split("To")[1].replace("p",".")+ ", MC")
+
+    latex2.DrawLatex(0.89, 0.915, latexBinStr)
     latex2.Draw("same")
     framePASS_badbalance.Print()
     legend.Draw("same")
@@ -431,17 +416,8 @@ def MakeDPhiFit(
     cfitFAIL_badbalance.cd()
     cfitFAIL_badbalance.Clear()
     frameFAIL_badbalance.Draw()
-    if doEtaBins:
-        if isData:        
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("neg","-").replace("pos","+").replace("p",".")+" < #eta_{jet} < "+eta.split("To")[1].replace("neg","-").replace("pos","+").replace("p",".")+ ", Data")
-        else:
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("neg","-").replace("pos","+").replace("p",".")+" < #eta_{jet} < "+eta.split("To")[1].replace("neg","-").replace("pos","+").replace("p",".")+ ", MC")
-    else:
-        if isData:        
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("p",".")+" < |#eta_{jet}| < "+eta.split("To")[1].replace("p",".")+ ", Data")
-        else:
-            latex2.DrawLatex(0.89, 0.915,pt.split("To")[0]+" GeV < pT_{jet} < "+pt.split("To")[1]+" GeV, "+eta.split("To")[0].replace("p",".")+" < |#eta_{jet}| < "+eta.split("To")[1].replace("p",".")+ ", MC")
 
+    latex2.DrawLatex(0.89, 0.915, latexBinStr)
     latex2.Draw("same")
     frameFAIL_badbalance.Print()
     legend.Draw("same")
@@ -458,10 +434,10 @@ def MakeDPhiFit(
     cfitPASS_badbalance.SaveAs("{}/{}_PASS_BADbal_{}.{}".format(outputDir,fit_filename,typeStr,pdfStr))
     cfitFAIL_badbalance.SaveAs("{}/{}_FAIL_BADbal_{}.{}".format(outputDir,fit_filename,typeStr,pdfStr))
 
-    print("eff_fit  = " + str(effcy.getVal())) 
-    print("eff_gen  = " + str(eff_gen)) 
-    print("mistag_fit = " + str(mistag.getVal())) 
-    print("mistag_gen = " + str(mistag_gen)) 
+    print("eff (fit)    = {:.3f}".format(effcy.getVal())) 
+    print("eff (gen)    = {:.3f}".format(eff_gen)) 
+    print("mistag (fit) = {:.3f}".format(mistag.getVal())) 
+    print("mistag (gen) = {:.3f}".format(mistag_gen)) 
 
     if isData:
         return effcy.getVal(), effcy.getError(), mistag.getVal(), mistag.getError()
@@ -608,11 +584,12 @@ def main():
     ybins = []
     # ptbin
     for ptBin in _pt:
+        print(ptBin)
         xbins.append(float(ptBin.split("To")[0]))                                
         xbins.append(float(ptBin.split("To")[1]))  
     # etabin
     for etaBin in _eta:
-        print etaBin
+        print(etaBin)
         if doEtaBins:
             lowBound   = etaBin.split("To")[0]
             lowBound   = lowBound.replace("pos","+").replace("neg","-")
@@ -682,6 +659,7 @@ def main():
             systStr=""
             if syst != "":
                 systStr += "_"+syst
+
             #
             # Retrieve histograms: PASS ID, GOOD balance
             #
@@ -710,6 +688,7 @@ def main():
             h_dphi_mc_genmatched_FAIL_badbalance   = f_mc.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
             h_dphi_mc_FAIL_badbalance              = f_mc.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
             h_dphi_data_FAIL_badbalance            = f_data.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+
             #
             # Perform fit on MC
             #
@@ -718,7 +697,8 @@ def main():
                 h_dphi_mc_PASS,h_dphi_mc_FAIL, 
                 h_dphi_mc_genunmatched_PASS_badbalance, h_dphi_mc_genmatched_PASS_badbalance, h_dphi_mc_genunmatched_FAIL_badbalance, h_dphi_mc_genmatched_FAIL_badbalance, 
                 h_dphi_mc_PASS_badbalance, h_dphi_mc_FAIL_badbalance, 
-                outputDir,_pt[i], _eta[j], cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance, iBinCount, iBinTotal,
+                outputDir,_pt[i], _eta[j], cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance, 
+                iBinCount, iBinTotal,
                 isData=False, doEtaBins=doEtaBins
             )
             heffmc.SetBinContent(i+1,j+1,    round(float(eff_mc),4))
@@ -736,7 +716,8 @@ def main():
                 h_dphi_data_PASS,h_dphi_data_FAIL, 
                 h_dphi_mc_genunmatched_PASS_badbalance,h_dphi_mc_genmatched_PASS_badbalance,h_dphi_mc_genunmatched_FAIL_badbalance,h_dphi_mc_genmatched_FAIL_badbalance,
                 h_dphi_data_PASS_badbalance,h_dphi_data_FAIL_badbalance, 
-                outputDir,_pt[i], _eta[j], cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance, iBinCount, iBinTotal,
+                outputDir,_pt[i], _eta[j], cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance, 
+                iBinCount, iBinTotal,
                 isData=True, doEtaBins=doEtaBins
             )
             heffdata.SetBinContent(i+1,j+1,    round(float(eff_data),4))
@@ -745,7 +726,7 @@ def main():
             hmistagdata.SetBinError(i+1,j+1,   round(float(mistag_data_err),4))
 
             iBinCount += 1
-            print "==========="
+            print("===========\n")
 
     del cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance
 
