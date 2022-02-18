@@ -36,7 +36,8 @@ def MakeDPhiFit(
     h_dphi_PASS,h_dphi_FAIL, 
     h_dphi_genunmatched_PASS_badbalance,h_dphi_genmatched_PASS_badbalance,h_dphi_genunmatched_FAIL_badbalance,h_dphi_genmatched_FAIL_badbalance,
     h_dphi_PASS_badbalance,h_dphi_FAIL_badbalance, 
-    outputDir, pt, eta, isData=False, doEtaBins=False):
+    outputDir, pt, eta, cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance, iBinCount, iBinTotal,
+    isData=False, doEtaBins=False):
     
     print("Performing fits to extract efficiency and mistag rate") 
     print("entries in PASS histos "+str(h_dphi_genunmatched_PASS.GetEntries())+","+str(h_dphi_genmatched_PASS.GetEntries())+","+str(h_dphi_PASS.GetEntries())+","+str(h_dphi_PASS_badbalance.GetEntries()))
@@ -352,8 +353,10 @@ def MakeDPhiFit(
     #
     #
     #
-    cfitPASS = ROOT.TCanvas("cfitPASS","cfitPASS",600,600)
-    cfitPASS.SetLogx(False)
+    # cfitPASS = ROOT.TCanvas("cfitPASS","cfitPASS",600,600)
+    # cfitPASS.SetLogx(False)
+    cfitPASS.cd()
+    cfitPASS.Clear()
     framePASS.Draw()
 
     latex2 = ROOT.TLatex()
@@ -384,8 +387,8 @@ def MakeDPhiFit(
     #
     #
     #
-    cfitFAIL = ROOT.TCanvas("cfitFAIL","cfitFAIL",600,600)
-    cfitFAIL.SetLogx(False)
+    cfitFAIL.cd()
+    cfitFAIL.Clear()
     frameFAIL.Draw()
     if doEtaBins:
         if isData:        
@@ -405,8 +408,8 @@ def MakeDPhiFit(
     #
     #
     #
-    cfitPASS_badbalance = ROOT.TCanvas("cfitPASS_badbalance","cfitPASS_badbalance",600,600)
-    cfitPASS_badbalance.SetLogx(False)
+    cfitPASS_badbalance.cd()
+    cfitPASS_badbalance.Clear()
     framePASS_badbalance.Draw()
     if doEtaBins:
         if isData:        
@@ -425,8 +428,8 @@ def MakeDPhiFit(
     #
     #
     #
-    cfitFAIL_badbalance = ROOT.TCanvas("cfitFAIL_badbalance","cfitFAIL_badbalance",600,600)
-    cfitFAIL_badbalance.SetLogx(False)
+    cfitFAIL_badbalance.cd()
+    cfitFAIL_badbalance.Clear()
     frameFAIL_badbalance.Draw()
     if doEtaBins:
         if isData:        
@@ -443,32 +446,21 @@ def MakeDPhiFit(
     frameFAIL_badbalance.Print()
     legend.Draw("same")
 
-    fit_filename = "fit_"+pt+"_"+eta
-
-    if isData:
-        cfitPASS.SaveAs(os.path.join(outputDir, fit_filename+"_PASS_GOODbal_data.pdf"))
-        if printPNG: cfitPASS.SaveAs(os.path.join(outputDir, fit_filename+"_PASS_GOODbal_data.png"))
-        cfitFAIL.SaveAs(os.path.join(outputDir, fit_filename+"_FAIL_GOODbal_data.pdf"))
-        if printPNG: cfitFAIL.SaveAs(os.path.join(outputDir, fit_filename+"_FAIL_GOODbal_data.png"))
-        cfitPASS_badbalance.SaveAs(os.path.join(outputDir, fit_filename+"_PASS_BADbal_data.pdf"))
-        if printPNG: cfitPASS_badbalance.SaveAs(os.path.join(outputDir, fit_filename+"_PASS_BADbal_Data.png"))
-        cfitFAIL_badbalance.SaveAs(os.path.join(outputDir, fit_filename+"_FAIL_BADbal_data.pdf"))
-        if printPNG: cfitFAIL_badbalance.SaveAs(os.path.join(outputDir, fit_filename+"_FAIL_BADbal_data.png"))
-    else:
-        cfitPASS.SaveAs(os.path.join(outputDir, fit_filename+"_PASS_GOODbal_mc.pdf"))
-        if printPNG: cfitPASS.SaveAs(os.path.join(outputDir, fit_filename+"_PASS_GOODbal_mc.png"))
-        cfitFAIL.SaveAs(os.path.join(outputDir, fit_filename+"_FAIL_GOODbal_mc.pdf"))
-        if printPNG: cfitFAIL.SaveAs(os.path.join(outputDir, fit_filename+"_FAIL_GOODbal_mc.png"))
-        cfitPASS_badbalance.SaveAs(os.path.join(outputDir, fit_filename+"_PASS_BADbal_mc.pdf"))
-        if printPNG: cfitPASS_badbalance.SaveAs(os.path.join(outputDir, fit_filename+"_PASS_BADbal_mc.png"))
-        cfitFAIL_badbalance.SaveAs(os.path.join(outputDir, fit_filename+"_FAIL_BADbal_mc.pdf"))
-        if printPNG: cfitFAIL_badbalance.SaveAs(os.path.join(outputDir, fit_filename+"_FAIL_BADbal_mc.png"))
-
-    del cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance
+    fit_filename = "fit"
+    typeStr = "data" if isData else "mc"
     
-    print("eff_mc  = " + str(effcy.getVal())) 
-    print("eff_gen = " + str(eff_gen)) 
-    print("mistag_mc  = " + str(mistag.getVal())) 
+    pdfStr = "pdf"
+    if iBinCount == 0: pdfStr = "pdf("
+    elif iBinCount == iBinTotal-1: pdfStr = "pdf)"
+
+    cfitPASS.SaveAs("{}/{}_PASS_GOODbal_{}.{}".format(outputDir,fit_filename,typeStr,pdfStr))
+    cfitFAIL.SaveAs("{}/{}_FAIL_GOODbal_{}.{}".format(outputDir,fit_filename,typeStr,pdfStr))
+    cfitPASS_badbalance.SaveAs("{}/{}_PASS_BADbal_{}.{}".format(outputDir,fit_filename,typeStr,pdfStr))
+    cfitFAIL_badbalance.SaveAs("{}/{}_FAIL_BADbal_{}.{}".format(outputDir,fit_filename,typeStr,pdfStr))
+
+    print("eff_fit  = " + str(effcy.getVal())) 
+    print("eff_gen  = " + str(eff_gen)) 
+    print("mistag_fit = " + str(mistag.getVal())) 
     print("mistag_gen = " + str(mistag_gen)) 
 
     if isData:
@@ -661,6 +653,21 @@ def main():
 
     ROOT.gStyle.SetOptStat(0)
     ROOT.gStyle.SetPaintTextFormat("4.2f")
+
+    cfitPASS = ROOT.TCanvas("cfitPASS","cfitPASS",600,600)
+    cfitPASS.SetLogx(False)
+
+    cfitFAIL = ROOT.TCanvas("cfitFAIL","cfitFAIL",600,600)
+    cfitFAIL.SetLogx(False)
+
+    cfitPASS_badbalance = ROOT.TCanvas("cfitPASS_badbalance","cfitPASS_badbalance",600,600)
+    cfitPASS_badbalance.SetLogx(False)
+
+    cfitFAIL_badbalance = ROOT.TCanvas("cfitFAIL_badbalance","cfitFAIL_badbalance",600,600)
+    cfitFAIL_badbalance.SetLogx(False)
+
+    iBinCount = 0
+    iBinTotal = len(_pt) * len(_eta)
     
     for i in range(0,len(_pt)):
         for j in range(0,len(_eta)):
@@ -711,7 +718,8 @@ def main():
                 h_dphi_mc_PASS,h_dphi_mc_FAIL, 
                 h_dphi_mc_genunmatched_PASS_badbalance, h_dphi_mc_genmatched_PASS_badbalance, h_dphi_mc_genunmatched_FAIL_badbalance, h_dphi_mc_genmatched_FAIL_badbalance, 
                 h_dphi_mc_PASS_badbalance, h_dphi_mc_FAIL_badbalance, 
-                outputDir,_pt[i], _eta[j], isData=False, doEtaBins=doEtaBins
+                outputDir,_pt[i], _eta[j], cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance, iBinCount, iBinTotal,
+                isData=False, doEtaBins=doEtaBins
             )
             heffmc.SetBinContent(i+1,j+1,    round(float(eff_mc),4))
             heffmc.SetBinError  (i+1,j+1,    round(float(eff_mc_err),4))
@@ -728,14 +736,19 @@ def main():
                 h_dphi_data_PASS,h_dphi_data_FAIL, 
                 h_dphi_mc_genunmatched_PASS_badbalance,h_dphi_mc_genmatched_PASS_badbalance,h_dphi_mc_genunmatched_FAIL_badbalance,h_dphi_mc_genmatched_FAIL_badbalance,
                 h_dphi_data_PASS_badbalance,h_dphi_data_FAIL_badbalance, 
-                outputDir,_pt[i], _eta[j], isData=True, doEtaBins=doEtaBins
+                outputDir,_pt[i], _eta[j], cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance, iBinCount, iBinTotal,
+                isData=True, doEtaBins=doEtaBins
             )
             heffdata.SetBinContent(i+1,j+1,    round(float(eff_data),4))
             heffdata.SetBinError  (i+1,j+1,    round(float(eff_data_err),4))
             hmistagdata.SetBinContent(i+1,j+1, round(float(mistag_data),4))
             hmistagdata.SetBinError(i+1,j+1,   round(float(mistag_data_err),4))
+
+            iBinCount += 1
             print "==========="
-        
+
+    del cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance
+
     xname = "Jet p_{T} [GeV]"
     yname = "Jet |#eta|"
     if doEtaBins:
