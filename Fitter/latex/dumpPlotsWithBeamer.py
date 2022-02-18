@@ -16,15 +16,16 @@ def main():
 
   for year in eras:
     outFileName="DumpPlots_PUIDSF_"+version+"_NLO_"+year
-    inDir="../"+version+"/NLO/"
+    # inDir="../"+version+"/NLO/"
+    inDir="../../../../../Backup_ULNanoV9_v1p4/"+version+"/NLO/"
     CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
     # outFileName="DumpPlots_PUIDSF_"+version+"_NLO_jesTotalUp_"+year
-    # inDir="../"+version+"/jesTotalUp/"
+    # inDir="../"+version+"/NLO_jesTotalUp/"
     # CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
     # outFileName="DumpPlots_PUIDSF_"+version+"_NLO_jesTotalDown_"+year
-    # inDir="../"+version+"/jesTotalDown/"
+    # inDir="../"+version+"/NLO_jesTotalDown/"
     # CompilePlots(inDir, version, year, outFileName, showFitInEachBin)
 
 def CompilePlots(inDir, version, year, outFileName, showFitInEachBin=True):
@@ -169,19 +170,19 @@ def makeTemplates(outFile):
   outFile.write("\\begin{figure}[t]\n")
   outFile.write("\\begin{minipage}[t]{0.49\\textwidth}%\n")
   outFile.write("\\centering\n")
-  outFile.write("\\includegraphics[scale=0.16]{#1/fit_#2_PASS_GOODbal_data}\n")
-  outFile.write("\\includegraphics[scale=0.16]{#1/fit_#2_FAIL_GOODbal_data}\\\\\n")
-  outFile.write("\\includegraphics[scale=0.16]{#1/fit_#2_PASS_BADbal_data}\n")
-  outFile.write("\\includegraphics[scale=0.16]{#1/fit_#2_FAIL_BADbal_data}\n")
+  outFile.write("\\includegraphics[scale=0.161,page=#2]{#1/fit_PASS_GOODbal_data}\n")
+  outFile.write("\\includegraphics[scale=0.161,page=#2]{#1/fit_FAIL_GOODbal_data}\\\\\n")
+  outFile.write("\\includegraphics[scale=0.161,page=#2]{#1/fit_PASS_BADbal_data}\n")
+  outFile.write("\\includegraphics[scale=0.161,page=#2]{#1/fit_FAIL_BADbal_data}\n")
   outFile.write("\\caption[]{Data}\n")
   outFile.write("\\end{minipage}%\n")
   outFile.write("{\\color{black}\\vrule\\hspace{4pt}}%\n")
   outFile.write("\\begin{minipage}[t]{0.49\\textwidth}%\n")
   outFile.write("\\centering\n")
-  outFile.write("\\includegraphics[scale=0.16]{#1/fit_#2_PASS_GOODbal_mc}\n")
-  outFile.write("\\includegraphics[scale=0.16]{#1/fit_#2_FAIL_GOODbal_mc}\\\\\n")
-  outFile.write("\\includegraphics[scale=0.16]{#1/fit_#2_PASS_BADbal_mc}\n")
-  outFile.write("\\includegraphics[scale=0.16]{#1/fit_#2_FAIL_BADbal_mc}\n")
+  outFile.write("\\includegraphics[scale=0.161,page=#2]{#1/fit_PASS_GOODbal_mc}\n")
+  outFile.write("\\includegraphics[scale=0.161,page=#2]{#1/fit_FAIL_GOODbal_mc}\\\\\n")
+  outFile.write("\\includegraphics[scale=0.161,page=#2]{#1/fit_PASS_BADbal_mc}\n")
+  outFile.write("\\includegraphics[scale=0.161,page=#2]{#1/fit_FAIL_BADbal_mc}\n")
   outFile.write("\\caption[]{MC}\n")
   outFile.write("\\end{minipage}%\n")
   outFile.write("\\end{figure}\n")
@@ -271,12 +272,11 @@ def makeMainContent(outFile,WPYearList,binList,showFitInEachBin=True):
     outFile.write("\\PlotsEffMistagSF{%s}{%s}{%s}\n" %(WPYear[0],WPYear[1],WPYear[2]))
     outFile.write("\\PlotsEffMistagSFSlices{%s}{%s}{%s}\n" %(WPYear[0],WPYear[1],WPYear[2]))
     if showFitInEachBin:
-      for binEntry in binList:
-        outFile.write("\\PlotsForEachBinDataAndMC{%s}{%s}{%s, %s}\n" %(WPYear[0],binEntry[0],binEntry[1],WPYear[2]))
+      for iBin, binEntry in enumerate(binList):
+        outFile.write("\\PlotsForEachBinDataAndMC{%s}{%s}{%s, %s}\n" %(WPYear[0],iBin+1,binEntry[1],WPYear[2]))
 
 def makeEndDocument(outFile):
   outFile.write("\\end{document}\n")
 
 if __name__ == "__main__":
   main()
-  
