@@ -10,13 +10,13 @@
 # --isMC=1 \
 # --dataStream="MC"
 
-# MAX_EVENTS=20000
-# python RunSkimmerLocal.py \
-# --era="UL2018" \
-# --maxEvents=${MAX_EVENTS} \
-# --outDir="./DataUL18_DoubleMuon" \
-# --isMC=0 \
-# --dataStream="DoubleMuon"
+MAX_EVENTS=-1
+python RunSkimmerLocal.py \
+--era="UL2018" \
+--maxEvents=${MAX_EVENTS} \
+--outDir="./DataUL18_DoubleMuon" \
+--isMC=0 \
+--dataStream="DoubleMuon"
 #
 # MAX_EVENTS=20000
 # python RunSkimmerLocal.py \
