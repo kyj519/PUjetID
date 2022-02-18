@@ -84,7 +84,6 @@ dphiBins =[round(x*dphiBinSize, 2) for x in xrange(0,dphiBinsN+1)]
 dphiBinsArray = array.array('d',dphiBins)
 dphiBinsN = len(dphiBins)-1
 
-
 #
 #
 #
@@ -493,9 +492,8 @@ if __name__== "__main__":
       # "jerUp",
       # "jerDown"
     ]
-  # Don't do ak4Systematics for MG+HW, AMCNLO and PHG
+  # Don't do ak4Systematics for MG+HW and PHG
   if "MG_HW" in args.sample: ak4Systematics=[]
-  if "AMCNLO" in args.sample: ak4Systematics=[]
   if "PHG" in args.sample: ak4Systematics=[]
   
   ROOT.ROOT.EnableImplicitMT(args.cores)
