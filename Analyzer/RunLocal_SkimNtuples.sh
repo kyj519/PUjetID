@@ -1,6 +1,6 @@
 #!/bin/bash
 NCORES=4
-
+export LD_PRELOAD=/usr/lib64/libXrdPosixPreload.so
 SAMPLES=(
 DataUL17B_DoubleMuon
 DataUL17C_DoubleMuon
