@@ -9,8 +9,8 @@ class Sample:
 
 version="DiLeptonSkim_ULNanoV9_v1p4"
 
-EOSURL="root://eoscms.cern.ch/"
-EOSDIR="/eos/cms/store/group/phys_jetmet/nbinnorj/"
+EOSURL="root://cluster142.knu.ac.kr/"
+EOSDIR="/pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/"
 CRABDIR="JetPUId_"+version+"/CRABOUTPUT/"
 NTUPDIR="JetPUId_"+version+"/ntuples_skim/"
 Samples = collections.OrderedDict()
