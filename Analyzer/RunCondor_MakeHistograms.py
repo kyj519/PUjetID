@@ -21,7 +21,7 @@ Samplelist = ["DataUL17B_DoubleMuon",
 "DataUL16G_DoubleMuon",
 "DataUL16H_DoubleMuon",
 'MCUL16_DY_MG']
-condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/condor/"
+condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/condor_hist/"
 njobs = 0
 os.system('rm -rf '+condor_dir+'job/*')
 os.system('rm -rf '+condor_dir+'log/*')
@@ -29,7 +29,7 @@ os.system('rm -rf '+condor_dir+'log/*')
 for sample in Samplelist:
 	f = open(condor_dir+"job/job_"+sample+".sh","w+")
 	f.write("#!/bin/bash\n")
-	f.write("source "+condor_dir+"../RunCondor_SkimNtuples.sh "+sample)
+	f.write("source "+condor_dir+"../RunCondor_MakeHistograms.sh "+sample)
 	os.system("chmod 755 "+condor_dir+"job/job_"+sample+".sh")
 	f.close()
 	submit_dic = {"executable": condor_dir+"job/job_"+sample+".sh",

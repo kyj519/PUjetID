@@ -7,3 +7,4 @@ histos/
 histos3D/
 BatchLog/
 condor/
+condor_hist/

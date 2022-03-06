@@ -11,7 +11,7 @@ import SampleList
 import SampleListUL
 
 ROOT.gROOT.SetBatch()
-ROOT.gROOT.LoadMacro("./Helpers.h")
+ROOT.gROOT.LoadMacro("/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/Helpers.h")
 
 #
 #
@@ -438,13 +438,13 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #
   # Create directory for output
   # 
-  outDir = './histos3D/'
+  outDir = SampleListUL.EOSDIR+"/result_his_not_hadd_yet/"
   if not(os.path.isdir(outDir)):
     os.mkdir(outDir)
 
   # Open a new ROOT file to store TH1
   outFileName = "%sHisto_%s%s.root"%(outDir,sample_name,systStrPost)
-  f = ROOT.TFile(outFileName, 'RECREATE')
+  f = ROOT.TDCacheFile(outFileName, 'RECREATE')
 
   # Loop over the Histograms3D dictionary and store TH3 in ROOT file
   for hist3DName in Histograms3D:
