@@ -12,7 +12,7 @@ reqNamePrefix="JetPUId"
 # Change this PATH where the crab directories are stored
 # Example: config.General.workArea = '/afs/cern.ch/work/n/nbinnorj/private/crab_projects/'
 #
-config.General.workArea        = '/afs/cern.ch/work/n/nbinnorj/private/crab_projects/'
+config.General.workArea        = '/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Skimmer/crab_UL/crab_projects/'
 config.General.transferOutputs = True
 config.General.transferLogs    = False
 #
@@ -42,8 +42,8 @@ config.JobType.allowUndistributedCMSSW = True
 #
 # JetMET CMS EOS space at CERN
 #
-config.Data.outLFNDirBase  = '/store/group/phys_jetmet/nbinnorj/JetPUId_'+version+'/CRABOUTPUT/'
-config.Site.storageSite    = 'T2_CH_CERN'
+#config.Data.outLFNDirBase  = '/u/user/yeonjoon/'
+config.Site.storageSite    = 'T3_KR_KNU'
 #
 # User CERNBox 
 #
@@ -57,5 +57,7 @@ whitelist_sites=[
 'T2_UK_*',
 'T2_DE_*',
 'T2_FR_*',
+'T2_KR_*',
+'T3_KR_*'
 ]
 config.Site.whitelist = whitelist_sites
