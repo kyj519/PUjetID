@@ -629,7 +629,7 @@ def main():
     hmistaggen.Sumw2()
 
     ROOT.gStyle.SetOptStat(0)
-    ROOT.gStyle.SetPaintTextFormat("4.2f")
+    ROOT.gStyle.SetPaintTextFormat("8.4f")
 
     cfitPASS = ROOT.TCanvas("cfitPASS","cfitPASS",600,600)
     cfitPASS.SetLogx(False)

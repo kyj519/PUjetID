@@ -31,7 +31,7 @@ config.JobType.inputFiles = [
 config.JobType.sendPythonFolder  = True
 config.JobType.outputFiles = ['tree.root']
 #
-config.Data.splitting    = 'FileBased'
+config.Data.splitting    = 'Automatic'
 config.Data.unitsPerJob  = 1
 config.Data.publication  = False
 config.Data.allowNonValidInputDataset = True

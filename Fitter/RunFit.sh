@@ -1,7 +1,7 @@
 #
 # Directory path containing all the histogram rootfiles
 #
-INDIR="../Analyzer/histos3D/"
+INDIR="../Analyzer/histos3D"
 
 #
 # Directory path for the output of the fits

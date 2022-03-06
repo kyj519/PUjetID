@@ -63,7 +63,7 @@ def main():
     PlotMap(h2)
 
 def PlotMap(h2):
-  ROOT.gStyle.SetPaintTextFormat("4.4f")
+  ROOT.gStyle.SetPaintTextFormat("6.6f")
   h2Name = h2.GetName()
   canv = ROOT.TCanvas("canv","canv",600,600)
   h2.SetMarkerSize(1.40)

@@ -1,5 +1,5 @@
 import os, htcondor
-
+'''
 Samplelist = ["DataUL17B_DoubleMuon",
 "DataUL17C_DoubleMuon",
 "DataUL17D_DoubleMuon",
@@ -20,7 +20,8 @@ Samplelist = ["DataUL17B_DoubleMuon",
 "DataUL16F_DoubleMuon",
 "DataUL16G_DoubleMuon",
 "DataUL16H_DoubleMuon",
-'MCUL16_DY_MG']
+'MCUL16_DY_MG']'''
+Samplelist = ["MCUL18_DY_AMCNLO","MCUL16_DY_AMCNLO","MCUL17_DY_AMCNLO","MCUL16APV_DY_AMCNLO"]
 condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/condor_hist/"
 njobs = 0
 os.system('rm -rf '+condor_dir+'job/*')
