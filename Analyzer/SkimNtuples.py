@@ -12,7 +12,7 @@ import SampleListUL
 import datetime
 
 ROOT.gROOT.SetBatch()
-ROOT.gROOT.LoadMacro("./Helpers.h")
+ROOT.gROOT.LoadMacro("/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/Helpers.h")
 
 def main(sample_name):
 
@@ -42,7 +42,8 @@ def main(sample_name):
   FileList = []
   for files in crabFiles:
     print files
-    FileList += [EOSURL+f for f in glob.glob(files)]
+    #FileList += [EOSURL+f for f in glob.glob(files)]
+    FileList += [f for f in glob.glob(files)]
   
   # Creating std::vector as filelist holder to be plugged into RDataFrame
   vec = ROOT.vector('string')()
@@ -155,7 +156,7 @@ if __name__== "__main__":
 
   parser = argparse.ArgumentParser("")
   parser.add_argument('-s', '--sample', type=str,  default="")
-  parser.add_argument('-c', '--cores',  type=int,  default=4)
+  parser.add_argument('-c', '--cores',  type=int,  default=20)
 
   args = parser.parse_args()
   print("sample = %s"%(args.sample))

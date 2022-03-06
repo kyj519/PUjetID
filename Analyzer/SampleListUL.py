@@ -9,8 +9,9 @@ class Sample:
 
 version="DiLeptonSkim_ULNanoV9_v1p4"
 
-EOSURL="root://cluster142.knu.ac.kr/"
-EOSDIR="/pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/"
+#EOSURL="root://cluster142.knu.ac.kr/"
+EOSURL=""
+EOSDIR="gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/"
 CRABDIR="JetPUId_"+version+"/CRABOUTPUT/"
 NTUPDIR="JetPUId_"+version+"/ntuples_skim/"
 Samples = collections.OrderedDict()
@@ -114,6 +115,15 @@ Samples["DataUL18A_DoubleMuon"] = Sample(
   ],
   ntupleFiles=[
     EOSDIR+NTUPDIR+"ntuple_DataUL18A_DoubleMuon.root"
+  ]
+)
+Samples["test"] = Sample(
+  name="test",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DoubleMuon/test"+"/*/*/tree_*.root"
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_test.root"
   ]
 )
 Samples["DataUL18B_DoubleMuon"] = Sample(
@@ -371,19 +381,19 @@ Samples["DataUL17F_DoubleEG"] = Sample(
 #
 # DY MG5 LO
 #
-# Samples["MCUL16_DY_MG"] = Sample(
-#   name="MCUL16_DY_MG",
-#   crabFiles=[
-#     EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/JetPUId_MCUL16NanoAODv9_"+version+"/*/*/tree_*.root",
-#   ],
-#   ntupleFiles=[
-#     EOSDIR+NTUPDIR+"ntuple_MCUL16_DY_MG.root"
-#   ],
-#  xs = 5347.0 #pb
-# )
-#
-# DY MG5 NLO
-#
+Samples["MCUL16_DY_MG"] = Sample(
+   name="MCUL16_DY_MG",
+   crabFiles=[
+     EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/JetPUId_MCUL16NanoAODv9_"+version+"/*/*/tree_*.root",
+   ],
+   ntupleFiles=[
+     EOSDIR+NTUPDIR+"ntuple_MCUL16_DY_MG.root"
+   ],
+  xs = 5347.0 #pb
+ )
+
+#DY MG5 NLO
+
 Samples["MCUL16_DY_AMCNLO"] = Sample(
   name="MCUL16_DY_AMCNLO",
   crabFiles=[
