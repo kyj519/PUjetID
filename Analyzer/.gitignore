@@ -6,3 +6,4 @@ SkimNtuplesAtBatch.sh.sub
 histos/
 histos3D/
 BatchLog/
+condor/
