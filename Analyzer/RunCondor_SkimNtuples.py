@@ -43,13 +43,13 @@ for sample in Samplelist:
 	"getenv":"True",
 	"should_transfer_files":"YES",
 	"when_to_transfer_output" : "ON_EXIT",
+	"RequestMemory":65536,
 	"output": condor_dir+"log/"+sample+".log",
 	"error" : condor_dir+"log/"+sample+".err"}
-	print(submit_dic)
 	sub = htcondor.Submit(submit_dic)
 	schedd = htcondor.Schedd()         
 	submit_result = schedd.submit(sub)  
-	print(submit_result.cluster())  
+	print(submit_result)  
 	
 
 
