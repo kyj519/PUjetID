@@ -61,3 +61,5 @@ whitelist_sites=[
 'T3_KR_*'
 ]
 config.Site.whitelist = whitelist_sites
+blacklist_sites=['T2_FR_GRIF']
+config.Site.blacklist = blacklist_sites
