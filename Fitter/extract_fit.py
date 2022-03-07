@@ -452,10 +452,10 @@ def main():
     parser.add_argument("--output",    dest="output",        help="output directory path",     type=str)
     parser.add_argument("--year",      dest="year",          help="data year",                 type=str)
     parser.add_argument("--wp",        dest="workingpoint",  help="Loose or Medium or Tight",  type=str)
-    parser.add_argument("--useNLO",    default=False,        action='store_true')
+    parser.add_argument("--order",    default="LO", help = "LO or NLO", type=str)
     parser.add_argument("--useHerwig", default=False,        action='store_true')
     parser.add_argument("--usePowheg", default=False,        action='store_true')
-    parser.add_argument("--syst",      dest="syst",          default="", help="jerUp,jerDown,jesTotalUp,jesTotalDown", type=str)
+    parser.add_argument("--syst",      dest="syst",          default="central", help="central,jerUp,jerDown,jesTotalUp,jesTotalDown", type=str)
 
     args = parser.parse_args()    
     
@@ -463,11 +463,19 @@ def main():
     outputDir = args.output
     year = args.year 
     workingpoint = args.workingpoint
-    useNLO = args.useNLO
+    print(args.order)
+    
+    if args.order == "LO":
+        useNLO = False
+    elif args.order == "NLO":
+        useNLO = True
+    print(useNLO)
     useHerwig = args.useHerwig
     usePowheg = args.usePowheg
-    syst = args.syst
-
+    if args.syst == "central":
+        syst = ""
+    else:
+        syst = args.syst
     # Make output directory if it does not exist
     if not os.path.exists(outputDir):
         os.makedirs(outputDir)
@@ -526,9 +534,9 @@ def main():
     ROOT.gStyle.SetMarkerSize(0.5)
     # ROOT.gStyle.SetOptLogx()
 
-    f_data = ROOT.TFile(data_filename,"READ")
-    f_mc   = ROOT.TFile(mc_filename,  "READ")
-   
+    f_data = ROOT.TDCacheFile(data_filename,"READ")
+    f_mc   = ROOT.TDCacheFile(mc_filename,  "READ")
+    print("mc file is "+mc_filename)
     #
     # Check both file is open
     #
