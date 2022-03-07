@@ -49,6 +49,8 @@ keep dilep*
 #
 keep *nJetSel*
 keep *jetSel*
+keep fixedGridRhoFastjetAll
+
 #
 # Branches added in output by modules in NanoAOD-tools (ALWAYS CHECK)
 #

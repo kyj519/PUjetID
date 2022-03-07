@@ -25,7 +25,6 @@ for runkey in runkeys:
 	"log":condor_dir+"condorlog/"+runkey.replace(" ","_")+".log",
 	"getenv":"True",
 	"should_transfer_files":"YES",
-	"RequstMemory":65536,
 	"when_to_transfer_output" : "ON_EXIT",
 	"output": condor_dir+"log/"+runkey.replace(" ","_")+".log",
 	"error" : condor_dir+"log/"+runkey.replace(" ","_")+".err"}

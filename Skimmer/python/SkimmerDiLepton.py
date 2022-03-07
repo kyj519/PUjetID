@@ -35,17 +35,20 @@ class SkimmerDiLepton(Module):
     # List jet systematics
     #
     ak4Systematics=[
+      "",
+      "noJER",
       "jesTotalUp",
       "jesTotalDown",
-      # "jerUp",
-      # "jerDown"
+      "jerUp",
+      "jerDown"
     ]
     #
     #
     #
-    self.jetSystsList = [""] # Nominal
-    if self.isMC:
-      self.jetSystsList.extend(ak4Systematics)
+    self.jetSystsList.extend(ak4Systematics)
+    #self.jetSystsList = [""] # Nominal
+    #if self.isMC:
+    #  self.jetSystsList.extend(ak4Systematics)
     #
     #
     #
@@ -302,7 +305,11 @@ class SkimmerDiLepton(Module):
       #NOTE: For MC, we use the value from nanoAOD-tools.
       #The pt and mass systematic variation branches are saved by nanoAOD-tools.
       jetPt   = "pt_nom"   if jetSyst == "" else "pt_"+jetSyst    
-      jetMass = "mass_nom" if jetSyst == "" else "mass_"+jetSyst 
+      jetMass = "mass_nom" if jetSyst == "" else "mass_"+jetSyst
+      if jetSyst == "noJER":
+        jetPt = "pt"
+        jetMass = "mass"
+
     else:
       #NOTE: For data, just use the value from nanoAODs.
       #The JECs has been applied at the NanoAOD production level.
