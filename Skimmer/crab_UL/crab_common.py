@@ -32,7 +32,7 @@ config.JobType.sendPythonFolder  = True
 config.JobType.outputFiles = ['tree.root']
 #
 config.Data.splitting    = 'Automatic'
-config.Data.unitsPerJob  = 1
+config.Data.unitsPerJob = 240
 config.Data.publication  = False
 config.Data.allowNonValidInputDataset = True
 config.JobType.allowUndistributedCMSSW = True
@@ -55,11 +55,10 @@ whitelist_sites=[
 'T2_CH_CERN',
 'T2_US_*',
 'T2_UK_*',
+'T2_IT_*',
 'T2_DE_*',
-'T2_FR_*',
-'T2_KR_*',
-'T3_KR_*'
+'T2_KR_*'
 ]
 config.Site.whitelist = whitelist_sites
-blacklist_sites=['T2_FR_GRIF']
+blacklist_sites=['T2_FR_GRIF_*']
 config.Site.blacklist = blacklist_sites

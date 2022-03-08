@@ -2,7 +2,7 @@ import sys
 import crab_common 
 import helpers
 
-crab_common.config.JobType.maxJobRuntimeMin = 720
+#crab_common.config.JobType.maxJobRuntimeMin  = 720
 
 crab_common.config.JobType.scriptArgs = [
   'era=2016',

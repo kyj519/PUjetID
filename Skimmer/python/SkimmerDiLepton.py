@@ -35,7 +35,6 @@ class SkimmerDiLepton(Module):
     # List jet systematics
     #
     ak4Systematics=[
-      "",
       "noJER",
       "jesTotalUp",
       "jesTotalDown",
@@ -45,10 +44,9 @@ class SkimmerDiLepton(Module):
     #
     #
     #
-    self.jetSystsList.extend(ak4Systematics)
-    #self.jetSystsList = [""] # Nominal
-    #if self.isMC:
-    #  self.jetSystsList.extend(ak4Systematics)
+    self.jetSystsList = [""]
+    if self.isMC:
+      self.jetSystsList.extend(ak4Systematics)
     #
     #
     #

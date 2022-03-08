@@ -2,7 +2,7 @@ import sys
 import crab_common 
 import helpers
 
-crab_common.config.JobType.maxJobRuntimeMin = 480
+#crab_common.config.JobType.maxJobRuntimeMin  = 480
 
 def GetDataStream(name):
   if "DoubleEG" in name:   return "DoubleEG"
