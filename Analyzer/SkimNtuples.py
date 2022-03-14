@@ -60,8 +60,9 @@ def main(sample_name):
     ak4Systematics=[
       "jesTotalUp",
       "jesTotalDown",
-      # "jerUp",
-      # "jerDown"
+      "jerUp",
+      "jerDown",
+      "noJER"
     ]
   #
   # Don't do ak4Systematics for MG+HW
