@@ -11,7 +11,7 @@
 #--dataStream="MC"
  
 #
- MAX_EVENTS=20000
+ MAX_EVENTS=5000
  python RunSkimmerLocal.py \
  --era="UL2017" \
  --maxEvents=${MAX_EVENTS} \
