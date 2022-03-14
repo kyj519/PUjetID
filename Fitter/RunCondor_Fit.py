@@ -1,9 +1,9 @@
 import os, htcondor
 from tables import EArray
 Eras = ['UL2018','UL2017','UL2016','UL2016APV']
-orders = ['LO','NLO']
+orders = ['NLO', 'LO']
 workingPoints = ['Loose','Medium',"Tight"]
-systs = ['central', 'jesTotalUp', 'jesTotalDown']
+systs = ['central', 'jesTotalUp', 'jesTotalDown', 'noJER']
 runkeys = [era+" "+order+" "+wp+" "+syst for syst in systs for wp in workingPoints for order in orders for era in Eras]
 condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Fitter/condor/"
 njobs = 0
@@ -31,7 +31,6 @@ for runkey in runkeys:
 	sub = htcondor.Submit(submit_dic)
 	schedd = htcondor.Schedd()         
 	submit_result = schedd.submit(sub)  
-	print(submit_result)  
 	
 
 

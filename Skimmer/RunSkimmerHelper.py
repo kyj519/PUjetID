@@ -177,10 +177,10 @@ def GetModules(era, isMC, dataStream):
   #
   elif era == "UL2017":
     if isMC: 
-      modules=[puWeight_UL2017(), muonRocCorUL2017(), jetCorr_AK4_UL2017_mc(), SkimmerDiLepton_UL2017_mc()]
+      modules=[puWeight_UL2017(), muonRocCorUL2017(), LeptonCleanPreselector_UL2017_mc(),jetCorr_AK4_UL2017_mc(), SkimmerDiLepton_UL2017_mc()]
     else:              
       if "DoubleMuon" in dataStream:
-        modules=[muonRocCorUL2017(),LeptonCleanPreselector_UL2017_data() ,SkimmerDiLepton_UL2017_data_dimuon()]
+        modules=[muonRocCorUL2017(),LeptonCleanPreselector_UL2017_muon_data() ,SkimmerDiLepton_UL2017_data_dimuon()]
       elif "DoubleEG" in dataStream:
         modules=[muonRocCorUL2017(), SkimmerDiLepton_UL2017_data_dielectron()]
   #

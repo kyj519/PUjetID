@@ -3,7 +3,7 @@ import ROOT
 import math
 import collections
 ROOT.gROOT.SetBatch(True)
-ROOT.gStyle.SetPaintTextFormat("4.3f")
+ROOT.gStyle.SetPaintTextFormat("6.4f")
 ROOT.gROOT.SetStyle("Plain")
 
 resultsDir  = "./results_ULNanoV9_v1p4/"
@@ -63,7 +63,7 @@ def main():
     PlotMap(h2)
 
 def PlotMap(h2):
-  ROOT.gStyle.SetPaintTextFormat("6.6f")
+  ROOT.gStyle.SetPaintTextFormat("6.4f")
   h2Name = h2.GetName()
   canv = ROOT.TCanvas("canv","canv",600,600)
   h2.SetMarkerSize(1.40)

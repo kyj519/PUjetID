@@ -438,7 +438,7 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #
   # Create directory for output
   # 
-  outDir = SampleListUL.EOSDIR+"/result_his_not_hadd_yet/"
+  outDir = SampleListUL.EOSDIR+"/result_his/"
   if not(os.path.isdir(outDir)):
     os.mkdir(outDir)
 
@@ -489,8 +489,9 @@ if __name__== "__main__":
     ak4Systematics=[
       "jesTotalUp",
       "jesTotalDown",
-      # "jerUp",
-      # "jerDown"
+       "jerUp",
+      "jerDown",
+      "noJER"
     ]
   # Don't do ak4Systematics for MG+HW and PHG
   if "MG_HW" in args.sample: ak4Systematics=[]

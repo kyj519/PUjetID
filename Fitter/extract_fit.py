@@ -472,6 +472,7 @@ def main():
     print(useNLO)
     useHerwig = args.useHerwig
     usePowheg = args.usePowheg
+    
     if args.syst == "central":
         syst = ""
     else:
@@ -862,7 +863,7 @@ def main():
     heffsf.SetMaximum(1.20)
     heffsf.SetMinimum(0.80)
     heffsf.SetMarkerSize(textsize)
-    heffsf.Draw("colztexterr")
+    heffsf.Draw("colztext")
     c4.SaveAs(os.path.join(outputDir, "h2_eff_sf"+year+"_"+wpShort+".pdf"))
     if printPNG: c4.SaveAs(os.path.join(outputDir, "h2_eff_sf"+year+"_"+wpShort+".png"))
     heffsf.SetName("h2_eff_sf"+year+"_"+wpShort)
