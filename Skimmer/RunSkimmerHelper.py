@@ -91,6 +91,21 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer im
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import puWeight_UL2018
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import puWeight_UL2016
 
+from PUjetID.Skimmer.LeptonCleanPreselector import LeptonCleanPreselector_UL2016APV_muon_data
+from PUjetID.Skimmer.LeptonCleanPreselector import LeptonCleanPreselector_UL2016_muon_data
+from PUjetID.Skimmer.LeptonCleanPreselector import LeptonCleanPreselector_UL2017_muon_data
+from PUjetID.Skimmer.LeptonCleanPreselector import LeptonCleanPreselector_UL2018_muon_data
+
+
+from PUjetID.Skimmer.LeptonCleanPreselector import LeptonCleanPreselector_UL2016APV_elec_data
+from PUjetID.Skimmer.LeptonCleanPreselector import LeptonCleanPreselector_UL2016_elec_data
+from PUjetID.Skimmer.LeptonCleanPreselector import LeptonCleanPreselector_UL2017_elec_data
+from PUjetID.Skimmer.LeptonCleanPreselector import LeptonCleanPreselector_UL2018_elec_data
+
+from PUjetID.Skimmer.LeptonCleanPreselector import LeptonCleanPreselector_UL2016APV_mc
+from PUjetID.Skimmer.LeptonCleanPreselector import LeptonCleanPreselector_UL2016_mc
+from PUjetID.Skimmer.LeptonCleanPreselector import LeptonCleanPreselector_UL2017_mc
+from PUjetID.Skimmer.LeptonCleanPreselector import LeptonCleanPreselector_UL2018_mc
 def GetModules(era, isMC, dataStream):
   modules = []
   #
@@ -165,7 +180,7 @@ def GetModules(era, isMC, dataStream):
       modules=[puWeight_UL2017(), muonRocCorUL2017(), jetCorr_AK4_UL2017_mc(), SkimmerDiLepton_UL2017_mc()]
     else:              
       if "DoubleMuon" in dataStream:
-        modules=[muonRocCorUL2017(), SkimmerDiLepton_UL2017_data_dimuon()]
+        modules=[muonRocCorUL2017(),LeptonCleanPreselector_UL2017_data() ,SkimmerDiLepton_UL2017_data_dimuon()]
       elif "DoubleEG" in dataStream:
         modules=[muonRocCorUL2017(), SkimmerDiLepton_UL2017_data_dielectron()]
   #
