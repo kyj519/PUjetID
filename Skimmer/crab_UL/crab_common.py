@@ -31,8 +31,8 @@ config.JobType.inputFiles = [
 config.JobType.sendPythonFolder  = True
 config.JobType.outputFiles = ['tree.root']
 #
-config.Data.splitting    = 'Automatic'
-config.Data.unitsPerJob = 240
+config.Data.splitting    = 'FileBased'
+config.Data.unitsPerJob = 1
 config.Data.publication  = False
 config.Data.allowNonValidInputDataset = True
 config.JobType.allowUndistributedCMSSW = True
@@ -44,6 +44,7 @@ config.JobType.allowUndistributedCMSSW = True
 #
 #config.Data.outLFNDirBase  = '/u/user/yeonjoon/'
 config.Site.storageSite    = 'T3_KR_KNU'
+config.JobType.maxMemoryMB = 2500
 #
 # User CERNBox 
 #
@@ -54,8 +55,7 @@ config.Data.ignoreLocality = True
 whitelist_sites=[
 'T2_CH_CERN',
 'T2_US_*',
-'T2_UK_*',
-'T2_IT_*',
+'T2_FI_*',
 'T2_DE_*',
 'T2_KR_*'
 ]
