@@ -1,0 +1,3 @@
+[submodule "Analyzer/data/JRDatabase"]
+	path = Analyzer/data/JRDatabase
+	url = https://github.com/cms-jet/JRDatabase.git
