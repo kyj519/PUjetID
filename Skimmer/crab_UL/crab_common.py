@@ -54,11 +54,11 @@ config.JobType.maxMemoryMB = 2500
 config.Data.ignoreLocality = True
 whitelist_sites=[
 'T2_CH_CERN',
-'T2_US_*',
+'T2_UK_*',
 'T2_FI_*',
 'T2_DE_*',
-'T2_KR_*'
+'T2_FR_*'
 ]
 config.Site.whitelist = whitelist_sites
-blacklist_sites=['T2_FR_GRIF_*']
+blacklist_sites=[]
 config.Site.blacklist = blacklist_sites

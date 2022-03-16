@@ -2,7 +2,7 @@ import sys
 import crab_common 
 import helpers
 
-crab_common.config.JobType.maxJobRuntimeMin = 2750
+crab_common.config.JobType.maxJobRuntimeMin = 240
 
 def GetDataStream(name):
   if "EGamma" in name: return "EGamma"
@@ -28,10 +28,12 @@ if __name__ == '__main__':
     #
     #
     dataStreamName=GetDataStream(dataset)
+    runPeriod=dataset.split("-")[0][-1:]
     crab_common.config.JobType.scriptArgs = [
       'era=UL2018',
       'isMC=0',
       'dataStream='+dataStreamName,
+      'runPeriod='+runPeriod
     ]
     #
     # Have to make unique requestName. 
