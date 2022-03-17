@@ -4,12 +4,11 @@ import glob
 import argparse
 from collections import OrderedDict 
 import datetime
-
 import array
 import ROOT
 import SampleList
 import SampleListUL
-
+import JERLoader
 ROOT.gROOT.SetBatch()
 ROOT.gROOT.LoadMacro("/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/Helpers.h")
 
@@ -96,9 +95,18 @@ deltaRBinsN = len(deltaRBins)-1
 def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
 
   isUL=False
-  
+  era = ""
   crabFiles   = []
   ntupleFiles = []
+
+  if "UL16" in sample_name:
+    era = "UL2016"
+    if "UL16APV" in sample_name:
+      era = "UL2016APV"
+  if "UL17" in sample_name:
+    era = "UL2017"
+  if "UL2018" in sample_name:
+    era = "UL2018"
 
   if "DataUL" in sample_name or "MCUL" in sample_name:
     EOSURL      = SampleListUL.EOSURL
@@ -130,7 +138,7 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
     vec.push_back(f)
 
   # Read all files into RDataFrame
-  df = ROOT.ROOT.RDataFrame("Events", vec)
+  df = ROOT.RDataFrame("Events", vec)
   
   isMC = False
   if "MC" in sample_name:
@@ -169,6 +177,7 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #
   # Define the probeJet
   #
+  df = df.Define("rho", "fixedGridRhoFastjetAll")
   probeJetStr=systStrPre+"jetSel0"
   df = df.Define("probeJet_pt",             probeJetStr+"_pt")
   df = df.Define("probeJet_eta",            probeJetStr+"_eta")
@@ -201,6 +210,14 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #
   #
   #
+  # @ROOT.Numba.Declare(["float","float","float"],"float")
+  # def getJER(pt, eta, rho):
+  #   Loader = JERLoader.JERLoader(era, isMC)
+  #   jer_pt_res = Loader.getJetPtResolution(pt, eta, rho)
+  #   return jer_pt_res
+  # df = df.Define("probeJet_jer", "Numba::getJER(probeJet_pt,probeJet_eta,rho)")
+
+  
   df = df.Define("probeJet_dilep_dphi_norm","DeltaPhiNorm(probeJet_dilep_dphi)")
   df = df.Define("probeJet_dilep_ptbalance","dilep_pt/probeJet_pt")
   #

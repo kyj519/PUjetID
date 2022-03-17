@@ -2,7 +2,7 @@
 NCORES=4
 
 SAMPLES=(
-# DataUL18A_DoubleMuon
+  DataUL18A_DoubleMuon
 # DataUL18B_DoubleMuon
 # DataUL18C_DoubleMuon
 # DataUL18D_DoubleMuon

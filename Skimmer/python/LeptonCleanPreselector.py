@@ -15,6 +15,19 @@ class LeptonCleanPreselector(Module):
         self.isDoubleElecData = isDoubleElecData
         self.isDoubleMuonData = isDoubleMuonData
         self.muonPtDef = "corrected_pt"  # using muon rochester corrected muon pt
+        ak4Systematics = [
+            "noJER",
+            "jesTotalUp",
+            "jesTotalDown",
+            "jerUp",
+            "jerDown"
+        ]
+        #
+        #
+        #
+        self.jetSystsList = [""]
+        if self.isMC:
+            self.jetSystsList.extend(ak4Systematics)
 
     def passElectronTriggerSelection(self, event):
 
@@ -290,7 +303,24 @@ class LeptonCleanPreselector(Module):
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
 
+    def getJetPtAndMassForSyst(self, jetSyst):
+        if self.isMC:
+            # NOTE: For MC, we use the value from nanoAOD-tools.
+            # The pt and mass systematic variation branches are saved by nanoAOD-tools.
+            jetPt = "pt_nom" if jetSyst == "" else "pt_"+jetSyst
+            jetMass = "mass_nom" if jetSyst == "" else "mass_"+jetSyst
+            if jetSyst == "noJER":
+                jetPt = "pt"
+                jetMass = "mass"
 
+        else:
+            # NOTE: For data, just use the value from nanoAODs.
+            # The JECs has been applied at the NanoAOD production level.
+            jetPt = "pt"
+            jetMass = "mass"
+
+        return jetPt, jetMass
+        
     def passJetSelection(self, event, jetSyst=""):
         #######################
         #
@@ -326,8 +356,11 @@ class LeptonCleanPreselector(Module):
         #
         return True
 
-    def passEventPreselection(self, event):
 
+
+        
+
+    def analyze(self,event):
         ######trigger######
         passElTrig = self.passElectronTriggerSelection(event)
         passMuTrig = self.passMuonTriggerSelection(event)
@@ -343,7 +376,6 @@ class LeptonCleanPreselector(Module):
         event.passJetSelNomSyst = False
 
         for jetSyst in self.jetSystsList:
-            self.resetJetBranches(event, jetSyst)
             if self.passJetSelection(event, jetSyst):
                 event.passJetSelNomSyst |= True
 

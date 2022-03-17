@@ -22,7 +22,7 @@ condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjet
 njobs = 0
 os.system('rm -rf '+condor_dir+'job/*')
 os.system('rm -rf '+condor_dir+'log/*')
-ncores = 4
+ncores = 10
 for sample in Samplelist:
 	f = open(condor_dir+"job/job_"+sample+".sh","w+")
 	f.write("#!/bin/bash\n")

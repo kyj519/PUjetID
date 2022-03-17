@@ -630,6 +630,7 @@ def main():
     heffgen     = ROOT.TH2F("heffgen",     "PU ID Eff MC (Gen-Based), WP " +workingpoint+ ", "+year,     xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
     hmistaggen  = ROOT.TH2F("hmistaggen",  "PU ID Mistag MC (Gen-Based), WP " +workingpoint+ ", "+year,  xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
 
+    
     heffdata.Sumw2()
     heffmc.Sumw2()
     hmistagdata.Sumw2()
@@ -638,7 +639,7 @@ def main():
     hmistaggen.Sumw2()
 
     ROOT.gStyle.SetOptStat(0)
-    ROOT.gStyle.SetPaintTextFormat("8.4f")
+    ROOT.gStyle.SetPaintTextFormat("6.4f")
 
     cfitPASS = ROOT.TCanvas("cfitPASS","cfitPASS",600,600)
     cfitPASS.SetLogx(False)
