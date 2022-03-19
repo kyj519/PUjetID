@@ -1,4 +1,4 @@
-python crab_UL2017_data.py ../samples/ULNanoAODv9/ULNanoAODv9_2017_Data.txt &
+python crab_UL2017_data.py ../samples/ULNanoAODv9/ULNanoAODv9_2017_Data.txt 
 #python crab_UL2017_mc.py   ../samples/ULNanoAODv9/ULNanoAODv9_2017_MC.txt
 
 python crab_UL2018_data.py ../samples/ULNanoAODv9/ULNanoAODv9_2018_Data.txt &

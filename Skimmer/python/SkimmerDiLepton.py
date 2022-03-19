@@ -1,12 +1,11 @@
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from PhysicsTools.NanoAODTools.postprocessing.tools import *
-from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetUncertainties import *
-from PhysicsTools.NanoAODTools.postprocessing.modules.jme.fatJetUncertainties import *
 import math
 import array
 import os
 import ROOT
+import shutil
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 import JERLoader
 
@@ -84,6 +83,7 @@ class SkimmerDiLepton(Module):
 			jerTag = jerInputFileName_pt[:jerInputFileName_pt.find('_MC_')+len('_MC')]
 		jerArchive = tarfile.open(jerInputArchivePath+jerTag+".tgz", "r:gz")
 		jerInputFilePath = tempfile.mkdtemp()
+		self.jerInputFilePath = jerInputFilePath
 		jerArchive.extractall(jerInputFilePath)
 
 		self.params_sf_and_uncertainty = ROOT.PyJetParametersWrapper()
@@ -294,6 +294,7 @@ class SkimmerDiLepton(Module):
 
 	def endJob(self):
 		Module.endJob(self)
+		shutil.rmtree(self.jerInputFilePath)
 		print("SkimmerDiLepton module ended successfully")
 		pass
 
