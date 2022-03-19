@@ -93,7 +93,6 @@ deltaRBinsArray = array.array('d',deltaRBins)
 deltaRBinsN = len(deltaRBins)-1
 
 def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
-
   isUL=False
   era = ""
   crabFiles   = []
@@ -185,6 +184,9 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   df = df.Define("probeJet_phi",            probeJetStr+"_phi")
   df = df.Define("probeJet_dilep_dphi",     probeJetStr+"_dilep_dphi")
   df = df.Define("probeJet_puIdDisc",       probeJetStr+"_puIdDisc")
+  df = df.Define("probeJet_jer_from_pt", probeJetStr+"_jer_from_pt")
+  df = df.Define("probeJet_jer_from_pt_nom", probeJetStr+"_jer_from_pt_nom")
+  df = df.Define("probeJet_jer_from_pt_nano", probeJetStr+"_jer_from_pt_nano")
   #
   # Guide on how to read the pileup ID bitmap variable: 
   # https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJetID#miniAOD_and_nanoAOD
@@ -209,17 +211,11 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
     df = df.Define("probeJet_gen_dR", probeJetStr+"_gen_dR")
   #
   #
-  #
-  # @ROOT.Numba.Declare(["float","float","float"],"float")
-  # def getJER(pt, eta, rho):
-  #   Loader = JERLoader.JERLoader(era, isMC)
-  #   jer_pt_res = Loader.getJetPtResolution(pt, eta, rho)
-  #   return jer_pt_res
-  # df = df.Define("probeJet_jer", "Numba::getJER(probeJet_pt,probeJet_eta,rho)")
 
   
   df = df.Define("probeJet_dilep_dphi_norm","DeltaPhiNorm(probeJet_dilep_dphi)")
   df = df.Define("probeJet_dilep_ptbalance","dilep_pt/probeJet_pt")
+  df = df.Define("probeJet_dilep_ptbalance_anomaly", "fabs(probeJet_dilep_ptbalance-1)")
   #
   # Define pileup ID cuts
   #
@@ -253,8 +249,12 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #
   #
   #
-  df = df.Define("probeJet_ptbalance_good","(probeJet_dilep_ptbalance>=0.5) && (probeJet_dilep_ptbalance<1.5)")
-  df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance<0.5")
+  #df = df.Define("probeJet_ptbalance_good","(probeJet_dilep_ptbalance>=0.5) && (probeJet_dilep_ptbalance<1.5)")
+  #df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance<0.5")
+  N_factor = 1
+  df = df.Define("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<=%f * probeJet_jer_from_pt" % (N_factor))
+  df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance_anomaly>=%f * probeJet_jer_from_pt" % (N_factor))
+
   #############################################
   #
   # Define Filters
