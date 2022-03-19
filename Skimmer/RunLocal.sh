@@ -8,7 +8,7 @@ python RunSkimmerLocal.py \
 --maxEvents=${MAX_EVENTS} \
 --outDir="./MCUL17_DYJetsToLL_LO" \
 --isMC=1 \
---dataStream="MC"
+--dataStream="MC" &> output_UL2017_MC.txt &
 
 echo "#######################################"
 echo "#######################################"
@@ -20,7 +20,7 @@ MAX_EVENTS=1000
  --maxEvents=${MAX_EVENTS} \
  --outDir="./DataUL17_DoubleMuon" \
  --isMC=0 \
- --dataStream="DoubleMuon" \
+ --dataStream="DoubleMuon" &> output_UL2017_DATA.txt &
 
 echo "#######################################"
 echo "#######################################"
@@ -45,7 +45,7 @@ python RunSkimmerLocal.py \
 --maxEvents=${MAX_EVENTS} \
 --outDir="./MCUL18_DYJetsToLL_LO" \
 --isMC=1 \
---dataStream="MC"
+--dataStream="MC" &> output_UL2018_MC.txt &
 
 echo "#######################################"
 echo "#######################################"
@@ -57,7 +57,7 @@ python RunSkimmerLocal.py \
 --maxEvents=${MAX_EVENTS} \
 --outDir="./DataUL18_DoubleMuon" \
 --isMC=0 \
---dataStream="DoubleMuon"
+--dataStream="DoubleMuon" &> output_UL2018_DATA.txt &
 
 echo "#######################################"
 echo "#######################################"
@@ -80,7 +80,7 @@ python RunSkimmerLocal.py \
 --maxEvents=${MAX_EVENTS} \
 --outDir="./MCUL16APV_DYJetsToLL_LO" \
 --isMC=1 \
---dataStream="MC"
+--dataStream="MC" &> output_UL2016APV_MC.txt &
 
 echo "#######################################"
 echo "#######################################"
@@ -92,7 +92,7 @@ python RunSkimmerLocal.py \
 --maxEvents=${MAX_EVENTS} \
 --outDir="./DataUL16APV_DoubleMuon" \
 --isMC=0 \
---dataStream="DoubleMuon"
+--dataStream="DoubleMuon" &> output_UL2016APV_DATA.txt &
 
 echo "#######################################"
 echo "#######################################"
