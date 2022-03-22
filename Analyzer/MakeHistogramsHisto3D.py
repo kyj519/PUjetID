@@ -252,8 +252,8 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #df = df.Define("probeJet_ptbalance_good","(probeJet_dilep_ptbalance>=0.5) && (probeJet_dilep_ptbalance<1.5)")
   #df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance<0.5")
   N_factor = 1
-  df = df.Define("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<=%f * probeJet_jer_from_pt" % (N_factor))
-  df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance_anomaly>=%f * probeJet_jer_from_pt" % (N_factor))
+  df = df.Define("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<= 1.00 * probeJet_jer_from_pt" )
+  df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance_anomaly>= 1.00 * probeJet_jer_from_pt" )
 
   #############################################
   #
