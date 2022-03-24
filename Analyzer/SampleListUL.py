@@ -53,6 +53,39 @@ Samples["MCUL18_DY_AMCNLO"] = Sample(
   ],
   xs = 6422.0 #pb
 )
+
+Samples["MCUL18_DY_AMCNLO_0J"] = Sample(
+  name="MCUL18_DY_AMCNLO_0J",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL18NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL18_DY_AMCNLO_0J.root"
+  ],
+  xs = 5129.0 #pb
+)
+
+Samples["MCUL18_DY_AMCNLO_1J"] = Sample(
+  name="MCUL18_DY_AMCNLO_1J",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL18NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL18_DY_AMCNLO_1J.root"
+  ],
+  xs = 951.5 #pb
+)
+
+Samples["MCUL18_DY_AMCNLO_2J"] = Sample(
+  name="MCUL18_DY_AMCNLO_2J",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL18NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL18_DY_AMCNLO_2J.root"
+  ],
+  xs = 361.4 #pb
+)
 #
 # TTTo2L2Nu
 #
@@ -224,6 +257,39 @@ Samples["MCUL17_DY_AMCNLO"] = Sample(
     EOSDIR+NTUPDIR+"ntuple_MCUL17_DY_AMCNLO.root"
   ],
   xs = 6422.0 #pb
+)
+
+Samples["MCUL17_DY_AMCNLO_0J"] = Sample(
+  name="MCUL17_DY_AMCNLO_0J",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL17NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL17_DY_AMCNLO_0J.root"
+  ],
+  xs = 5129.0 #pb
+)
+
+Samples["MCUL17_DY_AMCNLO_1J"] = Sample(
+  name="MCUL17_DY_AMCNLO_1J",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL17NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL17_DY_AMCNLO_1J.root"
+  ],
+  xs = 951.5 #pb
+)
+
+Samples["MCUL17_DY_AMCNLO_2J"] = Sample(
+  name="MCUL17_DY_AMCNLO_2J",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL17NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL17_DY_AMCNLO_2J.root"
+  ],
+  xs = 361.4 #pb
 )
 #
 # TTTo2L2Nu
@@ -404,6 +470,39 @@ Samples["MCUL16_DY_AMCNLO"] = Sample(
   ],
  xs = 6422.0 #pb
 )
+
+Samples["MCUL16_DY_AMCNLO_0J"] = Sample(
+  name="MCUL16_DY_AMCNLO_0J",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL16NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16_DY_AMCNLO_0J.root"
+  ],
+  xs = 5129.0 #pb
+)
+
+Samples["MCUL16_DY_AMCNLO_1J"] = Sample(
+  name="MCUL16_DY_AMCNLO_1J",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL16NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16_DY_AMCNLO_1J.root"
+  ],
+  xs = 951.5 #pb
+)
+
+Samples["MCUL16_DY_AMCNLO_2J"] = Sample(
+  name="MCUL16_DY_AMCNLO_2J",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL16NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16_DY_AMCNLO_2J.root"
+  ],
+  xs = 361.4 #pb
+)
 #
 # DYToMumu Powheg
 #
@@ -559,6 +658,39 @@ Samples["MCUL16APV_DY_AMCNLO"] = Sample(
     EOSDIR+NTUPDIR+"ntuple_MCUL16APV_DY_AMCNLO.root"
   ],
   xs = 6422.0 #pb
+)
+
+Samples["MCUL16APV_DY_AMCNLO_0J"] = Sample(
+  name="MCUL16APV_DY_AMCNLO_0J",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16APV_DY_AMCNLO_0J.root"
+  ],
+  xs = 5129.0 #pb
+)
+
+Samples["MCUL16APV_DY_AMCNLO_1J"] = Sample(
+  name="MCUL16APV_DY_AMCNLO_1J",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16APV_DY_AMCNLO_1J.root"
+  ],
+  xs = 951.5 #pb
+)
+
+Samples["MCUL16APV_DY_AMCNLO_2J"] = Sample(
+  name="MCUL16APV_DY_AMCNLO_2J",
+  crabFiles=[
+    EOSDIR+CRABDIR+"DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL16APV_DY_AMCNLO_2J.root"
+  ],
+  xs = 361.4 #pb
 )
 #
 # DYToMumu Powheg
