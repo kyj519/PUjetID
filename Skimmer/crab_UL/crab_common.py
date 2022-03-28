@@ -31,8 +31,8 @@ config.JobType.inputFiles = [
 config.JobType.sendPythonFolder  = True
 config.JobType.outputFiles = ['tree.root']
 #
-config.Data.splitting    = 'FileBased'
-config.Data.unitsPerJob = 1
+config.Data.splitting    = 'LumiBased'
+config.Data.unitsPerJob = 400
 config.Data.publication  = False
 config.Data.allowNonValidInputDataset = True
 config.JobType.allowUndistributedCMSSW = True
