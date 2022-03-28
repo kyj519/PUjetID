@@ -59,6 +59,6 @@ whitelist_sites=[
 'T2_DE_*',
 'T2_FR_*'
 ]
-config.Site.whitelist = whitelist_sites
-blacklist_sites=[]
+#config.Site.whitelist = whitelist_sites
+blacklist_sites=['T2_FR_GRIF_LLR','T2_UK_London_Brunel']
 config.Site.blacklist = blacklist_sites
