@@ -29,7 +29,7 @@ class sample_setting:
 	
 	def getFileFromXROOTD(self):
 		xrootd_prefix_knu = "root://cluster142.knu.ac.kr//store/user/yeonjoon/"
-		xrootd_prefix_cms = "root://xrootd-cms.infn.it/"
+		xrootd_prefix_cms = "root://cms-xrd-global.cern.ch/"
 		query = '--query  "file dataset=%s"' % self.dasdataset
 		stream = os.popen('/cvmfs/cms.cern.ch/common/dasgoclient %s' % query)
 		xrootdsample_without_prefix = stream.read().splitlines()
@@ -85,7 +85,7 @@ def condor_submitter(sample):
 		"jobbatchname": sample.sample_name+"_job_%d" % i,
 		"universe":"vanilla",
 		"request_cpus":1,
-		"RequestMemory":4096,
+		"RequestMemory":8096,
 		"log":current_dir+"/condor/condor_log/%s/job_%d.log"%(sample.sample_name,i),
 		"getenv":"True",
 		"should_transfer_files":"YES",

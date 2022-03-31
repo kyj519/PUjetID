@@ -43,7 +43,7 @@ for era in eraList:
 		if "DataUL" + era in file:
 			datalist_by_era[targetfilename].append(file)
 
-AK4Syst = ["","_jerDown","_jerUp","_jesTotalUp","_jesTotalUp","_noJER"]
+AK4Syst = ["","_jerDown","_jerUp","_jesTotalDown","_jesTotalUp","_noJER"]
 mclist_by_era_and_syst = {}
 for era in eraList:
 	for syst in AK4Syst:
@@ -60,7 +60,7 @@ for targetname, hist in datalist_by_era.items():
 		command_str = command_str + " " +tempdir + file
 	print(command_str)
 	os.system(command_str)
-	shutil.move(tempdir+targetname,histodir)
+	os.system("dccp -H %s%s %s"%(tempdir,targetname,histodir))
 
 for targetname, hist in mclist_by_era_and_syst.items():
 	command_str = "hadd -f %s%s" % (tempdir, targetname)
@@ -68,6 +68,6 @@ for targetname, hist in mclist_by_era_and_syst.items():
 		command_str = command_str + " " +tempdir + file
 	print(command_str)
 	os.system(command_str)
-	shutil.move(tempdir+targetname,histodir)
+	os.system("dccp -H %s%s %s"%(tempdir,targetname,histodir))
 
 shutil.rmtree(tempdir)

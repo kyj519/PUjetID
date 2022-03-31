@@ -77,9 +77,24 @@ absEtaBinsStr.append("abseta3p0To5p0")
 #
 #
 #
-dphiBinsN = 100
-dphiBinSize = 0.02
-dphiBins =[round(x*dphiBinSize, 2) for x in xrange(0,dphiBinsN+1)]
+# dphiBinsN = 50
+# dphiBinSize = 0.04
+# dphiBins =[round(x*dphiBinSize, 2) for x in xrange(0,dphiBinsN+1)]
+def slicebin(start, end, N):
+    temp = []
+    interval = end - start
+    tick = interval / N
+    for i in range(N):
+        temp.append(start+i*tick)
+    temp.append(end)
+    return temp
+def mergebin(*args):
+    merged = []
+    for bins in args:
+        merged = merged + bins
+    return sorted(array.array("d",set(merged)))
+
+dphiBins = mergebin(slicebin(0,0.5,12)+slicebin(0.5,1.5,50)+slicebin(1.5,2.0,12))
 dphiBinsArray = array.array('d',dphiBins)
 dphiBinsN = len(dphiBins)-1
 
@@ -153,12 +168,7 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   # Define columns in RDataframe
   #
   #############################################
-  # Define evtWeight variable
-  if "Data" in sample_name:
-    df = df.Define("evtWeight","1.0")
-  else: #For MC
-    df = df.Define("evtWeight","genWeight*eventWeightScale*puWeight*L1PreFiringWeight_Nom")
-
+ 
   # Define name for event weight
   weightName = "evtWeight"
 
@@ -187,6 +197,16 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   df = df.Define("probeJet_jer_from_pt", probeJetStr+"_jer_from_pt")
   df = df.Define("probeJet_jer_from_pt_nom", probeJetStr+"_jer_from_pt_nom")
   df = df.Define("probeJet_jer_from_pt_nano", probeJetStr+"_jer_from_pt_nano")
+  df = df.Define("probeJet_dilep_dphi_norm","DeltaPhiNorm(probeJet_dilep_dphi)")
+  df = df.Define("probeJet_binningWeight", "(0.5<=probeJet_dilep_dphi_norm)&&(probeJet_dilep_dphi_norm<1.5)?1.:(1./50.)/(0.5/12.)") 
+  
+   # Define evtWeight variable
+  if "Data" in sample_name:
+    df = df.Define("evtWeight","probeJet_binningWeight*1.0")
+  else: #For MC
+    df = df.Define("evtWeight","genWeight*eventWeightScale*puWeight*L1PreFiringWeight_Nom*probeJet_binningWeight")
+
+
   #
   # Guide on how to read the pileup ID bitmap variable: 
   # https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJetID#miniAOD_and_nanoAOD
@@ -213,7 +233,6 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #
 
   
-  df = df.Define("probeJet_dilep_dphi_norm","DeltaPhiNorm(probeJet_dilep_dphi)")
   df = df.Define("probeJet_dilep_ptbalance","dilep_pt/probeJet_pt")
   df = df.Define("probeJet_dilep_ptbalance_anomaly", "fabs(probeJet_dilep_ptbalance-1)")
   #
@@ -475,7 +494,18 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   for histName in Histograms:
     Histograms[histName].Write()
 
+
+
+  ##hist for variable binning pileup pdf###
+  hist_pileup_varbin = ROOT.TH1D("h_pileup_template_for_varbin","h_pileup_template_for_varbin",len(dphiBinsArray)-1,dphiBinsArray)
+  for i in range(1,len(dphiBinsArray)):
+    hist_pileup_varbin.SetBinContent(i,10.*0.5/12.)
+    if 12<i and i<63:
+        hist_pileup_varbin.SetBinContent(i,10.*1/50.)
+  hist_pileup_varbin.Write()
   f.Close()
+
+
   print("Histos saved in %s" %outFileName)
 
 if __name__== "__main__":

@@ -38,7 +38,7 @@ def MakeDPhiFit(
     h_dphi_PASS_badbalance,h_dphi_FAIL_badbalance, 
     outputDir, pt, eta, cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance, 
     iBinCount, iBinTotal,
-    isData=False, doEtaBins=False):
+    h_pileup_template_for_varbin, isData=False, doEtaBins=False):
 
     print("------------------------------------------------------------------")
     if isData:
@@ -97,6 +97,24 @@ def MakeDPhiFit(
     # Define the pdf: 
     # First import the histos templates
     #
+    h_dphi_genmatched_PASS_reweighted = h_dphi_genmatched_PASS.Clone()
+    h_dphi_genmatched_FAIL_reweighted = h_dphi_genmatched_FAIL.Clone()
+    h_dphi_genunmatched_PASS_reweighted = h_dphi_genunmatched_PASS.Clone()
+    h_dphi_genunmatched_FAIL_reweighted = h_dphi_genunmatched_FAIL.Clone()
+    for i in range(1,h_dphi_genmatched_PASS_reweighted.GetNbinsX()+1):
+        if i < 13 or i > 62:
+            print(i)
+            h_dphi_genmatched_PASS_reweighted.SetBinContent(i,h_dphi_genmatched_PASS.GetBinContent(i))
+            h_dphi_genmatched_FAIL_reweighted.SetBinContent(i,h_dphi_genmatched_FAIL.GetBinContent(i))
+            h_dphi_genunmatched_PASS_reweighted.SetBinContent(i,h_dphi_genunmatched_PASS.GetBinContent(i))
+            h_dphi_genunmatched_FAIL_reweighted.SetBinContent(i,h_dphi_genunmatched_FAIL.GetBinContent(i))
+
+    dh_template_SIG_PASS_reweighted = ROOT.RooDataHist("dh_template_SIG_PASS_reweighted", "dh_template_SIG_PASS_reweighted", ROOT.RooArgList(dphiZjet), ROOT.RooFit.Import(h_dphi_genmatched_PASS_reweighted))
+    dh_template_SIG_FAIL_reweighted = ROOT.RooDataHist("dh_template_SIG_FAIL_reweighted", "dh_template_SIG_FAIL_reweighted", ROOT.RooArgList(dphiZjet), ROOT.RooFit.Import(h_dphi_genmatched_FAIL_reweighted))
+    dh_template_PU_PASS_reweighted  = ROOT.RooDataHist("dh_template_PU_PASS_reweighted",  "dh_template_PU_PASS_reweighted",  ROOT.RooArgList(dphiZjet), ROOT.RooFit.Import(h_dphi_genunmatched_PASS_reweighted))
+    dh_template_PU_FAIL_reweighted  = ROOT.RooDataHist("dh_template_PU_FAIL_reweighted",  "dh_template_PU_FAIL_reweighted",  ROOT.RooArgList(dphiZjet), ROOT.RooFit.Import(h_dphi_genunmatched_FAIL_reweighted))
+
+
     dh_template_SIG_PASS = ROOT.RooDataHist("dh_template_SIG_PASS", "dh_template_SIG_PASS", ROOT.RooArgList(dphiZjet), ROOT.RooFit.Import(h_dphi_genmatched_PASS))
     dh_template_SIG_FAIL = ROOT.RooDataHist("dh_template_SIG_FAIL", "dh_template_SIG_FAIL", ROOT.RooArgList(dphiZjet), ROOT.RooFit.Import(h_dphi_genmatched_FAIL))
     dh_template_PU_PASS  = ROOT.RooDataHist("dh_template_PU_PASS",  "dh_template_PU_PASS",  ROOT.RooArgList(dphiZjet), ROOT.RooFit.Import(h_dphi_genunmatched_PASS))
@@ -104,15 +122,21 @@ def MakeDPhiFit(
     #
     # Now convert them to PDF:
     #
-    pdf_template_SIG_PASS = ROOT.RooHistPdf("pdf_template_SIG_PASS", "pdf_template_SIG_PASS", ROOT.RooArgSet(dphiZjet), dh_template_SIG_PASS)
-    pdf_template_SIG_FAIL = ROOT.RooHistPdf("pdf_template_SIG_FAIL", "pdf_template_SIG_FAIL", ROOT.RooArgSet(dphiZjet), dh_template_SIG_FAIL)
-    pdf_template_PU_PASS  = ROOT.RooHistPdf("pdf_template_PU_PASS",  "pdf_template_PU_PASS",  ROOT.RooArgSet(dphiZjet), dh_template_PU_PASS)
-    pdf_template_PU_FAIL  = ROOT.RooHistPdf("pdf_template_PU_FAIL",  "pdf_template_PU_FAIL",  ROOT.RooArgSet(dphiZjet), dh_template_PU_FAIL)
+    pdf_template_SIG_PASS = ROOT.RooHistPdf("pdf_template_SIG_PASS", "pdf_template_SIG_PASS", ROOT.RooArgSet(dphiZjet), dh_template_SIG_PASS_reweighted,2)
+    pdf_template_SIG_FAIL = ROOT.RooHistPdf("pdf_template_SIG_FAIL", "pdf_template_SIG_FAIL", ROOT.RooArgSet(dphiZjet), dh_template_SIG_FAIL_reweighted,2)
+    pdf_template_PU_PASS  = ROOT.RooHistPdf("pdf_template_PU_PASS",  "pdf_template_PU_PASS",  ROOT.RooArgSet(dphiZjet), dh_template_PU_PASS_reweighted,2)
+    pdf_template_PU_FAIL  = ROOT.RooHistPdf("pdf_template_PU_FAIL",  "pdf_template_PU_FAIL",  ROOT.RooArgSet(dphiZjet), dh_template_PU_FAIL_reweighted,2)
     #
     # The PU template is taken to be a flat (pol0) distribution
     #
     pol0_PU_PASS = ROOT.RooPolynomial("pol0_PU_PASS","pol0",dphiZjet, ROOT.RooArgList())
     pol0_PU_FAIL = ROOT.RooPolynomial("pol0_PU_FAIL","pol0",dphiZjet, ROOT.RooArgList())
+
+    #dh_template_pileup_varbin = ROOT.RooDataHist("dh_template_pileup_varbin", "dh_template_pileup_varbin", ROOT.RooArgList(dphiZjet), ROOT.RooFit.Import(h_pileup_template_for_varbin))
+ 
+
+    #pol0_PU_PASS = ROOT.RooHistPdf("pol0_PU_PASS","pol0",ROOT.RooArgSet(dphiZjet), dh_template_pileup_varbin)
+    #pol0_PU_FAIL = ROOT.RooHistPdf("pol0_PU_FAIL","pol0",ROOT.RooArgSet(dphiZjet), dh_template_pileup_varbin)
     #
     # Smears the SIGNAL template with a Gaussian to allow for different phi resolution between data and simulation. 
     #
@@ -177,6 +201,22 @@ def MakeDPhiFit(
     # Define the pdf:                   
     # First import the histos templates
     #
+    h_dphi_genmatched_PASS_badbalance_reweighted = h_dphi_genmatched_PASS_badbalance.Clone()
+    h_dphi_genmatched_FAIL_badbalance_reweighted = h_dphi_genmatched_FAIL_badbalance.Clone()
+    h_dphi_genunmatched_PASS_badbalance_reweighted = h_dphi_genunmatched_PASS_badbalance.Clone()
+    h_dphi_genunmatched_FAIL_badbalance_reweighted = h_dphi_genunmatched_FAIL_badbalance.Clone()
+    for i in range(1,h_dphi_genmatched_PASS_reweighted.GetNbinsX()+1):
+        if i < 13 or i > 62:
+            h_dphi_genmatched_PASS_badbalance_reweighted.SetBinContent(i,h_dphi_genmatched_PASS_badbalance.GetBinContent(i))
+            h_dphi_genmatched_FAIL_badbalance_reweighted.SetBinContent(i,h_dphi_genmatched_FAIL_badbalance.GetBinContent(i))
+            h_dphi_genunmatched_PASS_badbalance_reweighted.SetBinContent(i,h_dphi_genunmatched_PASS_badbalance.GetBinContent(i))
+            h_dphi_genunmatched_FAIL_badbalance_reweighted.SetBinContent(i,h_dphi_genunmatched_FAIL_badbalance.GetBinContent(i))
+ 
+    dh_template_SIG_PASS_badbalance_reweighted  = ROOT.RooDataHist("dh_template_SIG_PASS_badbalance_reweighted",  "dh_template_SIG_PASS_badbalance_reweighted" , ROOT.RooArgList(dphiZjet),ROOT.RooFit.Import(h_dphi_genmatched_PASS_badbalance_reweighted))
+    dh_template_SIG_FAIL_badbalance_reweighted  = ROOT.RooDataHist("dh_template_SIG_FAIL_badbalance_reweighted",  "dh_template_SIG_FAIL_badbalance_reweighted" , ROOT.RooArgList(dphiZjet),ROOT.RooFit.Import(h_dphi_genmatched_FAIL_badbalance_reweighted))
+    dh_template_PU_PASS_badbalance_reweighted = ROOT.RooDataHist("dh_template_PU_PASS_badbalance_reweighted",  "dh_template_PU_PASS_badbalance_reweighted" , ROOT.RooArgList(dphiZjet),ROOT.RooFit.Import(h_dphi_genunmatched_PASS_badbalance_reweighted))
+    dh_template_PU_FAIL_badbalance_reweighted  = ROOT.RooDataHist("dh_template_PU_FAIL_badbalance_reweighted",  "dh_template_PU_FAIL_badbalance_reweighted" , ROOT.RooArgList(dphiZjet),ROOT.RooFit.Import(h_dphi_genunmatched_FAIL_badbalance_reweighted))
+    
     dh_template_SIG_PASS_badbalance  = ROOT.RooDataHist("dh_template_SIG_PASS_badbalance",  "dh_template_SIG_PASS_badbalance" , ROOT.RooArgList(dphiZjet),ROOT.RooFit.Import(h_dphi_genmatched_PASS_badbalance))
     dh_template_SIG_FAIL_badbalance  = ROOT.RooDataHist("dh_template_SIG_FAIL_badbalance",  "dh_template_SIG_FAIL_badbalance" , ROOT.RooArgList(dphiZjet),ROOT.RooFit.Import(h_dphi_genmatched_FAIL_badbalance))
     dh_template_PU_PASS_badbalance  = ROOT.RooDataHist("dh_template_PU_PASS_badbalance",  "dh_template_PU_PASS_badbalance" , ROOT.RooArgList(dphiZjet),ROOT.RooFit.Import(h_dphi_genunmatched_PASS_badbalance))
@@ -184,16 +224,20 @@ def MakeDPhiFit(
     #
     # Now convert them to PDF:
     #
-    pdf_template_SIG_PASS_badbalance = ROOT.RooHistPdf("pdf_template_SIG_PASS_badbalance", "pdf_template_SIG_PASS_badbalance", ROOT.RooArgSet(dphiZjet),dh_template_SIG_PASS_badbalance)
-    pdf_template_SIG_FAIL_badbalance = ROOT.RooHistPdf("pdf_template_SIG_FAIL_badbalance", "pdf_template_SIG_FAIL_badbalance", ROOT.RooArgSet(dphiZjet),dh_template_SIG_FAIL_badbalance)
-    pdf_template_PU_PASS_badbalance  = ROOT.RooHistPdf("pdf_template_PU_PASS_badbalance", "pdf_template_PU_PASS_badbalance",  ROOT.RooArgSet(dphiZjet),dh_template_PU_PASS_badbalance)
-    pdf_template_PU_FAIL_badbalance  = ROOT.RooHistPdf("pdf_template_PU_FAIL_badbalance", "pdf_template_PU_FAIL_badbalance",  ROOT.RooArgSet(dphiZjet),dh_template_PU_FAIL_badbalance)
+    pdf_template_SIG_PASS_badbalance = ROOT.RooHistPdf("pdf_template_SIG_PASS_badbalance", "pdf_template_SIG_PASS_badbalance", ROOT.RooArgSet(dphiZjet),dh_template_SIG_PASS_badbalance_reweighted,2)
+    pdf_template_SIG_FAIL_badbalance = ROOT.RooHistPdf("pdf_template_SIG_FAIL_badbalance", "pdf_template_SIG_FAIL_badbalance", ROOT.RooArgSet(dphiZjet),dh_template_SIG_FAIL_badbalance_reweighted,2)
+    pdf_template_PU_PASS_badbalance  = ROOT.RooHistPdf("pdf_template_PU_PASS_badbalance", "pdf_template_PU_PASS_badbalance",  ROOT.RooArgSet(dphiZjet),dh_template_PU_PASS_badbalance_reweighted,2)
+    pdf_template_PU_FAIL_badbalance  = ROOT.RooHistPdf("pdf_template_PU_FAIL_badbalance", "pdf_template_PU_FAIL_badbalance",  ROOT.RooArgSet(dphiZjet),dh_template_PU_FAIL_badbalance_reweighted,2)
+    
+
     #
     #The PU template is taken to be a flat (pol0) distribution   
     #
     pol0_PU_PASS_badbalance = ROOT.RooPolynomial("pol0_PU_PASS_badbalance","pol0",dphiZjet, ROOT.RooArgList());
     pol0_PU_FAIL_badbalance = ROOT.RooPolynomial("pol0_PU_FAIL_badbalance","pol0",dphiZjet, ROOT.RooArgList());
     #
+    #pol0_PU_PASS_badbalance = ROOT.RooHistPdf("pol0_PU_PASS","pol0",ROOT.RooArgSet(dphiZjet), dh_template_pileup_varbin)
+    #pol0_PU_FAIL_badbalance = ROOT.RooHistPdf("pol0_PU_FAIL","pol0",ROOT.RooArgSet(dphiZjet), dh_template_pileup_varbin)
     # Smears the SIGNAL template with a Gaussian to allow for different phi resolution between data and simulation. 
     #
     # PASS
@@ -456,6 +500,7 @@ def main():
     parser.add_argument("--useHerwig", default=False,        action='store_true')
     parser.add_argument("--usePowheg", default=False,        action='store_true')
     parser.add_argument("--syst",      dest="syst",          default="central", help="central,jerUp,jerDown,jesTotalUp,jesTotalDown", type=str)
+    parser.add_argument("--useJetBinned",   default=False, action='store_true')
 
     args = parser.parse_args()    
     
@@ -698,6 +743,8 @@ def main():
             h_dphi_mc_genmatched_FAIL_badbalance   = f_mc.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
             h_dphi_mc_FAIL_badbalance              = f_mc.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
             h_dphi_data_FAIL_badbalance            = f_data.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_pileup_template_for_varbin_mc   = f_mc.Get("h_pileup_template_for_varbin")
+            h_pileup_template_for_varbin_data   = f_data.Get("h_pileup_template_for_varbin")
 
             #
             # Perform fit on MC
@@ -709,7 +756,7 @@ def main():
                 h_dphi_mc_PASS_badbalance, h_dphi_mc_FAIL_badbalance, 
                 outputDir,_pt[i], _eta[j], cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance, 
                 iBinCount, iBinTotal,
-                isData=False, doEtaBins=doEtaBins
+                h_pileup_template_for_varbin_mc, isData=False, doEtaBins=doEtaBins
             )
             heffmc.SetBinContent(i+1,j+1,    round(float(eff_mc),4))
             heffmc.SetBinError  (i+1,j+1,    round(float(eff_mc_err),4))
@@ -728,7 +775,7 @@ def main():
                 h_dphi_data_PASS_badbalance,h_dphi_data_FAIL_badbalance, 
                 outputDir,_pt[i], _eta[j], cfitPASS, cfitFAIL, cfitPASS_badbalance, cfitFAIL_badbalance, 
                 iBinCount, iBinTotal,
-                isData=True, doEtaBins=doEtaBins
+                h_pileup_template_for_varbin_mc, isData=True, doEtaBins=doEtaBins
             )
             heffdata.SetBinContent(i+1,j+1,    round(float(eff_data),4))
             heffdata.SetBinError  (i+1,j+1,    round(float(eff_data_err),4))

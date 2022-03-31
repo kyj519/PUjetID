@@ -17,12 +17,18 @@ Samplelist = ["DataUL17B_DoubleMuon",
 "DataUL16F_DoubleMuon",
 "DataUL16G_DoubleMuon",
 "DataUL16H_DoubleMuon",
-"MCUL18_DY_AMCNLO","MCUL16_DY_AMCNLO","MCUL17_DY_AMCNLO","MCUL16APV_DY_AMCNLO"]
+"MCUL18_DY_AMCNLO_0J","MCUL16_DY_AMCNLO_0J","MCUL17_DY_AMCNLO_0J","MCUL16APV_DY_AMCNLO_0J",
+"MCUL18_DY_AMCNLO_1J","MCUL16_DY_AMCNLO_1J","MCUL17_DY_AMCNLO_1J","MCUL16APV_DY_AMCNLO_1J",
+"MCUL18_DY_AMCNLO_2J","MCUL16_DY_AMCNLO_2J","MCUL17_DY_AMCNLO_2J","MCUL16APV_DY_AMCNLO_2J"]
+
+Samplelist.remove("MCUL18_DY_AMCNLO_0J")
+Samplelist.remove("MCUL18_DY_AMCNLO_1J")
+Samplelist.remove("MCUL18_DY_AMCNLO_2J")
 condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/condor_hist/"
 njobs = 0
 os.system('rm -rf '+condor_dir+'job/*')
 os.system('rm -rf '+condor_dir+'log/*')
-ncores = 10
+ncores = 20
 for sample in Samplelist:
 	f = open(condor_dir+"job/job_"+sample+".sh","w+")
 	f.write("#!/bin/bash\n")

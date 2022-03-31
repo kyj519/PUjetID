@@ -1,29 +1,32 @@
 import os, htcondor
 
-# Samplelist = ["DataUL17B_DoubleMuon",
-# "DataUL17C_DoubleMuon",
-# "DataUL17D_DoubleMuon",
-# "DataUL17E_DoubleMuon",
-# "DataUL17F_DoubleMuon",
-# "DataUL18A_DoubleMuon",
-# "DataUL18B_DoubleMuon",
-# "DataUL18C_DoubleMuon",
-# "DataUL18D_DoubleMuon",
-# "DataUL16APVB_DoubleMuon",
-# "DataUL16APVC_DoubleMuon",
-# "DataUL16APVD_DoubleMuon",
-# "DataUL16APVE_DoubleMuon",
-# "DataUL16APVF_DoubleMuon",
-# "DataUL16F_DoubleMuon",
-# "DataUL16G_DoubleMuon",
-# "DataUL16H_DoubleMuon"]
-Samplelist = ["MCUL18_DY_AMCNLO","MCUL16_DY_AMCNLO","MCUL17_DY_AMCNLO","MCUL16APV_DY_AMCNLO"]
 
+Samplelist = ["DataUL17B_DoubleMuon",
+"DataUL17C_DoubleMuon",
+"DataUL17D_DoubleMuon",
+"DataUL17E_DoubleMuon",
+"DataUL17F_DoubleMuon",
+"DataUL18A_DoubleMuon",
+"DataUL18B_DoubleMuon",
+"DataUL18C_DoubleMuon",
+"DataUL18D_DoubleMuon",
+"DataUL16APVB_DoubleMuon",
+"DataUL16APVC_DoubleMuon",
+"DataUL16APVD_DoubleMuon",
+"DataUL16APVE_DoubleMuon",
+"DataUL16APVF_DoubleMuon",
+"DataUL16F_DoubleMuon",
+"DataUL16G_DoubleMuon",
+"DataUL16H_DoubleMuon",
+"MCUL18_DY_AMCNLO_0J","MCUL16_DY_AMCNLO_0J","MCUL17_DY_AMCNLO_0J","MCUL16APV_DY_AMCNLO_0J",
+"MCUL18_DY_AMCNLO_1J","MCUL16_DY_AMCNLO_1J","MCUL17_DY_AMCNLO_1J","MCUL16APV_DY_AMCNLO_1J",
+"MCUL18_DY_AMCNLO_2J","MCUL16_DY_AMCNLO_2J","MCUL17_DY_AMCNLO_2J","MCUL16APV_DY_AMCNLO_2J"]
+Samplelist = ["MCUL18_DY_AMCNLO_1J"]
 condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/condor/"
 njobs = 0
 os.system('rm -rf '+condor_dir+'job/*')
 os.system('rm -rf '+condor_dir+'log/*')
-ncores = 40
+ncores = 20
 for sample in Samplelist:
 	f = open(condor_dir+"job/job_"+sample+".sh","w+")
 	f.write("#!/bin/bash\n")

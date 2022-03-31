@@ -1,0 +1,60 @@
+RunSkimmerLocal.py START
+args =  Namespace(dataStream='', era='UL2018', inputNanoAOD='root://cms-xrd-global.cern.ch//store/mc/RunIISummer20UL18NanoAODv9/DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8/NANOAODSIM/106X_upgrade2018_realistic_v16_L1v1-v1/70000/8B6BF44B-9147-C848-BAEC-C1A3213F75AA.root', isMC=1, outDir='gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/outtree/DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8')
+era  =  UL2018
+isMC =  1
+dataStream =  
+NanoAOD =  root://cms-xrd-global.cern.ch//store/mc/RunIISummer20UL18NanoAODv9/DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8/NANOAODSIM/106X_upgrade2018_realistic_v16_L1v1-v1/70000/8B6BF44B-9147-C848-BAEC-C1A3213F75AA.root
+isDoubleElecData =  False
+isDoubleMuonData =  False
+JEC : Summer19UL18_V5_MC	 JER : Summer19UL18_JRV2_MC
+MET branch : MET
+Loading C++ helper from /u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Skimmer/data/muon/roccor.Run2.v5/RoccoR.cc
+Use muon pt with rochester corrections applied. Branch:corrected_pt
+
+
+Just printout what we will give to the PostProcessor
+JSON      :  None
+SELECTION :  ((nMuon>=2 && Sum$(Muon_pt>15.)>=1) || (nElectron>=2 && Sum$(Electron_pt>20.)>=1)) && (nJet>=1) && (Alt$(HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8,0) || Alt$(HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL,0))
+MODULES   :  [<PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer.puWeightProducer object at 0x2b90f3c8ec90>, <PUjetID.Skimmer.MuonRocCorrProducer.MuonRocCorrProducer object at 0x2b90f3ca8d50>, <PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetUncertainties.jetmetUncertaintiesProducer object at 0x2b90f3cac4d0>, <PUjetID.Skimmer.SkimmerDiLepton.SkimmerDiLepton object at 0x2b90fe493fd0>]
+Will write selected trees to gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/outtree/DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8
+Loading jet energy scale (JES) uncertainties from file '/tmp/tmpok0CER/Summer19UL18_V5_MC_Uncertainty_AK4PFchs.txt'
+Loading jet energy resolutions (JER) from file '/tmp/tmphXetRc/Summer19UL18_JRV2_MC_PtResolution_AK4PFchs.txt'
+Loading JER scale factors and uncertainties from file '/tmp/tmphXetRc/Summer19UL18_JRV2_MC_SF_AK4PFchs.txt'
+Filename root://cms-xrd-global.cern.ch//store/mc/RunIISummer20UL18NanoAODv9/DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8/NANOAODSIM/106X_upgrade2018_realistic_v16_L1v1-v1/70000/8B6BF44B-9147-C848-BAEC-C1A3213F75AA.root is remote, will do a copy to local path /tmp/8B6BF44B-9147-C848-BAEC-C1A3213F75AA-61bd3f59d05d309c.root
+Time used for transferring the file locally: 619.11 s
+Pre-select 286565 entries out of 977816 (29.31%)
+nanoAODv5 or higher: True
+Processed    10000/  286565 entries,  3.49% (elapsed time   115.7s, curr speed    0.086 kHz, avg speed    0.086 kHz), accepted     5047/   10001 events (50.46%)
+Processed    20000/  286565 entries,  6.98% (elapsed time   244.4s, curr speed    0.078 kHz, avg speed    0.082 kHz), accepted    10090/   20001 events (50.45%)
+Processed    30000/  286565 entries, 10.47% (elapsed time   368.9s, curr speed    0.080 kHz, avg speed    0.081 kHz), accepted    15212/   30001 events (50.70%)
+Processed    40000/  286565 entries, 13.96% (elapsed time   500.1s, curr speed    0.076 kHz, avg speed    0.080 kHz), accepted    20235/   40001 events (50.59%)
+Processed    50000/  286565 entries, 17.45% (elapsed time   628.7s, curr speed    0.078 kHz, avg speed    0.080 kHz), accepted    25338/   50001 events (50.67%)
+Processed    60000/  286565 entries, 20.94% (elapsed time   753.0s, curr speed    0.080 kHz, avg speed    0.080 kHz), accepted    30423/   60001 events (50.70%)
+Processed    70000/  286565 entries, 24.43% (elapsed time   886.3s, curr speed    0.075 kHz, avg speed    0.079 kHz), accepted    35496/   70001 events (50.71%)
+Processed    80000/  286565 entries, 27.92% (elapsed time  1018.1s, curr speed    0.076 kHz, avg speed    0.079 kHz), accepted    40627/   80001 events (50.78%)
+Processed    90000/  286565 entries, 31.41% (elapsed time  1145.2s, curr speed    0.079 kHz, avg speed    0.079 kHz), accepted    45736/   90001 events (50.82%)
+Processed   100000/  286565 entries, 34.90% (elapsed time  1278.2s, curr speed    0.075 kHz, avg speed    0.078 kHz), accepted    50816/  100001 events (50.82%)
+Processed   110000/  286565 entries, 38.39% (elapsed time  1405.3s, curr speed    0.079 kHz, avg speed    0.078 kHz), accepted    55888/  110001 events (50.81%)
+Processed   120000/  286565 entries, 41.88% (elapsed time  1532.4s, curr speed    0.079 kHz, avg speed    0.078 kHz), accepted    60938/  120001 events (50.78%)
+Processed   130000/  286565 entries, 45.36% (elapsed time  1661.4s, curr speed    0.078 kHz, avg speed    0.078 kHz), accepted    65979/  130001 events (50.75%)
+Processed   140000/  286565 entries, 48.85% (elapsed time  1786.7s, curr speed    0.080 kHz, avg speed    0.078 kHz), accepted    71090/  140001 events (50.78%)
+Processed   150000/  286565 entries, 52.34% (elapsed time  1919.5s, curr speed    0.075 kHz, avg speed    0.078 kHz), accepted    76198/  150001 events (50.80%)
+Processed   160000/  286565 entries, 55.83% (elapsed time  2051.2s, curr speed    0.076 kHz, avg speed    0.078 kHz), accepted    81289/  160001 events (50.81%)
+Processed   170000/  286565 entries, 59.32% (elapsed time  2176.8s, curr speed    0.080 kHz, avg speed    0.078 kHz), accepted    86456/  170001 events (50.86%)
+Processed   180000/  286565 entries, 62.81% (elapsed time  2311.0s, curr speed    0.074 kHz, avg speed    0.078 kHz), accepted    91546/  180001 events (50.86%)
+Processed   190000/  286565 entries, 66.30% (elapsed time  2443.5s, curr speed    0.075 kHz, avg speed    0.078 kHz), accepted    96737/  190001 events (50.91%)
+Processed   200000/  286565 entries, 69.79% (elapsed time  2568.4s, curr speed    0.080 kHz, avg speed    0.078 kHz), accepted   101843/  200001 events (50.92%)
+Processed   210000/  286565 entries, 73.28% (elapsed time  2696.4s, curr speed    0.078 kHz, avg speed    0.078 kHz), accepted   106961/  210001 events (50.93%)
+Processed   220000/  286565 entries, 76.77% (elapsed time  2824.5s, curr speed    0.078 kHz, avg speed    0.078 kHz), accepted   112036/  220001 events (50.93%)
+Processed   230000/  286565 entries, 80.26% (elapsed time  2950.3s, curr speed    0.080 kHz, avg speed    0.078 kHz), accepted   117129/  230001 events (50.93%)
+Processed   240000/  286565 entries, 83.75% (elapsed time  3083.6s, curr speed    0.075 kHz, avg speed    0.078 kHz), accepted   122211/  240001 events (50.92%)
+Processed   250000/  286565 entries, 87.24% (elapsed time  3209.6s, curr speed    0.079 kHz, avg speed    0.078 kHz), accepted   127214/  250001 events (50.89%)
+Processed   260000/  286565 entries, 90.73% (elapsed time  3338.9s, curr speed    0.077 kHz, avg speed    0.078 kHz), accepted   132290/  260001 events (50.88%)
+Processed   270000/  286565 entries, 94.22% (elapsed time  3468.0s, curr speed    0.078 kHz, avg speed    0.078 kHz), accepted   137409/  270001 events (50.89%)
+Processed   280000/  286565 entries, 97.71% (elapsed time  3592.4s, curr speed    0.080 kHz, avg speed    0.078 kHz), accepted   142565/  280001 events (50.92%)
+File closed successfully
+Processed 286565 preselected entries from root://cms-xrd-global.cern.ch//store/mc/RunIISummer20UL18NanoAODv9/DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8/NANOAODSIM/106X_upgrade2018_realistic_v16_L1v1-v1/70000/8B6BF44B-9147-C848-BAEC-C1A3213F75AA.root (977816 entries). Finally selected 145838 entries
+Done gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/outtree/DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8/8B6BF44B-9147-C848-BAEC-C1A3213F75AA_Skim.root
+SkimmerDiLepton module ended successfully
+Total time 4463.6 sec. to process 977816 events. Rate = 219.1 Hz.
+RunSkimmerCondor.py DONE
