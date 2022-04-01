@@ -29,7 +29,7 @@ class sample_setting:
 	
 	def getFileFromXROOTD(self):
 		xrootd_prefix_knu = "root://cluster142.knu.ac.kr//store/user/yeonjoon/"
-		xrootd_prefix_cms = "root://xrootd-cms.infn.it/"
+		xrootd_prefix_cms = "root://cms-xrd-global.cern.ch///"
 		query = '--query  "file dataset=%s"' % self.dasdataset
 		stream = os.popen('/cvmfs/cms.cern.ch/common/dasgoclient %s' % query)
 		xrootdsample_without_prefix = stream.read().splitlines()
