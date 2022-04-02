@@ -1,9 +1,9 @@
 import os, htcondor
 from tables import EArray
 Eras = ['UL2018','UL2017','UL2016','UL2016APV']
-orders = ['NLO', 'LO']
+orders = ['NLO']
 workingPoints = ['Loose','Medium',"Tight"]
-systs = ['central', 'jesTotalUp', 'jesTotalDown', 'noJER']
+systs = ['central', 'jesTotalUp', 'jesTotalDown', 'noJER', 'jerUp', 'jerDown']
 runkeys = [era+" "+order+" "+wp+" "+syst for syst in systs for wp in workingPoints for order in orders for era in Eras]
 condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Fitter/condor/"
 njobs = 0

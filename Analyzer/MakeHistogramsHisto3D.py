@@ -77,8 +77,8 @@ absEtaBinsStr.append("abseta3p0To5p0")
 #
 #
 #
-dphiBinsN = 100
-dphiBinSize = 0.02
+dphiBinsN = 50
+dphiBinSize = 0.04
 dphiBins =[round(x*dphiBinSize, 2) for x in xrange(0,dphiBinsN+1)]
 dphiBinsArray = array.array('d',dphiBins)
 dphiBinsN = len(dphiBins)-1

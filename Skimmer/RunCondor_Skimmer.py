@@ -85,7 +85,7 @@ def condor_submitter(sample):
 		"jobbatchname": sample.sample_name+"_job_%d" % i,
 		"universe":"vanilla",
 		"request_cpus":1,
-		"RequestMemory":4096,
+		"RequestMemory":8192,
 		"log":current_dir+"/condor/condor_log/%s/job_%d.log"%(sample.sample_name,i),
 		"getenv":"True",
 		"should_transfer_files":"YES",

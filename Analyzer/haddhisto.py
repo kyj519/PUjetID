@@ -3,6 +3,7 @@ os.system("export X509_USER_PROXY=/u/user/yeonjoon/proxy.cert")
 os.system("export LD_PRELOAD=/usr/lib64/libpdcap.so")
 os.system("export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/dcap")
 
+
 #
 # combine all data histos into one root file
 #
@@ -31,11 +32,23 @@ os.system("export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/dcap")
 # cp ./temp/Histo_DataUL16.root ${HISTODIR}
 # rm -rf ./temp
 histodir= "gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his/"
+histodir_xrootd="root://cluster142.knu.ac.kr//store/user/yeonjoon/ntuples/result_his/"
+histodir_result= "gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his_hadd/"
 tempdir = "./temp/"
-shutil.copytree(histodir,tempdir)
+tempdir_result = "./temp_hadd/"
+
+if os.path.isdir(tempdir):
+	shutil.rmtree(tempdir)
+if os.path.isdir(tempdir_result):
+	shutil.rmtree(tempdir_result)
+os.mkdir(tempdir)
+os.system("xrdcp -r %s %s --parallel 4" % (histodir_xrootd, tempdir))
+os.system("mv %sresult_his/* %s" % (tempdir,tempdir))
+shutil.rmtree(tempdir+"result_his")
+os.mkdir(tempdir_result)
 histlist = os.listdir(tempdir)
 datalist_by_era = {}
-eraList = ["17","16","16APV"]
+eraList = ["17","16","16APV","18"]
 for era in eraList:
 	targetfilename = "Histo_DataUL%s.root" % era 
 	datalist_by_era[targetfilename]=[]
@@ -55,19 +68,21 @@ for era in eraList:
 
 print("Hadd start for data")
 for targetname, hist in datalist_by_era.items():
-	command_str = "hadd -f %s%s" % (tempdir,targetname)
+	command_str = "hadd -f %s%s" % (tempdir_result,targetname)
 	for file in hist:
 		command_str = command_str + " " +tempdir + file
 	print(command_str)
 	os.system(command_str)
-	shutil.move(tempdir+targetname,histodir)
+	os.system("dccp -H %s%s %s"%(tempdir_result,targetname,histodir_result))
 
 for targetname, hist in mclist_by_era_and_syst.items():
-	command_str = "hadd -f %s%s" % (tempdir, targetname)
+	command_str = "hadd -f %s%s" % (tempdir_result, targetname)
 	for file in hist:
 		command_str = command_str + " " +tempdir + file
 	print(command_str)
 	os.system(command_str)
-	shutil.move(tempdir+targetname,histodir)
+	os.system("dccp -H %s%s %s"%(tempdir_result,targetname,histodir_result))
+
 
 shutil.rmtree(tempdir)
+shutil.rmtree(tempdir_result)

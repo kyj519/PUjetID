@@ -78,6 +78,7 @@ p=PostProcessor(
   provenance=True,
   fwkJobReport=True,
   jsonInput=jsonInput if not(isMC) else None,
+  prefetch = True
 )
 p.run()
 
