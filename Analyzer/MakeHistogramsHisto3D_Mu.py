@@ -77,8 +77,8 @@ absEtaBinsStr.append("abseta3p0To5p0")
 #
 #
 #
-dphiBinsN = 50
-dphiBinSize = 0.04
+dphiBinsN = 100
+dphiBinSize = 0.02
 dphiBins =[round(x*dphiBinSize, 2) for x in xrange(0,dphiBinsN+1)]
 dphiBinsArray = array.array('d',dphiBins)
 dphiBinsN = len(dphiBins)-1
@@ -252,8 +252,8 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #df = df.Define("probeJet_ptbalance_good","(probeJet_dilep_ptbalance>=0.5) && (probeJet_dilep_ptbalance<1.5)")
   #df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance<0.5")
   N_factor = 1
-  df = df.Define("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<= 1.00 * probeJet_jer_from_pt" )
-  df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance_anomaly>= 1.00 * probeJet_jer_from_pt" )
+  df = df.Define("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<= 2.50 * probeJet_jer_from_pt" )
+  df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance_anomaly>= 2.50 * probeJet_jer_from_pt" )
 
   #############################################
   #
@@ -460,7 +460,7 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
     os.mkdir(outDir)
 
   # Open a new ROOT file to store TH1
-  outFileName = "%sHisto_%s%s.root"%(outDir,sample_name,systStrPost)
+  outFileName = "%sHisto_%s%s_Mu.root"%(outDir,sample_name,systStrPost)
   f = ROOT.TDCacheFile(outFileName, 'RECREATE')
 
   # Loop over the Histograms3D dictionary and store TH3 in ROOT file

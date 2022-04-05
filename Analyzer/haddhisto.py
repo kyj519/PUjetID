@@ -50,21 +50,34 @@ histlist = os.listdir(tempdir)
 datalist_by_era = {}
 eraList = ["17","16","16APV","18"]
 for era in eraList:
-	targetfilename = "Histo_DataUL%s.root" % era 
-	datalist_by_era[targetfilename]=[]
+	targetfilename_Mu = "Histo_DataUL%s_Mu.root" % era 
+	datalist_by_era[targetfilename_Mu]=[]
 	for file in histlist:
-		if "DataUL" + era in file:
-			datalist_by_era[targetfilename].append(file)
+		if "DataUL" + era in file and "_Mu" in file:
+			datalist_by_era[targetfilename_Mu].append(file)
+for era in eraList:
+	targetfilename_El ="Histo_DataUL%s_El.root" % era 
+	datalist_by_era[targetfilename_El]=[]
+	for file in histlist:
+		if "DataUL" + era in file and "_El" in file:
+			datalist_by_era[targetfilename_El].append(file)
 
-AK4Syst = ["","_jerDown","_jerUp","_jesTotalUp","_jesTotalUp","_noJER"]
+AK4Syst = ["","_jerDown","_jerUp","_jesTotalUp","_jesTotalDown","_noJER"]
 mclist_by_era_and_syst = {}
 for era in eraList:
 	for syst in AK4Syst:
-		targetfilename = "Histo_MCUL%s_DY_AMCNLO%s.root" % (era,syst)
+		targetfilename = "Histo_MCUL%s_DY_AMCNLO%s_Mu.root" % (era,syst)
 		mclist_by_era_and_syst[targetfilename]=[]
-		mclist_by_era_and_syst[targetfilename].append("Histo_MCUL%s_DY_AMCNLO_0J%s.root" % (era,syst))
-		mclist_by_era_and_syst[targetfilename].append("Histo_MCUL%s_DY_AMCNLO_1J%s.root" % (era,syst))
-		mclist_by_era_and_syst[targetfilename].append("Histo_MCUL%s_DY_AMCNLO_2J%s.root" % (era,syst))
+		mclist_by_era_and_syst[targetfilename].append("Histo_MCUL%s_DY_AMCNLO_0J%s_Mu.root" % (era,syst))
+		mclist_by_era_and_syst[targetfilename].append("Histo_MCUL%s_DY_AMCNLO_1J%s_Mu.root" % (era,syst))
+		mclist_by_era_and_syst[targetfilename].append("Histo_MCUL%s_DY_AMCNLO_2J%s_Mu.root" % (era,syst))
+for era in eraList:
+	for syst in AK4Syst:
+		targetfilename = "Histo_MCUL%s_DY_AMCNLO%s_El.root" % (era,syst)
+		mclist_by_era_and_syst[targetfilename]=[]
+		mclist_by_era_and_syst[targetfilename].append("Histo_MCUL%s_DY_AMCNLO_0J%s_El.root" % (era,syst))
+		mclist_by_era_and_syst[targetfilename].append("Histo_MCUL%s_DY_AMCNLO_1J%s_El.root" % (era,syst))
+		mclist_by_era_and_syst[targetfilename].append("Histo_MCUL%s_DY_AMCNLO_2J%s_El.root" % (era,syst))
 
 print("Hadd start for data")
 for targetname, hist in datalist_by_era.items():
@@ -73,7 +86,7 @@ for targetname, hist in datalist_by_era.items():
 		command_str = command_str + " " +tempdir + file
 	print(command_str)
 	os.system(command_str)
-	os.system("dccp -H %s%s %s"%(tempdir_result,targetname,histodir_result))
+	os.system("dccp -H %s%s %s &"%(tempdir_result,targetname,histodir_result))
 
 for targetname, hist in mclist_by_era_and_syst.items():
 	command_str = "hadd -f %s%s" % (tempdir_result, targetname)
@@ -81,8 +94,6 @@ for targetname, hist in mclist_by_era_and_syst.items():
 		command_str = command_str + " " +tempdir + file
 	print(command_str)
 	os.system(command_str)
-	os.system("dccp -H %s%s %s"%(tempdir_result,targetname,histodir_result))
+	os.system("dccp -H %s%s %s &"%(tempdir_result,targetname,histodir_result))
 
 
-shutil.rmtree(tempdir)
-shutil.rmtree(tempdir_result)

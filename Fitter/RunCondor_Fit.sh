@@ -8,13 +8,13 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/dcap
 
 
 
-INDIR="gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his"
+INDIR="gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his_hadd"
 
 #
 # Directory path for the output of the fits
 #
 #OUTDIR="gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his/fitresult"
-OUTDIR="/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Fitter/result"
+OUTDIR="/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Fitter/result/${5}"
 #runkeyformat = era+" "+order+" "+wp+" "+syst
 #############################################################################
 #
@@ -22,5 +22,5 @@ OUTDIR="/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Fit
 #
 #############################################################################
 
-python /u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Fitter/extract_fit.py --input $INDIR --output ${OUTDIR}/${2}_${4}/${1}_WP${3}/  --year $1 --wp $3 --syst $4 --order $2
+python /u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Fitter/extract_fit_allchannel.py --input $INDIR --output ${OUTDIR}/${2}_${4}/${1}_WP${3}/  --year $1 --wp $3 --syst $4 --order $2 
  

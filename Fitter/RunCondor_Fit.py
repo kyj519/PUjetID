@@ -1,5 +1,5 @@
 import os, htcondor
-from tables import EArray
+from datetime import datetime
 Eras = ['UL2018','UL2017','UL2016','UL2016APV']
 orders = ['NLO']
 workingPoints = ['Loose','Medium',"Tight"]
@@ -10,12 +10,13 @@ njobs = 0
 os.system('rm -rf '+condor_dir+'job/*')
 os.system('rm -rf '+condor_dir+'log/*')
 
-print(runkeys)
+now = datetime.now()
+nowstr = now.strftime("%d%m%Y_%H%M%S")
 
 for runkey in runkeys:
 	f = open(condor_dir+"job/job_"+runkey.replace(" ","_")+".sh","w+")
 	f.write("#!/bin/bash\n")
-	f.write("source "+condor_dir+"../RunCondor_Fit.sh "+runkey)
+	f.write("source "+condor_dir+"../RunCondor_Fit.sh "+runkey+" "+nowstr)
 	os.system("chmod 755 "+condor_dir+"job/job_"+runkey.replace(" ","_")+".sh")
 	f.close()
 	submit_dic = {"executable": condor_dir+"job/job_"+runkey.replace(" ","_")+".sh",

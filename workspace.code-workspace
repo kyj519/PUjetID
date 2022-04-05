@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../PhysicsTools/NanoAODTools"
+		},
+		{
+			"path": "../../../../../SE_UserHome"
+		}
+	],
+	"settings": {}
+}
