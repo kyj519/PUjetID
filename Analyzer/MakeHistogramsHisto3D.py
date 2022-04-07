@@ -1,3 +1,4 @@
+from ast import Store, parse
 import sys
 import os
 import glob
@@ -92,7 +93,7 @@ deltaRBins =[round(x*deltaRBinSize, 2) for x in xrange(0,deltaRBinsN+1)]
 deltaRBinsArray = array.array('d',deltaRBins)
 deltaRBinsN = len(deltaRBins)-1
 
-def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
+def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=False):
   isUL=False
   era = ""
   crabFiles   = []
@@ -251,9 +252,9 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #
   #df = df.Define("probeJet_ptbalance_good","(probeJet_dilep_ptbalance>=0.5) && (probeJet_dilep_ptbalance<1.5)")
   #df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance<0.5")
-  N_factor = 1
-  df = df.Define("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<= 2.50 * probeJet_jer_from_pt" )
-  df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance_anomaly>= 2.50 * probeJet_jer_from_pt" )
+  print("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<= %.1f * probeJet_jer_from_pt" % balanceN) 
+  df = df.Define("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<= %.1f * probeJet_jer_from_pt" % balanceN )
+  df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance_anomaly>= %.1f * probeJet_jer_from_pt" % balanceN)
 
   #############################################
   #
@@ -261,8 +262,12 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #
   #############################################
   df_filters  = OrderedDict()
-  df_filters["passNJetSel"] = df.Filter("passOS").Filter(systStrPre+"passNJetSel").Filter("isMuMu") #Only muon channel at the moment
-
+  if isMuCh:
+    df_filters["passNJetSel"] = df.Filter("passOS").Filter(systStrPre+"passNJetSel").Filter("isMuMu") #Only muon channel at the moment
+    print("isMuMu selected")
+  else:
+    df_filters["passNJetSel"] = df.Filter("passOS").Filter(systStrPre+"passNJetSel").Filter("isElEl") #Only muon channel at the moment
+    print("isElEl selected")
   #
   # Choose column used for PU Id cuts
   #
@@ -455,12 +460,16 @@ def main(sample_name, useSkimNtuples, systStr, useNewTraining=False):
   #
   # Create directory for output
   # 
-  outDir = SampleListUL.EOSDIR+"/result_his/"
+  outDir = SampleListUL.EOSDIR+"/result_his/"+ ("N%.1f" % balanceN).replace(".","p")+"/"
   if not(os.path.isdir(outDir)):
     os.mkdir(outDir)
 
   # Open a new ROOT file to store TH1
-  outFileName = "%sHisto_%s%s_Mu.root"%(outDir,sample_name,systStrPost)
+  if isMuCh:
+    outFileName = "%sHisto_%s%s_Mu.root"%(outDir,sample_name,systStrPost)
+  else:
+    outFileName = "%sHisto_%s%s_El.root"%(outDir,sample_name,systStrPost)
+ 
   f = ROOT.TDCacheFile(outFileName, 'RECREATE')
 
   # Loop over the Histograms3D dictionary and store TH3 in ROOT file
@@ -485,10 +494,17 @@ if __name__== "__main__":
   parser = argparse.ArgumentParser("")
   parser.add_argument('--sample',         dest='sample',         type=str,  default="")
   parser.add_argument('--cores',          dest='cores',          type=int,  default=4)
+  parser.add_argument('--balanceN', dest= 'balanceN', type = float, default=2.0)
+  parser.add_argument('--Ch', dest='Ch', type=str, default='Mu')
   parser.add_argument('--useSkimNtuples', dest='useSkimNtuples', action='store_true')
   parser.add_argument('--useNewTraining', dest='useNewTraining', action='store_true')
-
+  
   args = parser.parse_args()
+  balanceN = args.balanceN
+  if args.Ch == 'Mu':
+    isMuCh = True
+  elif args.Ch == 'El':
+    isMuCh = False
   print("sample = %s" %(args.sample))
   print("ncores = %d" %(args.cores))
   print("useSkimNtuples = %r" %(args.useSkimNtuples))
@@ -518,12 +534,12 @@ if __name__== "__main__":
   #
   # Do Nominal
   #
-  main(args.sample,args.useSkimNtuples,"",args.useNewTraining)
+  main(args.sample,args.useSkimNtuples,"",isMuCh,balanceN,args.useNewTraining)
   #
   # Do Systematics
   #
   for systStr in ak4Systematics:
-    main(args.sample,args.useSkimNtuples,systStr,args.useNewTraining)
+    main(args.sample,args.useSkimNtuples,systStr,isMuCh,balanceN,args.useNewTraining)
 
   time_end = datetime.datetime.now()
   elapsed = time_end - time_start

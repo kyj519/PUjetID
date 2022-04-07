@@ -1,52 +1,36 @@
 import os, shutil
-os.system("export X509_USER_PROXY=/u/user/yeonjoon/proxy.cert")
-os.system("export LD_PRELOAD=/usr/lib64/libpdcap.so")
-os.system("export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/dcap")
+import argparse
+import tempfile
 
 
-#
-# combine all data histos into one root file
-#
-# export X509_USER_PROXY=/u/user/yeonjoon/proxy.cert
-# export LD_PRELOAD="/usr/lib64/libpdcap.so"
-# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib64/dcap"
-# HISTODIR="gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his"
-
-# python haddhisto.py --histdir $HISTODIR
-
-# mkdir ./temp
-# ls $HISTODIR | xargs -I{} cp $HISTODIR/{} ./temp/ &
-# wait
-# hadd -f ./temp/Histo_DataUL17.root ./temp/Histo_DataUL17*_*.root
-# hadd -f ./temp/Histo_DataUL18.root ./temp/Histo_DataUL18*_*.root
-# hadd -f ./temp/Histo_DataUL16APV.root ./temp/Histo_DataUL16APV*_*.root
-# hadd -f ./temp/Histo_DataUL16.root ./temp/Histo_DataUL16[FGH]_*.root
-# hadd -f ./temp/Histo_MCUL16_DY_AMCNLO_JetBinned.root ./temp/Histo_MCUL16[FGH]_*.root
-# hadd -f ./temp/Histo_DataUL16APV_DY_AMCNLO_JetBinned.root ./temp/Histo_DataUL16[FGH]_*.root
-# hadd -f ./temp/Histo_DataUL17_DY_AMCNLO_JetBinned.root ./temp/Histo_DataUL16[FGH]_*.root
-# hadd -f ./temp/Histo_DataUL18_DY_AMCNLO_JetBinned.root ./temp/Histo_DataUL16[FGH]_*.root
-
-# cp ./temp/Histo_DataUL17.root ${HISTODIR}
-# cp ./temp/Histo_DataUL18.root ${HISTODIR}
-# cp ./temp/Histo_DataUL16APV.root ${HISTODIR}
-# cp ./temp/Histo_DataUL16.root ${HISTODIR}
-# rm -rf ./temp
-histodir= "gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his/"
-histodir_xrootd="root://cluster142.knu.ac.kr//store/user/yeonjoon/ntuples/result_his/"
-histodir_result= "gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his_hadd/"
-tempdir = "./temp/"
-tempdir_result = "./temp_hadd/"
+parser = argparse.ArgumentParser("")
+parser.add_argument('--subfolder',         dest='subfolder',         type=str,  default="")
+args = parser.parse_args()
+subfolder = args.subfolder+"/"
+print(subfolder)
+histodir= "gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his/"+subfolder
+histodir_xrootd="root://cluster142.knu.ac.kr//store/user/yeonjoon/ntuples/result_his/"+subfolder
+histodir_result= "gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his_hadd/"+subfolder
+tempdir = "/d0/scratch/yeonjoon/temp/"+subfolder
+tempdir_result = "/d0/scratch/yeonjoon/temp_hadd/"+subfolder
 
 if os.path.isdir(tempdir):
 	shutil.rmtree(tempdir)
 if os.path.isdir(tempdir_result):
 	shutil.rmtree(tempdir_result)
-os.mkdir(tempdir)
-os.system("xrdcp -r %s %s --parallel 4" % (histodir_xrootd, tempdir))
-os.system("mv %sresult_his/* %s" % (tempdir,tempdir))
-shutil.rmtree(tempdir+"result_his")
-os.mkdir(tempdir_result)
+if os.path.isdir(histodir_result):
+	shutil.rmtree(histodir_result)
+
+
+os.makedirs(tempdir)
+os.makedirs(tempdir_result)
+os.makedirs(histodir_result)
+
+os.system("xrdcp -r %s %s --parallel 4" % (histodir_xrootd, tempdir.replace(subfolder,"")))
+os.system("mv %s%s* %s" % (tempdir, subfolder,tempdir))
+
 histlist = os.listdir(tempdir)
+print(histlist)
 datalist_by_era = {}
 eraList = ["17","16","16APV","18"]
 for era in eraList:

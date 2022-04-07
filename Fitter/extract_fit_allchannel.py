@@ -44,7 +44,6 @@ def MakeDPhiFit(
     outputDir, pt, eta, cfitPASS_Mu, cfitFAIL_Mu, cfitPASS_badbalance_Mu,cfitFAIL_badbalance_Mu, cfitPASS_El, cfitFAIL_El, cfitPASS_badbalance_El, cfitFAIL_badbalance_El, 
     iBinCount, iBinTotal,
     isData=False, doEtaBins=False):
-    pprint.pprint(locals())
     print("------------------------------------------------------------------")
     if isData:
         print("Performing fits to extract efficiency and mistag rate in DATA") 
@@ -78,9 +77,17 @@ def MakeDPhiFit(
     #
     # Declare effcy and mistag
     #
+    # iBinCount 39~44 -> 40<P_T<50, -2.5<eta<2.5
     effcy    = ROOT.RooRealVar("effcy","effcy",  0.9, 0.,1.)
-    mistag   = ROOT.RooRealVar("mistag","mistag",0.1, 0.,1.)
-    
+    bound_0p25 = mistag_gen*0.25
+    bound_1p75 = min(mistag_gen*1.75,1.)
+    bound_0p90 = min(mistag_gen*0.90,1.)
+    bound_1p10 = min(mistag_gen*1.10,1.)
+
+ 
+    if not isData: mistag   = ROOT.RooRealVar("mistag","mistag",mistag_gen,0.,1.)
+    if iBinCount >= 39 and iBinCount <= 44: mistag   =  ROOT.RooRealVar("mistag","mistag",mistag_gen,bound_0p90 ,bound_1p10) 
+    if isData: mistag   = ROOT.RooRealVar("mistag","mistag",0.1 ,0.,1.) 
     ################# What follows concerns the first 4 templates (GOOD jet/Z pt balance) #################
     #
     # Total number of events of signal (=real jets) events and of PU (=pileup jets) events before applying PU ID
@@ -376,12 +383,12 @@ def MakeDPhiFit(
     simultpdf.addPdf(extpdf_SIGandPU_FAIL_El,"FAILsample_El")
     simultpdf.addPdf(extpdf_SIGandPU_PASS_badbalance_El,"PASSsample_badbalance_El")
     simultpdf.addPdf(extpdf_SIGandPU_FAIL_badbalance_El,"FAILsample_badbalance_El")
-    
-    simultpdf.fitTo(combData,ROOT.RooFit.Save())
-    simultpdf.fitTo(combData,ROOT.RooFit.Save())
+    ncpu = 1
+    simultpdf.fitTo(combData,ROOT.RooFit.Save(),ROOT.RooFit.NumCPU(ncpu))
+    simultpdf.fitTo(combData,ROOT.RooFit.Save(),ROOT.RooFit.NumCPU(ncpu))
 
-    simultpdf.fitTo(combData,ROOT.RooFit.Save(), ROOT.RooFit.PrintLevel(-1))
-    simultpdf.fitTo(combData,ROOT.RooFit.Save(), ROOT.RooFit.PrintLevel(-1))
+    simultpdf.fitTo(combData,ROOT.RooFit.Save(), ROOT.RooFit.PrintLevel(-1),ROOT.RooFit.NumCPU(ncpu))
+    simultpdf.fitTo(combData,ROOT.RooFit.Save(), ROOT.RooFit.PrintLevel(-1),ROOT.RooFit.NumCPU(ncpu))
 
     ROOT.gStyle.SetTitleStyle(0)
     ROOT.gStyle.SetTitleBorderSize(0)
@@ -1075,6 +1082,15 @@ def main():
             hmistagmc.SetBinError(i+1,j+1,   round(float(mistag_mc_err),4))
             heffgen.SetBinContent(i+1,j+1,    round(float(eff_gen),4))
             hmistaggen.SetBinContent(i+1,j+1, round(float(mistag_gen),4))
+            f = open(os.path.join(outputDir, "bound_"+year+"_"+workingpoint[0]+".txt"),"a+")
+            f.write("bin=%s, ibin = %d, ratio=%f, mistag_mc=%f, mistag_gen=%f, mistag_gen*0.25=%f, mistag_gen*1.75=%f\n" % (binStr,iBinCount, mistag_mc/mistag_gen,mistag_mc, mistag_gen, mistag_gen*0.25, mistag_gen*1.75))
+            f.close()
+
+            if (mistag_mc/mistag_gen) < 0.255 or (mistag_mc/mistag_gen) > 1.65:
+                f = open(os.path.join(outputDir, "bound_alert_"+year+"_"+workingpoint[0]+".txt"),"a+")
+                f.write("bin=%s, ratio=%f, mistag_mc=%f, mistag_gen=%f, mistag_gen*0.25=%f, mistag_gen*1.75=%f\n" % (binStr,mistag_mc/mistag_gen,mistag_mc, mistag_gen, mistag_gen*0.25, mistag_gen*1.75))
+                f.close()
+
 
             #
             # Perform fit on Data
@@ -1317,7 +1333,7 @@ def main():
     hmistaggensf.SetMinimum(0.0)
     hmistaggensf.SetMarkerSize(textsize)
     hmistaggensf.Draw("colztexterr")
-    c8.SaveAs(os.path.join(outputDir, "h2_mistaggen_sf"+year+"_"+wpShort+".pdf"))
+    c12.SaveAs(os.path.join(outputDir, "h2_mistaggen_sf"+year+"_"+wpShort+".pdf"))
     if printPNG: c8.SaveAs(os.path.join(outputDir, "h2_mistaggen_sf"+year+"_"+wpShort+".png"))
     hmistaggensf.SetName("h2_mistaggen_sf"+year+"_"+wpShort)
     hmistaggensf.SaveAs(os.path.join(outputDir, "h2_mistaggen_sf"+year+"_"+wpShort+".root"))
