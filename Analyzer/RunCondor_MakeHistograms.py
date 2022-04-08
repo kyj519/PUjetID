@@ -39,7 +39,7 @@ Samplelist.extend(["DataUL18A_EGamma",
 "DataUL16APVD_DoubleEG",
 "DataUL16APVE_DoubleEG",
 "DataUL16APVF_DoubleEG"])
-condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/condor_hist/"
+condor_dir = "/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Analyzer/condor_hist/"
 njobs = 0
 
 os.system('rm -rf '+condor_dir+'job/*')
@@ -47,7 +47,8 @@ os.system('rm -rf '+condor_dir+'log/*')
 
 def submitter(ncores, memory, fname, channel, N):
 	submit_dic = {"executable": fname,
-	"jobbatchname": "PUJets_"+sample+"_"+channel,
+	"jobbatchname": "PUJets_"+sample,
+	#"jobbatchname": "PUJets_histo",	
 	"universe":"vanilla",
 	"request_cpus":ncores,
 	"log":condor_dir+"condor_log/"+sample+str(N).replace(".","p")+".log",
@@ -56,7 +57,9 @@ def submitter(ncores, memory, fname, channel, N):
 	"should_transfer_files":"YES",
 	"when_to_transfer_output" : "ON_EXIT",
 	"output": condor_dir+"log/"+sample+str(N).replace(".","p")+".log",
-	"error" : condor_dir+"log/"+sample+str(N).replace(".","p")+".err"}
+	"error" : condor_dir+"log/"+sample+str(N).replace(".","p")+".err",
+ 	"concurrency_limits" : 'n200.yeonjoon'
+   }
 	sub = htcondor.Submit(submit_dic)
 	schedd = htcondor.Schedd()         
 	submit_result = schedd.submit(sub)

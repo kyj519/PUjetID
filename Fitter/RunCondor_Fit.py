@@ -6,14 +6,14 @@ workingPoints = ['Loose','Medium',"Tight"]
 systs = ['central', 'jesTotalUp', 'jesTotalDown', 'noJER', 'jerUp', 'jerDown']
 systs = ['central']
 runkeys = [era+" "+order+" "+wp+" "+syst for syst in systs for wp in workingPoints for order in orders for era in Eras]
-condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Fitter/condor/"
+condor_dir = "/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Fitter/condor/"
 njobs = 0
 os.system('rm -rf '+condor_dir+'job/*')
 os.system('rm -rf '+condor_dir+'log/*')
 
 now = datetime.now()
 nowstr = now.strftime("%d%m%Y_%H%M%S")
-balanceN = os.listdir('gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his_hadd/')
+balanceN = os.listdir('/gv0/Users/yeonjoon/ntuples/result_his_hadd')
 
 for runkey in runkeys:
 	for n in balanceN:

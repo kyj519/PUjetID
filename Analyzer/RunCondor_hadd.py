@@ -1,9 +1,9 @@
 import os, htcondor
 
-histdir = "/u/user/yeonjoon/SE_UserHome/ntuples/result_his"
+histdir = "/gv0/Users/yeonjoon/ntuples/result_his"
 
-condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/condor_hadd/"
-python_hadd_path = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/haddhisto_condor.py"
+condor_dir = "/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Analyzer/condor_hadd/"
+python_hadd_path = "/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Analyzer/haddhisto_condor.py"
 subfolder_list = os.listdir(histdir)
 os.system('rm -rf %s/job/*' % condor_dir)
 os.system('rm -rf %s/condor_log/*' % condor_dir)

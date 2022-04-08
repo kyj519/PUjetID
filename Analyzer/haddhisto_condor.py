@@ -8,28 +8,16 @@ parser.add_argument('--subfolder',         dest='subfolder',         type=str,  
 args = parser.parse_args()
 subfolder = args.subfolder+"/"
 print(subfolder)
-histodir= "gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his/"+subfolder
-histodir_xrootd="root://cluster142.knu.ac.kr//store/user/yeonjoon/ntuples/result_his/"+subfolder
-histodir_result= "gsidcap://cluster142.knu.ac.kr//pnfs/knu.ac.kr/data/cms/store/user/yeonjoon/ntuples/result_his_hadd/"+subfolder
-tempdir = "/d0/scratch/yeonjoon/temp/"+subfolder
-tempdir_result = "/d0/scratch/yeonjoon/temp_hadd/"+subfolder
-
-if os.path.isdir(tempdir):
-	shutil.rmtree(tempdir)
-if os.path.isdir(tempdir_result):
-	shutil.rmtree(tempdir_result)
+histodir= "/gv0/Users/yeonjoon/ntuples/result_his/"+subfolder
+histodir_result= "/gv0/Users/yeonjoon/ntuples/result_his_hadd/"+subfolder
 if os.path.isdir(histodir_result):
 	shutil.rmtree(histodir_result)
 
 
-os.makedirs(tempdir)
-os.makedirs(tempdir_result)
 os.makedirs(histodir_result)
 
-os.system("xrdcp -r %s %s --parallel 4" % (histodir_xrootd, tempdir.replace(subfolder,"")))
-os.system("mv %s%s* %s" % (tempdir, subfolder,tempdir))
 
-histlist = os.listdir(tempdir)
+histlist = os.listdir(histodir)
 print(histlist)
 datalist_by_era = {}
 eraList = ["17","16","16APV","18"]
@@ -62,22 +50,23 @@ for era in eraList:
 		mclist_by_era_and_syst[targetfilename].append("Histo_MCUL%s_DY_AMCNLO_0J%s_El.root" % (era,syst))
 		mclist_by_era_and_syst[targetfilename].append("Histo_MCUL%s_DY_AMCNLO_1J%s_El.root" % (era,syst))
 		mclist_by_era_and_syst[targetfilename].append("Histo_MCUL%s_DY_AMCNLO_2J%s_El.root" % (era,syst))
-
+for file in histlist:
+    if "_INCL" in file:
+        shutil.copy2(histodir+file,histodir_result)
+        
 print("Hadd start for data")
 for targetname, hist in datalist_by_era.items():
-	command_str = "hadd -f %s%s" % (tempdir_result,targetname)
+	command_str = "hadd -f %s%s" % (histodir_result,targetname)
 	for file in hist:
-		command_str = command_str + " " +tempdir + file
+		command_str = command_str + " " +histodir + file
 	print(command_str)
 	os.system(command_str)
-	os.system("dccp -H %s%s %s &"%(tempdir_result,targetname,histodir_result))
 
 for targetname, hist in mclist_by_era_and_syst.items():
-	command_str = "hadd -f %s%s" % (tempdir_result, targetname)
+	command_str = "hadd -f %s%s" % (histodir_result, targetname)
 	for file in hist:
-		command_str = command_str + " " +tempdir + file
+		command_str = command_str + " " +histodir + file
 	print(command_str)
 	os.system(command_str)
-	os.system("dccp -H %s%s %s &"%(tempdir_result,targetname,histodir_result))
 
 
