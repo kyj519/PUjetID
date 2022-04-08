@@ -43,13 +43,13 @@ Samples["MCUL18_DY_MG"] = Sample(
 #
 # DY MG5 NLO
 #
-Samples["MCUL18_DY_AMCNLO"] = Sample(
-  name="MCUL18_DY_AMCNLO",
+Samples["MCUL18_DY_AMCNLO_INCL"] = Sample(
+  name="MCUL18_DY_AMCNLO_INCL",
   crabFiles=[
     EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL18NanoAODv9_"+version+"/*/*/tree_*.root",
   ],
   ntupleFiles=[
-    EOSDIR+NTUPDIR+"ntuple_MCUL18_DY_AMCNLO.root"
+    EOSDIR+NTUPDIR+"ntuple_MCUL18_DY_AMCNLO_INCL.root"
   ],
   xs = 6422.0 #pb
 )
@@ -248,13 +248,13 @@ Samples["MCUL17_DY_MG"] = Sample(
 #
 # DY MG5 NLO
 #
-Samples["MCUL17_DY_AMCNLO"] = Sample(
-  name="MCUL17_DY_AMCNLO",
+Samples["MCUL17_DY_AMCNLO_INCL"] = Sample(
+  name="MCUL17_DY_AMCNLO_INCL",
   crabFiles=[
     EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL17NanoAODv9_"+version+"/*/*/tree_*.root",
   ],
   ntupleFiles=[
-    EOSDIR+NTUPDIR+"ntuple_MCUL17_DY_AMCNLO.root"
+    EOSDIR+NTUPDIR+"ntuple_MCUL17_DY_AMCNLO_INCL.root"
   ],
   xs = 6422.0 #pb
 )
@@ -460,13 +460,13 @@ Samples["MCUL16_DY_MG"] = Sample(
 
 #DY MG5 NLO
 
-Samples["MCUL16_DY_AMCNLO"] = Sample(
-  name="MCUL16_DY_AMCNLO",
+Samples["MCUL16_DY_AMCNLO_INCL"] = Sample(
+  name="MCUL16_DY_AMCNLO_INCL",
   crabFiles=[
     EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL16NanoAODv9_"+version+"/*/*/tree_*.root",
   ],
   ntupleFiles=[
-    EOSDIR+NTUPDIR+"ntuple_MCUL16_DY_AMCNLO.root"
+    EOSDIR+NTUPDIR+"ntuple_MCUL16_DY_AMCNLO_INCL.root"
   ],
  xs = 6422.0 #pb
 )
@@ -649,13 +649,13 @@ Samples["MCUL16APV_DY_MG"] = Sample(
 #
 # DY MG5 NLO
 #
-Samples["MCUL16APV_DY_AMCNLO"] = Sample(
-  name="MCUL16APV_DY_AMCNLO",
+Samples["MCUL16APV_DY_AMCNLO_INCL"] = Sample(
+  name="MCUL16APV_DY_AMCNLO_INCL",
   crabFiles=[
     EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/JetPUId_MCUL16APVNanoAODv9_"+version+"/*/*/tree_*.root",
   ],
   ntupleFiles=[
-    EOSDIR+NTUPDIR+"ntuple_MCUL16APV_DY_AMCNLO.root"
+    EOSDIR+NTUPDIR+"ntuple_MCUL16APV_DY_AMCNLO_INCL.root"
   ],
   xs = 6422.0 #pb
 )
