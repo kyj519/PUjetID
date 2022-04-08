@@ -63,7 +63,8 @@ def submitter(ncores, memory, fname, channel, N):
 	sub = htcondor.Submit(submit_dic)
 	schedd = htcondor.Schedd()         
 	submit_result = schedd.submit(sub)
-nlist=[0.5+0.1*i for i in range(0,16)]
+nlist=[0.5+0.5*i for i in range(0,4)]
+nlist=[1.5]
 for n in nlist:
 	for sample in Samplelist:
 		fname = condor_dir+"job/job_"+sample+"_N"+str(n).replace(".","p")+".sh"
