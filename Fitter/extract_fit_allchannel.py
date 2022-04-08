@@ -32,6 +32,8 @@ ROOT.RooMsgService.instance().setGlobalKillBelow(ROOT.RooFit.FATAL)
 
 printPNG=False
 
+    
+        
 def MakeDPhiFit(
     h_dphi_genunmatched_PASS_Mu,h_dphi_genmatched_PASS_Mu,h_dphi_genunmatched_FAIL_Mu,h_dphi_genmatched_FAIL_Mu,
     h_dphi_PASS_Mu,h_dphi_FAIL_Mu, 
@@ -86,7 +88,7 @@ def MakeDPhiFit(
 
  
     if not isData: mistag   = ROOT.RooRealVar("mistag","mistag",mistag_gen,0.,1.)
-    if iBinCount >= 39 and iBinCount <= 44: mistag   =  ROOT.RooRealVar("mistag","mistag",mistag_gen,bound_0p90 ,bound_1p10) 
+    #if iBinCount >= 39 and iBinCount <= 44: mistag   =  ROOT.RooRealVar("mistag","mistag",mistag_gen,bound_0p90 ,bound_1p10) 
     if isData: mistag   = ROOT.RooRealVar("mistag","mistag",0.1 ,0.,1.) 
     ################# What follows concerns the first 4 templates (GOOD jet/Z pt balance) #################
     #
@@ -134,15 +136,15 @@ def MakeDPhiFit(
     #
     # Now convert them to PDF:
     #
-    pdf_template_SIG_PASS_Mu = ROOT.RooHistPdf("pdf_template_SIG_PASS_Mu", "pdf_template_SIG_PASS_Mu", ROOT.RooArgSet(dphiZjet), dh_template_SIG_PASS_Mu)
-    pdf_template_SIG_FAIL_Mu = ROOT.RooHistPdf("pdf_template_SIG_FAIL_Mu", "pdf_template_SIG_FAIL_Mu", ROOT.RooArgSet(dphiZjet), dh_template_SIG_FAIL_Mu)
-    pdf_template_PU_PASS_Mu  = ROOT.RooHistPdf("pdf_template_PU_PASS_Mu",  "pdf_template_PU_PASS_Mu",  ROOT.RooArgSet(dphiZjet), dh_template_PU_PASS_Mu)
-    pdf_template_PU_FAIL_Mu  = ROOT.RooHistPdf("pdf_template_PU_FAIL_Mu",  "pdf_template_PU_FAIL_Mu",  ROOT.RooArgSet(dphiZjet), dh_template_PU_FAIL_Mu)
+    pdf_template_SIG_PASS_Mu = ROOT.RooHistPdf("pdf_template_SIG_PASS_Mu", "pdf_template_SIG_PASS_Mu", ROOT.RooArgSet(dphiZjet), dh_template_SIG_PASS_Mu,2)
+    pdf_template_SIG_FAIL_Mu = ROOT.RooHistPdf("pdf_template_SIG_FAIL_Mu", "pdf_template_SIG_FAIL_Mu", ROOT.RooArgSet(dphiZjet), dh_template_SIG_FAIL_Mu,2)
+    pdf_template_PU_PASS_Mu  = ROOT.RooHistPdf("pdf_template_PU_PASS_Mu",  "pdf_template_PU_PASS_Mu",  ROOT.RooArgSet(dphiZjet), dh_template_PU_PASS_Mu,2)
+    pdf_template_PU_FAIL_Mu  = ROOT.RooHistPdf("pdf_template_PU_FAIL_Mu",  "pdf_template_PU_FAIL_Mu",  ROOT.RooArgSet(dphiZjet), dh_template_PU_FAIL_Mu,2)
 
-    pdf_template_SIG_PASS_El = ROOT.RooHistPdf("pdf_template_SIG_PASS_El", "pdf_template_SIG_PASS_El", ROOT.RooArgSet(dphiZjet), dh_template_SIG_PASS_El)
-    pdf_template_SIG_FAIL_El = ROOT.RooHistPdf("pdf_template_SIG_FAIL_El", "pdf_template_SIG_FAIL_El", ROOT.RooArgSet(dphiZjet), dh_template_SIG_FAIL_El)
-    pdf_template_PU_PASS_El  = ROOT.RooHistPdf("pdf_template_PU_PASS_El",  "pdf_template_PU_PASS_El",  ROOT.RooArgSet(dphiZjet), dh_template_PU_PASS_El)
-    pdf_template_PU_FAIL_El  = ROOT.RooHistPdf("pdf_template_PU_FAIL_El",  "pdf_template_PU_FAIL_El",  ROOT.RooArgSet(dphiZjet), dh_template_PU_FAIL_El)
+    pdf_template_SIG_PASS_El = ROOT.RooHistPdf("pdf_template_SIG_PASS_El", "pdf_template_SIG_PASS_El", ROOT.RooArgSet(dphiZjet), dh_template_SIG_PASS_El,2)
+    pdf_template_SIG_FAIL_El = ROOT.RooHistPdf("pdf_template_SIG_FAIL_El", "pdf_template_SIG_FAIL_El", ROOT.RooArgSet(dphiZjet), dh_template_SIG_FAIL_El,2)
+    pdf_template_PU_PASS_El  = ROOT.RooHistPdf("pdf_template_PU_PASS_El",  "pdf_template_PU_PASS_El",  ROOT.RooArgSet(dphiZjet), dh_template_PU_PASS_El,2)
+    pdf_template_PU_FAIL_El  = ROOT.RooHistPdf("pdf_template_PU_FAIL_El",  "pdf_template_PU_FAIL_El",  ROOT.RooArgSet(dphiZjet), dh_template_PU_FAIL_El,2)
     #
     # The PU template is taken to be a flat (pol0) distribution
     #
@@ -156,23 +158,23 @@ def MakeDPhiFit(
     #
     # PASS
     gauss_mean_PASS_Mu  = ROOT.RooRealVar("mean_PASS_Mu","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_Mu = ROOT.RooRealVar("sigma_PASS_Mu","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_PASS_Mu = ROOT.RooRealVar("sigma_PASS_Mu","sigma gauss",0.02,0.02,0.12)
     gauss_PASS_Mu       = ROOT.RooGaussian("gauss_PASS_Mu","gauss", dphiZjet ,gauss_mean_PASS_Mu,gauss_sigma_PASS_Mu) 
     tmpxg_SIG_PASS_Mu   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_Mu","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_Mu , gauss_PASS_Mu)
 
     gauss_mean_PASS_El  = ROOT.RooRealVar("mean_PASS_El","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_El = ROOT.RooRealVar("sigma_PASS_El","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_PASS_El = ROOT.RooRealVar("sigma_PASS_El","sigma gauss",0.02,0.02,0.12)
     gauss_PASS_El       = ROOT.RooGaussian("gauss_PASS_El","gauss", dphiZjet ,gauss_mean_PASS_El,gauss_sigma_PASS_El) 
     tmpxg_SIG_PASS_El   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_El","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_El , gauss_PASS_El)
     # FAIL
     gauss_mean_FAIL_Mu  = ROOT.RooRealVar("mean_FAIL_Mu","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_Mu = ROOT.RooRealVar("sigma_FAIL_Mu","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_FAIL_Mu = ROOT.RooRealVar("sigma_FAIL_Mu","sigma gauss",0.02,0.02,0.12)
     gauss_FAIL_Mu       = ROOT.RooGaussian("gauss_FAIL_Mu","gauss", dphiZjet ,gauss_mean_FAIL_Mu,gauss_sigma_FAIL_Mu) 
     tmpxg_SIG_FAIL_Mu   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_Mu","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_Mu , gauss_FAIL_Mu)
 
 
     gauss_mean_FAIL_El  = ROOT.RooRealVar("mean_FAIL_El","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_El = ROOT.RooRealVar("sigma_FAIL_El","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_FAIL_El = ROOT.RooRealVar("sigma_FAIL_El","sigma gauss",0.02,0.02,0.12)
     gauss_FAIL_El       = ROOT.RooGaussian("gauss_FAIL_El","gauss", dphiZjet ,gauss_mean_FAIL_El,gauss_sigma_FAIL_El) 
     tmpxg_SIG_FAIL_El   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_El","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_El , gauss_FAIL_El)
     #
@@ -181,12 +183,12 @@ def MakeDPhiFit(
     #
     # PASS
     # gauss_mean_PU_PASS  = ROOT.RooRealVar("mean_PU_PASS","mean",0,-0.05,0.05)
-    # gauss_sigma_PU_PASS = ROOT.RooRealVar("sigma_PU_PASS","sigma gauss",0.02,0.001,0.2)
+    # gauss_sigma_PU_PASS = ROOT.RooRealVar("sigma_PU_PASS","sigma gauss",0.02,0.02,0.12)
     # gauss_PU_PASS       = ROOT.RooGaussian("gauss_PU_PASS","gauss", dphiZjet ,gauss_mean_PU_PASS,gauss_sigma_PU_PASS) 
     # tmpxg_PU_PASS       = ROOT.RooFFTConvPdf("tmpxg_PU_PASS","template x gauss" ,dphiZjet, pdf_template_PU_PASS , gauss_PU_PASS)
     # # FAIL
     # gauss_mean_PU_FAIL  = ROOT.RooRealVar("mean_PU_FAIL","mean",0,-0.05,0.05)
-    # gauss_sigma_PU_FAIL = ROOT.RooRealVar("sigma_PU_FAIL","sigma gauss",0.02,0.001,0.2)
+    # gauss_sigma_PU_FAIL = ROOT.RooRealVar("sigma_PU_FAIL","sigma gauss",0.02,0.02,0.12)
     # gauss_PU_FAIL       = ROOT.RooGaussian("gauss_PU_FAIL","gauss", dphiZjet ,gauss_mean_PU_FAIL,gauss_sigma_PU_FAIL) 
     # tmpxg_PU_FAIL       = ROOT.RooFFTConvPdf("tmpxg_PU_FAIL","template x gauss" ,dphiZjet, pdf_template_PU_FAIL , gauss_PU_FAIL)
     #
@@ -257,15 +259,15 @@ def MakeDPhiFit(
     #
     # Now convert them to PDF:
     #
-    pdf_template_SIG_PASS_badbalance_Mu = ROOT.RooHistPdf("pdf_template_SIG_PASS_badbalance_Mu", "pdf_template_SIG_PASS_badbalance_Mu", ROOT.RooArgSet(dphiZjet),dh_template_SIG_PASS_badbalance_Mu)
-    pdf_template_SIG_FAIL_badbalance_Mu = ROOT.RooHistPdf("pdf_template_SIG_FAIL_badbalance_Mu", "pdf_template_SIG_FAIL_badbalance_Mu", ROOT.RooArgSet(dphiZjet),dh_template_SIG_FAIL_badbalance_Mu)
-    pdf_template_PU_PASS_badbalance_Mu  = ROOT.RooHistPdf("pdf_template_PU_PASS_badbalance_Mu", "pdf_template_PU_PASS_badbalance_Mu",  ROOT.RooArgSet(dphiZjet),dh_template_PU_PASS_badbalance_Mu)
-    pdf_template_PU_FAIL_badbalance_Mu  = ROOT.RooHistPdf("pdf_template_PU_FAIL_badbalance_Mu", "pdf_template_PU_FAIL_badbalance_Mu",  ROOT.RooArgSet(dphiZjet),dh_template_PU_FAIL_badbalance_Mu)
+    pdf_template_SIG_PASS_badbalance_Mu = ROOT.RooHistPdf("pdf_template_SIG_PASS_badbalance_Mu", "pdf_template_SIG_PASS_badbalance_Mu", ROOT.RooArgSet(dphiZjet),dh_template_SIG_PASS_badbalance_Mu,2)
+    pdf_template_SIG_FAIL_badbalance_Mu = ROOT.RooHistPdf("pdf_template_SIG_FAIL_badbalance_Mu", "pdf_template_SIG_FAIL_badbalance_Mu", ROOT.RooArgSet(dphiZjet),dh_template_SIG_FAIL_badbalance_Mu,2)
+    pdf_template_PU_PASS_badbalance_Mu  = ROOT.RooHistPdf("pdf_template_PU_PASS_badbalance_Mu", "pdf_template_PU_PASS_badbalance_Mu",  ROOT.RooArgSet(dphiZjet),dh_template_PU_PASS_badbalance_Mu,2)
+    pdf_template_PU_FAIL_badbalance_Mu  = ROOT.RooHistPdf("pdf_template_PU_FAIL_badbalance_Mu", "pdf_template_PU_FAIL_badbalance_Mu",  ROOT.RooArgSet(dphiZjet),dh_template_PU_FAIL_badbalance_Mu,2)
 
-    pdf_template_SIG_PASS_badbalance_El = ROOT.RooHistPdf("pdf_template_SIG_PASS_badbalance_El", "pdf_template_SIG_PASS_badbalance_El", ROOT.RooArgSet(dphiZjet),dh_template_SIG_PASS_badbalance_El)
-    pdf_template_SIG_FAIL_badbalance_El = ROOT.RooHistPdf("pdf_template_SIG_FAIL_badbalance_El", "pdf_template_SIG_FAIL_badbalance_El", ROOT.RooArgSet(dphiZjet),dh_template_SIG_FAIL_badbalance_El)
-    pdf_template_PU_PASS_badbalance_El  = ROOT.RooHistPdf("pdf_template_PU_PASS_badbalance_El", "pdf_template_PU_PASS_badbalance_El",  ROOT.RooArgSet(dphiZjet),dh_template_PU_PASS_badbalance_El)
-    pdf_template_PU_FAIL_badbalance_El  = ROOT.RooHistPdf("pdf_template_PU_FAIL_badbalance_El", "pdf_template_PU_FAIL_badbalance_El",  ROOT.RooArgSet(dphiZjet),dh_template_PU_FAIL_badbalance_El)
+    pdf_template_SIG_PASS_badbalance_El = ROOT.RooHistPdf("pdf_template_SIG_PASS_badbalance_El", "pdf_template_SIG_PASS_badbalance_El", ROOT.RooArgSet(dphiZjet),dh_template_SIG_PASS_badbalance_El,2)
+    pdf_template_SIG_FAIL_badbalance_El = ROOT.RooHistPdf("pdf_template_SIG_FAIL_badbalance_El", "pdf_template_SIG_FAIL_badbalance_El", ROOT.RooArgSet(dphiZjet),dh_template_SIG_FAIL_badbalance_El,2)
+    pdf_template_PU_PASS_badbalance_El  = ROOT.RooHistPdf("pdf_template_PU_PASS_badbalance_El", "pdf_template_PU_PASS_badbalance_El",  ROOT.RooArgSet(dphiZjet),dh_template_PU_PASS_badbalance_El,2)
+    pdf_template_PU_FAIL_badbalance_El  = ROOT.RooHistPdf("pdf_template_PU_FAIL_badbalance_El", "pdf_template_PU_FAIL_badbalance_El",  ROOT.RooArgSet(dphiZjet),dh_template_PU_FAIL_badbalance_El,2)
     #
     #The PU template is taken to be a flat (pol0) distribution   
     #
@@ -279,22 +281,22 @@ def MakeDPhiFit(
     #
     # PASS
     gauss_mean_PASS_badbalance_Mu  = ROOT.RooRealVar("mean_PASS_badbalance_Mu","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_badbalance_Mu = ROOT.RooRealVar("sigma_PASS_badbalance_Mu","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_PASS_badbalance_Mu = ROOT.RooRealVar("sigma_PASS_badbalance_Mu","sigma gauss",0.02,0.02,0.12)
     gauss_PASS_badbalance_Mu       = ROOT.RooGaussian("gauss_PASS_badbalance_Mu","gauss", dphiZjet ,gauss_mean_PASS_badbalance_Mu,gauss_sigma_PASS_badbalance_Mu)
     tmpxg_SIG_PASS_badbalance_Mu   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_badbalance_Mu","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_badbalance_Mu , gauss_PASS_badbalance_Mu)
 
     gauss_mean_PASS_badbalance_El  = ROOT.RooRealVar("mean_PASS_badbalance_El","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_badbalance_El = ROOT.RooRealVar("sigma_PASS_badbalance_El","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_PASS_badbalance_El = ROOT.RooRealVar("sigma_PASS_badbalance_El","sigma gauss",0.02,0.02,0.12)
     gauss_PASS_badbalance_El       = ROOT.RooGaussian("gauss_PASS_badbalance_El","gauss", dphiZjet ,gauss_mean_PASS_badbalance_El,gauss_sigma_PASS_badbalance_El)
     tmpxg_SIG_PASS_badbalance_El   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_badbalance_El","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_badbalance_El , gauss_PASS_badbalance_El)
     # FAIL
     gauss_mean_FAIL_badbalance_Mu  = ROOT.RooRealVar("mean_FAIL_badbalance_Mu","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_badbalance_Mu = ROOT.RooRealVar("sigma_FAIL_badbalance_Mu","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_FAIL_badbalance_Mu = ROOT.RooRealVar("sigma_FAIL_badbalance_Mu","sigma gauss",0.02,0.02,0.12)
     gauss_FAIL_badbalance_Mu       = ROOT.RooGaussian("gauss_FAIL_badbalance_Mu","gauss", dphiZjet ,gauss_mean_FAIL_badbalance_Mu,gauss_sigma_FAIL_badbalance_Mu)
     tmpxg_SIG_FAIL_badbalance_Mu   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_badbalance_Mu","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_badbalance_Mu , gauss_FAIL_badbalance_Mu)
 
     gauss_mean_FAIL_badbalance_El  = ROOT.RooRealVar("mean_FAIL_badbalance_El","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_badbalance_El = ROOT.RooRealVar("sigma_FAIL_badbalance_El","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_FAIL_badbalance_El = ROOT.RooRealVar("sigma_FAIL_badbalance_El","sigma gauss",0.02,0.02,0.12)
     gauss_FAIL_badbalance_El       = ROOT.RooGaussian("gauss_FAIL_badbalance_El","gauss", dphiZjet ,gauss_mean_FAIL_badbalance_El,gauss_sigma_FAIL_badbalance_El)
     tmpxg_SIG_FAIL_badbalance_El   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_badbalance_El","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_badbalance_El , gauss_FAIL_badbalance_El)
     #
@@ -303,12 +305,12 @@ def MakeDPhiFit(
     #
     # PASS
     # gauss_mean_PU_PASS_badbalance  = ROOT.RooRealVar("mean_PU_PASS_badbalance","mean",0,-0.05,0.05)
-    # gauss_sigma_PU_PASS_badbalance = ROOT.RooRealVar("sigma_PU_PASS_badbalance","sigma gauss",0.02,0.001,0.2)
+    # gauss_sigma_PU_PASS_badbalance = ROOT.RooRealVar("sigma_PU_PASS_badbalance","sigma gauss",0.02,0.02,0.12)
     # gauss_PU_PASS_badbalance       = ROOT.RooGaussian("gauss_PU_PASS_badbalance","gauss", dphiZjet ,gauss_mean_PU_PASS_badbalance,gauss_sigma_PU_PASS_badbalance) 
     # tmpxg_PU_PASS_badbalance       = ROOT.RooFFTConvPdf("tmpxg_PU_PASS_badbalance","template x gauss" ,dphiZjet, pdf_template_PU_PASS_badbalance , gauss_PU_PASS_badbalance)
     # # FAIL
     # gauss_mean_PU_FAIL  = ROOT.RooRealVar("mean_PU_FAIL_badbalance","mean",0,-0.05,0.05)
-    # gauss_sigma_PU_FAIL = ROOT.RooRealVar("sigma_PU_FAIL_badbalance","sigma gauss",0.02,0.001,0.2)
+    # gauss_sigma_PU_FAIL = ROOT.RooRealVar("sigma_PU_FAIL_badbalance","sigma gauss",0.02,0.02,0.12)
     # gauss_PU_FAIL       = ROOT.RooGaussian("gauss_PU_FAIL_badbalance","gauss", dphiZjet ,gauss_mean_PU_FAIL_badbalance, gauss_sigma_PU_FAIL_badbalance) 
     # tmpxg_PU_FAIL       = ROOT.RooFFTConvPdf("tmpxg_PU_FAIL_badbalance","template x gauss" ,dphiZjet, pdf_template_PU_FAIL_badbalance, gauss_PU_FAIL_badbalance)
     #
@@ -987,6 +989,8 @@ def main():
     iBinCount = 0
     iBinTotal = len(_pt) * len(_eta)
     
+    binningStr = "_probeJet_dilep_dphi_norm"
+    #binningStr = "_probeJet_dilep_dphi_m1_abs" 
     for i in range(0,len(_pt)):
         for j in range(0,len(_eta)):
             ptBinStr  = "_pt"+_pt[i]
@@ -1004,61 +1008,61 @@ def main():
             #
             # Retrieve histograms: PASS ID, GOOD balance
             #
-            h_dphi_mc_genunmatched_PASS_Mu = f_mc_Mu.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_genmatched_PASS_Mu  = f_mc_Mu.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_PASS_Mu              = f_mc_Mu.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_data_PASS_Mu            = f_data_Mu.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_dphi_mc_genunmatched_PASS_Mu = f_mc_Mu.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+"_failGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_genmatched_PASS_Mu  = f_mc_Mu.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+"_passGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_PASS_Mu              = f_mc_Mu.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+binStr+binningStr+systStr)
+            h_dphi_data_PASS_Mu            = f_data_Mu.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+binStr+binningStr)
             #
             # Retrieve histograms: FAIL ID, GOOD balance
             #
-            h_dphi_mc_genunmatched_FAIL_Mu = f_mc_Mu.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_genmatched_FAIL_Mu   = f_mc_Mu.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_FAIL_Mu              = f_mc_Mu.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_data_FAIL_Mu            = f_data_Mu.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_dphi_mc_genunmatched_FAIL_Mu = f_mc_Mu.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+"_failGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_genmatched_FAIL_Mu   = f_mc_Mu.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+"_passGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_FAIL_Mu              = f_mc_Mu.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+binStr+binningStr+systStr)
+            h_dphi_data_FAIL_Mu            = f_data_Mu.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+binStr+binningStr)
             #
             # Retrieve histograms: PASS ID, BAD balance
             #
-            h_dphi_mc_genunmatched_PASS_badbalance_Mu =  f_mc_Mu.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_genmatched_PASS_badbalance_Mu   =  f_mc_Mu.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_PASS_badbalance_Mu              =  f_mc_Mu.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_data_PASS_badbalance_Mu            =  f_data_Mu.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_dphi_mc_genunmatched_PASS_badbalance_Mu =  f_mc_Mu.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+"_failGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_genmatched_PASS_badbalance_Mu   =  f_mc_Mu.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+"_passGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_PASS_badbalance_Mu              =  f_mc_Mu.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+binStr+binningStr+systStr)
+            h_dphi_data_PASS_badbalance_Mu            =  f_data_Mu.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+binStr+binningStr)
             #
             # Retrieve histograms: FAIL ID, BAD balance
             #
-            h_dphi_mc_genunmatched_FAIL_badbalance_Mu = f_mc_Mu.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_genmatched_FAIL_badbalance_Mu   = f_mc_Mu.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_FAIL_badbalance_Mu              = f_mc_Mu.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_data_FAIL_badbalance_Mu            = f_data_Mu.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_dphi_mc_genunmatched_FAIL_badbalance_Mu = f_mc_Mu.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_failGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_genmatched_FAIL_badbalance_Mu   = f_mc_Mu.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_passGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_FAIL_badbalance_Mu              = f_mc_Mu.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+binningStr+systStr)
+            h_dphi_data_FAIL_badbalance_Mu            = f_data_Mu.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+binningStr)
 
 
 
             # Retrieve histograms: PASS ID, GOOD balance
             #
-            h_dphi_mc_genunmatched_PASS_El = f_mc_El.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_genmatched_PASS_El   = f_mc_El.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_PASS_El              = f_mc_El.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_data_PASS_El            = f_data_El.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_dphi_mc_genunmatched_PASS_El = f_mc_El.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+"_failGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_genmatched_PASS_El   = f_mc_El.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+"_passGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_PASS_El              = f_mc_El.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+binStr+binningStr+systStr)
+            h_dphi_data_PASS_El            = f_data_El.Get("h_passNJetSel_probeJet_goodBal_passPUID"+workingpoint+binStr+binningStr)
             #
             # Retrieve histograms: FAIL ID, GOOD balance
             #
-            h_dphi_mc_genunmatched_FAIL_El = f_mc_El.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_genmatched_FAIL_El   = f_mc_El.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_FAIL_El              = f_mc_El.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_data_FAIL_El            = f_data_El.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_dphi_mc_genunmatched_FAIL_El = f_mc_El.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+"_failGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_genmatched_FAIL_El   = f_mc_El.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+"_passGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_FAIL_El              = f_mc_El.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+binStr+binningStr+systStr)
+            h_dphi_data_FAIL_El            = f_data_El.Get("h_passNJetSel_probeJet_goodBal_failPUID"+workingpoint+binStr+binningStr)
             #
             # Retrieve histograms: PASS ID, BAD balance
             #
-            h_dphi_mc_genunmatched_PASS_badbalance_El =  f_mc_El.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_genmatched_PASS_badbalance_El   =  f_mc_El.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_PASS_badbalance_El              =  f_mc_El.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_data_PASS_badbalance_El            =  f_data_El.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_dphi_mc_genunmatched_PASS_badbalance_El =  f_mc_El.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+"_failGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_genmatched_PASS_badbalance_El   =  f_mc_El.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+"_passGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_PASS_badbalance_El              =  f_mc_El.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+binStr+binningStr+systStr)
+            h_dphi_data_PASS_badbalance_El            =  f_data_El.Get("h_passNJetSel_probeJet_badBal_passPUID"+workingpoint+binStr+binningStr)
             #
             # Retrieve histograms: FAIL ID, BAD balance
             #
-            h_dphi_mc_genunmatched_FAIL_badbalance_El = f_mc_El.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_failGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_genmatched_FAIL_badbalance_El   = f_mc_El.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_passGenMatch"+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_mc_FAIL_badbalance_El              = f_mc_El.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm"+systStr)
-            h_dphi_data_FAIL_badbalance_El            = f_data_El.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+"_probeJet_dilep_dphi_norm")
+            h_dphi_mc_genunmatched_FAIL_badbalance_El = f_mc_El.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_failGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_genmatched_FAIL_badbalance_El   = f_mc_El.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+"_passGenMatch"+binStr+binningStr+systStr)
+            h_dphi_mc_FAIL_badbalance_El              = f_mc_El.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+binningStr+systStr)
+            h_dphi_data_FAIL_badbalance_El            = f_data_El.Get("h_passNJetSel_probeJet_badBal_failPUID"+workingpoint+binStr+binningStr)
 
             #
             # Perform fit on MC
