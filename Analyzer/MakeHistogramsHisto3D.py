@@ -9,10 +9,39 @@ import array
 import ROOT
 import SampleList
 import SampleListUL
+import suppressNegatives
 ROOT.gROOT.SetBatch()
 ROOT.gROOT.LoadMacro("/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Analyzer/Helpers.h")
 
+def makeVarBin(varBinDict):
+    binEdge = varBinDict["binEdge"]
+    binSplitN = varBinDict["binSplitN"]
+    if not len(binEdge) == 4 or not len(binSplitN) == 3:
+        print("Error: wrong input format")
+        exit()
+    if not binSplitN[0] == binSplitN[2]:
+        print("Error: wrong input format")
+        exit()
+        
+    binSet = []
+    
+    for i in range(len(binEdge)-1):
+        tick = binEdge[i+1] - binEdge[i]
+        tick = tick/binSplitN[i]
+        for j in range(binSplitN[i]):
+            binSet.append(binEdge[i]+j*tick)
+    binSet.append(binEdge[len(binEdge)-1])
+    return array.array("d",binSet)
 
+def getVarBinWeightFormula(varBinDict, dphiStr):
+    binEdge = varBinDict["binEdge"]
+    binSplitN = varBinDict["binSplitN"]
+    weight = (binEdge[2]-binEdge[1])/binSplitN[1]
+    weight = weight / ((binEdge[1]-binEdge[0])/binSplitN[0])
+    formula = "(%s>%f)&&(%s<%f)?1.0:%f" % (dphiStr, binEdge[1], dphiStr, binEdge[2], weight)
+    print(formula)
+    return formula
+    
 
 #
 #
@@ -99,6 +128,13 @@ deltaRBinSize = 0.02
 deltaRBins =[round(x*deltaRBinSize, 2) for x in xrange(0,deltaRBinsN+1)]
 deltaRBinsArray = array.array('d',deltaRBins)
 deltaRBinsN = len(deltaRBins)-1
+
+varBinDict = {"binEdge":[0,0.5,1.5,2],"binSplitN":[10,50,10]}
+dphiVarBinsArray = makeVarBin(varBinDict)
+dphiVarBinsN = len(dphiVarBinsArray)-1
+
+
+
 
 def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=False):
   isUL=False
@@ -195,6 +231,7 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
   df = df.Define("probeJet_jer_from_pt", probeJetStr+"_jer_from_pt")
   df = df.Define("probeJet_jer_from_pt_nom", probeJetStr+"_jer_from_pt_nom")
   df = df.Define("probeJet_jer_from_pt_nano", probeJetStr+"_jer_from_pt_nano")
+
   #
   # Guide on how to read the pileup ID bitmap variable: 
   # https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJetID#miniAOD_and_nanoAOD
@@ -225,6 +262,11 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
   df = df.Define("probeJet_dilep_dphi_m1_abs","fabs(probeJet_dilep_dphi_norm-1)")
   df = df.Define("probeJet_dilep_ptbalance","dilep_pt/probeJet_pt")
   df = df.Define("probeJet_dilep_ptbalance_anomaly", "fabs(probeJet_dilep_ptbalance-1)")
+  
+  
+  df = df.Define("binningWeight", getVarBinWeightFormula(varBinDict,"probeJet_dilep_dphi_norm"))
+  df = df.Define("evtWeight_varBin","evtWeight*binningWeight")
+  weightName_varBin = weightName+"_varBin"
   #
   # Define pileup ID cuts
   #
@@ -348,6 +390,9 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
     histoInfo_absBin = ROOT.RDF.TH3DModel(histoNameFinal_absBin, histoNameFinal_absBin, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, absdphim1BinsN, absdphim1BinsArray)
     Histograms3D[histoNameFinal_absBin] = df_filters[cutLevel].Histo3D(histoInfo_absBin, "probeJet_pt","probeJet_eta","probeJet_dilep_dphi_m1_abs", weightName)
  
+    histoNameFinal  = "h3_%s_probeJet_pt_eta_dilep_dphiVarBin_norm%s" %(cutLevel,systStrPost)
+    histoInfo = ROOT.RDF.TH3DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, dphiVarBinsN, dphiVarBinsArray)
+    Histograms3D[histoNameFinal] = df_filters[cutLevel].Histo3D(histoInfo, "probeJet_pt","probeJet_eta","probeJet_dilep_dphi_norm", weightName_varBin)
   #
   # absEtaBins
   #
@@ -464,7 +509,9 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
     elif "_gen_dR" in h3Name:
       Histograms = ProjectTH3(h3, Histograms, "gen_dR", systStrPost)
     elif "_dilep_dphi_m1_abs" in h3Name:
-      Histograms = ProjectTH3(h3, Histograms, "dilep_dphi_m1_abs", systStrPost) 
+      Histograms = ProjectTH3(h3, Histograms, "dilep_dphi_m1_abs", systStrPost)
+    elif "dilep_dphiVarBin_norm" in h3Name:
+      Histograms = ProjectTH3(h3, Histograms, "dilep_dphiVarBin_norm", systStrPost) 
 
   print("Number of 1D histos: %s " %len(Histograms))
   ##############################################
@@ -501,6 +548,10 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
 
   f.Close()
   print("Histos saved in %s" %outFileName)
+  if isMC:
+    suppressNegatives.negativeSuppressor(outFileName,conserveOriginal=False)
+
+  
 
 if __name__== "__main__":
   time_start = datetime.datetime.now()
@@ -555,6 +606,8 @@ if __name__== "__main__":
   #
   for systStr in ak4Systematics:
     main(args.sample,args.useSkimNtuples,systStr,isMuCh,balanceN,args.useNewTraining)
+
+  
 
   time_end = datetime.datetime.now()
   elapsed = time_end - time_start

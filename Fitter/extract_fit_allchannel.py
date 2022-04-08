@@ -32,7 +32,15 @@ ROOT.RooMsgService.instance().setGlobalKillBelow(ROOT.RooFit.FATAL)
 
 printPNG=False
 
-    
+def getNormalizeHist(hist_orig):
+    hist = hist_orig.Clone()
+    nbin = hist.GetNbinsX()
+    for i in range(1,nbin+1):
+        content_orig=hist.GetBinContent(i)
+        bin_width = hist.GetBinWidth(i)
+        hist.SetBinContent(i,bin_width*content_orig)
+        
+    return hist
         
 def MakeDPhiFit(
     h_dphi_genunmatched_PASS_Mu,h_dphi_genmatched_PASS_Mu,h_dphi_genunmatched_FAIL_Mu,h_dphi_genmatched_FAIL_Mu,
@@ -136,15 +144,15 @@ def MakeDPhiFit(
     #
     # Now convert them to PDF:
     #
-    pdf_template_SIG_PASS_Mu = ROOT.RooHistPdf("pdf_template_SIG_PASS_Mu", "pdf_template_SIG_PASS_Mu", ROOT.RooArgSet(dphiZjet), dh_template_SIG_PASS_Mu,2)
-    pdf_template_SIG_FAIL_Mu = ROOT.RooHistPdf("pdf_template_SIG_FAIL_Mu", "pdf_template_SIG_FAIL_Mu", ROOT.RooArgSet(dphiZjet), dh_template_SIG_FAIL_Mu,2)
-    pdf_template_PU_PASS_Mu  = ROOT.RooHistPdf("pdf_template_PU_PASS_Mu",  "pdf_template_PU_PASS_Mu",  ROOT.RooArgSet(dphiZjet), dh_template_PU_PASS_Mu,2)
-    pdf_template_PU_FAIL_Mu  = ROOT.RooHistPdf("pdf_template_PU_FAIL_Mu",  "pdf_template_PU_FAIL_Mu",  ROOT.RooArgSet(dphiZjet), dh_template_PU_FAIL_Mu,2)
+    pdf_template_SIG_PASS_Mu = ROOT.RooHistPdf("pdf_template_SIG_PASS_Mu", "pdf_template_SIG_PASS_Mu", ROOT.RooArgSet(dphiZjet), dh_template_SIG_PASS_Mu,1)
+    pdf_template_SIG_FAIL_Mu = ROOT.RooHistPdf("pdf_template_SIG_FAIL_Mu", "pdf_template_SIG_FAIL_Mu", ROOT.RooArgSet(dphiZjet), dh_template_SIG_FAIL_Mu,1)
+    pdf_template_PU_PASS_Mu  = ROOT.RooHistPdf("pdf_template_PU_PASS_Mu",  "pdf_template_PU_PASS_Mu",  ROOT.RooArgSet(dphiZjet), dh_template_PU_PASS_Mu,1)
+    pdf_template_PU_FAIL_Mu  = ROOT.RooHistPdf("pdf_template_PU_FAIL_Mu",  "pdf_template_PU_FAIL_Mu",  ROOT.RooArgSet(dphiZjet), dh_template_PU_FAIL_Mu,1)
 
-    pdf_template_SIG_PASS_El = ROOT.RooHistPdf("pdf_template_SIG_PASS_El", "pdf_template_SIG_PASS_El", ROOT.RooArgSet(dphiZjet), dh_template_SIG_PASS_El,2)
-    pdf_template_SIG_FAIL_El = ROOT.RooHistPdf("pdf_template_SIG_FAIL_El", "pdf_template_SIG_FAIL_El", ROOT.RooArgSet(dphiZjet), dh_template_SIG_FAIL_El,2)
-    pdf_template_PU_PASS_El  = ROOT.RooHistPdf("pdf_template_PU_PASS_El",  "pdf_template_PU_PASS_El",  ROOT.RooArgSet(dphiZjet), dh_template_PU_PASS_El,2)
-    pdf_template_PU_FAIL_El  = ROOT.RooHistPdf("pdf_template_PU_FAIL_El",  "pdf_template_PU_FAIL_El",  ROOT.RooArgSet(dphiZjet), dh_template_PU_FAIL_El,2)
+    pdf_template_SIG_PASS_El = ROOT.RooHistPdf("pdf_template_SIG_PASS_El", "pdf_template_SIG_PASS_El", ROOT.RooArgSet(dphiZjet), dh_template_SIG_PASS_El,1)
+    pdf_template_SIG_FAIL_El = ROOT.RooHistPdf("pdf_template_SIG_FAIL_El", "pdf_template_SIG_FAIL_El", ROOT.RooArgSet(dphiZjet), dh_template_SIG_FAIL_El,1)
+    pdf_template_PU_PASS_El  = ROOT.RooHistPdf("pdf_template_PU_PASS_El",  "pdf_template_PU_PASS_El",  ROOT.RooArgSet(dphiZjet), dh_template_PU_PASS_El,1)
+    pdf_template_PU_FAIL_El  = ROOT.RooHistPdf("pdf_template_PU_FAIL_El",  "pdf_template_PU_FAIL_El",  ROOT.RooArgSet(dphiZjet), dh_template_PU_FAIL_El,1)
     #
     # The PU template is taken to be a flat (pol0) distribution
     #
@@ -259,15 +267,15 @@ def MakeDPhiFit(
     #
     # Now convert them to PDF:
     #
-    pdf_template_SIG_PASS_badbalance_Mu = ROOT.RooHistPdf("pdf_template_SIG_PASS_badbalance_Mu", "pdf_template_SIG_PASS_badbalance_Mu", ROOT.RooArgSet(dphiZjet),dh_template_SIG_PASS_badbalance_Mu,2)
-    pdf_template_SIG_FAIL_badbalance_Mu = ROOT.RooHistPdf("pdf_template_SIG_FAIL_badbalance_Mu", "pdf_template_SIG_FAIL_badbalance_Mu", ROOT.RooArgSet(dphiZjet),dh_template_SIG_FAIL_badbalance_Mu,2)
-    pdf_template_PU_PASS_badbalance_Mu  = ROOT.RooHistPdf("pdf_template_PU_PASS_badbalance_Mu", "pdf_template_PU_PASS_badbalance_Mu",  ROOT.RooArgSet(dphiZjet),dh_template_PU_PASS_badbalance_Mu,2)
-    pdf_template_PU_FAIL_badbalance_Mu  = ROOT.RooHistPdf("pdf_template_PU_FAIL_badbalance_Mu", "pdf_template_PU_FAIL_badbalance_Mu",  ROOT.RooArgSet(dphiZjet),dh_template_PU_FAIL_badbalance_Mu,2)
+    pdf_template_SIG_PASS_badbalance_Mu = ROOT.RooHistPdf("pdf_template_SIG_PASS_badbalance_Mu", "pdf_template_SIG_PASS_badbalance_Mu", ROOT.RooArgSet(dphiZjet),dh_template_SIG_PASS_badbalance_Mu,1)
+    pdf_template_SIG_FAIL_badbalance_Mu = ROOT.RooHistPdf("pdf_template_SIG_FAIL_badbalance_Mu", "pdf_template_SIG_FAIL_badbalance_Mu", ROOT.RooArgSet(dphiZjet),dh_template_SIG_FAIL_badbalance_Mu,1)
+    pdf_template_PU_PASS_badbalance_Mu  = ROOT.RooHistPdf("pdf_template_PU_PASS_badbalance_Mu", "pdf_template_PU_PASS_badbalance_Mu",  ROOT.RooArgSet(dphiZjet),dh_template_PU_PASS_badbalance_Mu,1)
+    pdf_template_PU_FAIL_badbalance_Mu  = ROOT.RooHistPdf("pdf_template_PU_FAIL_badbalance_Mu", "pdf_template_PU_FAIL_badbalance_Mu",  ROOT.RooArgSet(dphiZjet),dh_template_PU_FAIL_badbalance_Mu,1)
 
-    pdf_template_SIG_PASS_badbalance_El = ROOT.RooHistPdf("pdf_template_SIG_PASS_badbalance_El", "pdf_template_SIG_PASS_badbalance_El", ROOT.RooArgSet(dphiZjet),dh_template_SIG_PASS_badbalance_El,2)
-    pdf_template_SIG_FAIL_badbalance_El = ROOT.RooHistPdf("pdf_template_SIG_FAIL_badbalance_El", "pdf_template_SIG_FAIL_badbalance_El", ROOT.RooArgSet(dphiZjet),dh_template_SIG_FAIL_badbalance_El,2)
-    pdf_template_PU_PASS_badbalance_El  = ROOT.RooHistPdf("pdf_template_PU_PASS_badbalance_El", "pdf_template_PU_PASS_badbalance_El",  ROOT.RooArgSet(dphiZjet),dh_template_PU_PASS_badbalance_El,2)
-    pdf_template_PU_FAIL_badbalance_El  = ROOT.RooHistPdf("pdf_template_PU_FAIL_badbalance_El", "pdf_template_PU_FAIL_badbalance_El",  ROOT.RooArgSet(dphiZjet),dh_template_PU_FAIL_badbalance_El,2)
+    pdf_template_SIG_PASS_badbalance_El = ROOT.RooHistPdf("pdf_template_SIG_PASS_badbalance_El", "pdf_template_SIG_PASS_badbalance_El", ROOT.RooArgSet(dphiZjet),dh_template_SIG_PASS_badbalance_El,1)
+    pdf_template_SIG_FAIL_badbalance_El = ROOT.RooHistPdf("pdf_template_SIG_FAIL_badbalance_El", "pdf_template_SIG_FAIL_badbalance_El", ROOT.RooArgSet(dphiZjet),dh_template_SIG_FAIL_badbalance_El,1)
+    pdf_template_PU_PASS_badbalance_El  = ROOT.RooHistPdf("pdf_template_PU_PASS_badbalance_El", "pdf_template_PU_PASS_badbalance_El",  ROOT.RooArgSet(dphiZjet),dh_template_PU_PASS_badbalance_El,1)
+    pdf_template_PU_FAIL_badbalance_El  = ROOT.RooHistPdf("pdf_template_PU_FAIL_badbalance_El", "pdf_template_PU_FAIL_badbalance_El",  ROOT.RooArgSet(dphiZjet),dh_template_PU_FAIL_badbalance_El,1)
     #
     #The PU template is taken to be a flat (pol0) distribution   
     #
@@ -991,6 +999,7 @@ def main():
     
     binningStr = "_probeJet_dilep_dphi_norm"
     #binningStr = "_probeJet_dilep_dphi_m1_abs" 
+    #binningStr = "_probeJet_dilep_dphiVarBin_norm"
     for i in range(0,len(_pt)):
         for j in range(0,len(_eta)):
             ptBinStr  = "_pt"+_pt[i]
