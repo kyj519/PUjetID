@@ -1,7 +1,7 @@
 import ROOT
 import root_numpy as rnp
 import numpy as np
-import shutil
+import shutil, os
 
 
 #loop over inside the TFile
@@ -21,7 +21,7 @@ histName_passGenMatch = lambda nameList: filter(lambda name: "_passGenMatch_" in
 histName_failGenMatch = lambda nameList: filter(lambda name: "_failGenMatch_" in name, nameList )
 
 # get list of histograms
-wgetListOfHist         = lambda iFile, nameList: [ (name, iFile.Get(name)) for name in nameList ]
+getListOfHist         = lambda iFile, nameList: [ (name, iFile.Get(name)) for name in nameList ]
 
 
 # symmetrize bins if it has negatives
@@ -289,6 +289,7 @@ def negativeSuppressor(inputFileName, conserveOriginal = True):
     saveComparison(outFile, outHist_list_passGenMatched, outHist_list_failGenMatched, hist_list_passGenMatched, hist_list_failGenMatched)
     if not conserveOriginal:
       shutil.move(inputFileName, inputFileName.replace(".root",".old"))
+      os.remove(inputFileName.replace(".root",".old"))
       shutil.move(outFileName,inputFileName)
        
 

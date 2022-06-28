@@ -74,6 +74,10 @@ def MakeDPhiFit(
     effcy    = ROOT.RooRealVar("effcy","effcy",  0.9, 0.,1.)
     mistag   = ROOT.RooRealVar("mistag","mistag",0.1, 0.,1.)
     
+    if not isData:
+        mistag   = ROOT.RooRealVar("mistag","mistag",mistag_gen,0.,1.)
+        effcy    = ROOT.RooRealVar("effcy","effcy",  eff_gen, 0.,1.)   
+  
     ################# What follows concerns the first 4 templates (GOOD jet/Z pt balance) #################
     #
     # Total number of events of signal (=real jets) events and of PU (=pileup jets) events before applying PU ID
@@ -104,10 +108,10 @@ def MakeDPhiFit(
     #
     # Now convert them to PDF:
     #
-    pdf_template_SIG_PASS = ROOT.RooHistPdf("pdf_template_SIG_PASS", "pdf_template_SIG_PASS", ROOT.RooArgSet(dphiZjet), dh_template_SIG_PASS)
-    pdf_template_SIG_FAIL = ROOT.RooHistPdf("pdf_template_SIG_FAIL", "pdf_template_SIG_FAIL", ROOT.RooArgSet(dphiZjet), dh_template_SIG_FAIL)
-    pdf_template_PU_PASS  = ROOT.RooHistPdf("pdf_template_PU_PASS",  "pdf_template_PU_PASS",  ROOT.RooArgSet(dphiZjet), dh_template_PU_PASS)
-    pdf_template_PU_FAIL  = ROOT.RooHistPdf("pdf_template_PU_FAIL",  "pdf_template_PU_FAIL",  ROOT.RooArgSet(dphiZjet), dh_template_PU_FAIL)
+    pdf_template_SIG_PASS = ROOT.RooHistPdf("pdf_template_SIG_PASS", "pdf_template_SIG_PASS", ROOT.RooArgSet(dphiZjet), dh_template_SIG_PASS, 1)
+    pdf_template_SIG_FAIL = ROOT.RooHistPdf("pdf_template_SIG_FAIL", "pdf_template_SIG_FAIL", ROOT.RooArgSet(dphiZjet), dh_template_SIG_FAIL, 1)
+    pdf_template_PU_PASS  = ROOT.RooHistPdf("pdf_template_PU_PASS",  "pdf_template_PU_PASS",  ROOT.RooArgSet(dphiZjet), dh_template_PU_PASS, 1)
+    pdf_template_PU_FAIL  = ROOT.RooHistPdf("pdf_template_PU_FAIL",  "pdf_template_PU_FAIL",  ROOT.RooArgSet(dphiZjet), dh_template_PU_FAIL, 1)
     #
     # The PU template is taken to be a flat (pol0) distribution
     #
@@ -118,12 +122,12 @@ def MakeDPhiFit(
     #
     # PASS
     gauss_mean_PASS  = ROOT.RooRealVar("mean_PASS","mean",0,-0.05,0.05)
-    gauss_sigma_PASS = ROOT.RooRealVar("sigma_PASS","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_PASS = ROOT.RooRealVar("sigma_PASS","sigma gauss",0.03,0.015,0.12)
     gauss_PASS       = ROOT.RooGaussian("gauss_PASS","gauss", dphiZjet ,gauss_mean_PASS,gauss_sigma_PASS) 
     tmpxg_SIG_PASS   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS","template x gauss" ,dphiZjet, pdf_template_SIG_PASS , gauss_PASS)
     # FAIL
     gauss_mean_FAIL  = ROOT.RooRealVar("mean_FAIL","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL = ROOT.RooRealVar("sigma_FAIL","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_FAIL = ROOT.RooRealVar("sigma_FAIL","sigma gauss",0.03,0.015,0.12)
     gauss_FAIL       = ROOT.RooGaussian("gauss_FAIL","gauss", dphiZjet ,gauss_mean_FAIL,gauss_sigma_FAIL) 
     tmpxg_SIG_FAIL   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL , gauss_FAIL)
     #
@@ -132,12 +136,12 @@ def MakeDPhiFit(
     #
     # PASS
     # gauss_mean_PU_PASS  = ROOT.RooRealVar("mean_PU_PASS","mean",0,-0.05,0.05)
-    # gauss_sigma_PU_PASS = ROOT.RooRealVar("sigma_PU_PASS","sigma gauss",0.02,0.001,0.2)
+    # gauss_sigma_PU_PASS = ROOT.RooRealVar("sigma_PU_PASS","sigma gauss",0.03,0.015,0.12)
     # gauss_PU_PASS       = ROOT.RooGaussian("gauss_PU_PASS","gauss", dphiZjet ,gauss_mean_PU_PASS,gauss_sigma_PU_PASS) 
     # tmpxg_PU_PASS       = ROOT.RooFFTConvPdf("tmpxg_PU_PASS","template x gauss" ,dphiZjet, pdf_template_PU_PASS , gauss_PU_PASS)
     # # FAIL
     # gauss_mean_PU_FAIL  = ROOT.RooRealVar("mean_PU_FAIL","mean",0,-0.05,0.05)
-    # gauss_sigma_PU_FAIL = ROOT.RooRealVar("sigma_PU_FAIL","sigma gauss",0.02,0.001,0.2)
+    # gauss_sigma_PU_FAIL = ROOT.RooRealVar("sigma_PU_FAIL","sigma gauss",0.03,0.015,0.12)
     # gauss_PU_FAIL       = ROOT.RooGaussian("gauss_PU_FAIL","gauss", dphiZjet ,gauss_mean_PU_FAIL,gauss_sigma_PU_FAIL) 
     # tmpxg_PU_FAIL       = ROOT.RooFFTConvPdf("tmpxg_PU_FAIL","template x gauss" ,dphiZjet, pdf_template_PU_FAIL , gauss_PU_FAIL)
     #
@@ -184,10 +188,10 @@ def MakeDPhiFit(
     #
     # Now convert them to PDF:
     #
-    pdf_template_SIG_PASS_badbalance = ROOT.RooHistPdf("pdf_template_SIG_PASS_badbalance", "pdf_template_SIG_PASS_badbalance", ROOT.RooArgSet(dphiZjet),dh_template_SIG_PASS_badbalance)
-    pdf_template_SIG_FAIL_badbalance = ROOT.RooHistPdf("pdf_template_SIG_FAIL_badbalance", "pdf_template_SIG_FAIL_badbalance", ROOT.RooArgSet(dphiZjet),dh_template_SIG_FAIL_badbalance)
-    pdf_template_PU_PASS_badbalance  = ROOT.RooHistPdf("pdf_template_PU_PASS_badbalance", "pdf_template_PU_PASS_badbalance",  ROOT.RooArgSet(dphiZjet),dh_template_PU_PASS_badbalance)
-    pdf_template_PU_FAIL_badbalance  = ROOT.RooHistPdf("pdf_template_PU_FAIL_badbalance", "pdf_template_PU_FAIL_badbalance",  ROOT.RooArgSet(dphiZjet),dh_template_PU_FAIL_badbalance)
+    pdf_template_SIG_PASS_badbalance = ROOT.RooHistPdf("pdf_template_SIG_PASS_badbalance", "pdf_template_SIG_PASS_badbalance", ROOT.RooArgSet(dphiZjet),dh_template_SIG_PASS_badbalance, 1)
+    pdf_template_SIG_FAIL_badbalance = ROOT.RooHistPdf("pdf_template_SIG_FAIL_badbalance", "pdf_template_SIG_FAIL_badbalance", ROOT.RooArgSet(dphiZjet),dh_template_SIG_FAIL_badbalance, 1)
+    pdf_template_PU_PASS_badbalance  = ROOT.RooHistPdf("pdf_template_PU_PASS_badbalance", "pdf_template_PU_PASS_badbalance",  ROOT.RooArgSet(dphiZjet),dh_template_PU_PASS_badbalance, 1)
+    pdf_template_PU_FAIL_badbalance  = ROOT.RooHistPdf("pdf_template_PU_FAIL_badbalance", "pdf_template_PU_FAIL_badbalance",  ROOT.RooArgSet(dphiZjet),dh_template_PU_FAIL_badbalance, 1)
     #
     #The PU template is taken to be a flat (pol0) distribution   
     #
@@ -198,12 +202,12 @@ def MakeDPhiFit(
     #
     # PASS
     gauss_mean_PASS_badbalance  = ROOT.RooRealVar("mean_PASS_badbalance","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_badbalance = ROOT.RooRealVar("sigma_PASS_badbalance","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_PASS_badbalance = ROOT.RooRealVar("sigma_PASS_badbalance","sigma gauss",0.03,0.015,0.12)
     gauss_PASS_badbalance       = ROOT.RooGaussian("gauss_PASS_badbalance","gauss", dphiZjet ,gauss_mean_PASS_badbalance,gauss_sigma_PASS_badbalance)
     tmpxg_SIG_PASS_badbalance   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_badbalance","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_badbalance , gauss_PASS_badbalance)
     # FAIL
     gauss_mean_FAIL_badbalance  = ROOT.RooRealVar("mean_FAIL_badbalance","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_badbalance = ROOT.RooRealVar("sigma_FAIL_badbalance","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_FAIL_badbalance = ROOT.RooRealVar("sigma_FAIL_badbalance","sigma gauss",0.03,0.015,0.12)
     gauss_FAIL_badbalance       = ROOT.RooGaussian("gauss_FAIL_badbalance","gauss", dphiZjet ,gauss_mean_FAIL_badbalance,gauss_sigma_FAIL_badbalance)
     tmpxg_SIG_FAIL_badbalance   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_badbalance","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_badbalance , gauss_FAIL_badbalance)
     #
@@ -212,12 +216,12 @@ def MakeDPhiFit(
     #
     # PASS
     # gauss_mean_PU_PASS_badbalance  = ROOT.RooRealVar("mean_PU_PASS_badbalance","mean",0,-0.05,0.05)
-    # gauss_sigma_PU_PASS_badbalance = ROOT.RooRealVar("sigma_PU_PASS_badbalance","sigma gauss",0.02,0.001,0.2)
+    # gauss_sigma_PU_PASS_badbalance = ROOT.RooRealVar("sigma_PU_PASS_badbalance","sigma gauss",0.03,0.015,0.12)
     # gauss_PU_PASS_badbalance       = ROOT.RooGaussian("gauss_PU_PASS_badbalance","gauss", dphiZjet ,gauss_mean_PU_PASS_badbalance,gauss_sigma_PU_PASS_badbalance) 
     # tmpxg_PU_PASS_badbalance       = ROOT.RooFFTConvPdf("tmpxg_PU_PASS_badbalance","template x gauss" ,dphiZjet, pdf_template_PU_PASS_badbalance , gauss_PU_PASS_badbalance)
     # # FAIL
     # gauss_mean_PU_FAIL  = ROOT.RooRealVar("mean_PU_FAIL_badbalance","mean",0,-0.05,0.05)
-    # gauss_sigma_PU_FAIL = ROOT.RooRealVar("sigma_PU_FAIL_badbalance","sigma gauss",0.02,0.001,0.2)
+    # gauss_sigma_PU_FAIL = ROOT.RooRealVar("sigma_PU_FAIL_badbalance","sigma gauss",0.03,0.015,0.12)
     # gauss_PU_FAIL       = ROOT.RooGaussian("gauss_PU_FAIL_badbalance","gauss", dphiZjet ,gauss_mean_PU_FAIL_badbalance, gauss_sigma_PU_FAIL_badbalance) 
     # tmpxg_PU_FAIL       = ROOT.RooFFTConvPdf("tmpxg_PU_FAIL_badbalance","template x gauss" ,dphiZjet, pdf_template_PU_FAIL_badbalance, gauss_PU_FAIL_badbalance)
     #
@@ -523,13 +527,21 @@ def main():
         if useNLO:    mc_filename   = inputDir+"/Histo_MCUL16_DY_AMCNLO.root"
         # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL16_DY_MG_HW.root"
         if usePowheg: mc_filename   = inputDir+"/Histo_MCUL16_DYToMuMu_PHG.root"
+    
+    data_filename = data_filename.replace(".root","_Mu.root")
+    useINCL = False
+    if useINCL:
+        mc_filename = mc_filename.replace("_AMCNLO","_AMCNLO_INCL_Mu")
+    else:
+        mc_filename = mc_filename.replace("_AMCNLO","_AMCNLO_Mu")
 
+    
 
     if syst != "":
         if  useHerwig or usePowheg:
             raise Exception("Can't specify systematics for Herwig/Powheg samples. Only LO and NLO samples.")
         else:
-            mc_filename = mc_filename.replace(".root","_"+syst+".root")
+            mc_filename = mc_filename.replace("_Mu","_"+syst+"_Mu")
 
     ROOT.gStyle.SetOptStat(0)
     ROOT.gStyle.SetMarkerSize(0.5)
@@ -657,7 +669,7 @@ def main():
     iBinTotal = len(_pt) * len(_eta)
     
     binningStr = "_probeJet_dilep_dphi_norm"
-    binningStr = "_probeJet_dilep_dphi_m1_abs"
+    #binningStr = "_probeJet_dilep_dphi_m1_abs"
     for i in range(0,len(_pt)):
         for j in range(0,len(_eta)):
             ptBinStr  = "_pt"+_pt[i]
@@ -957,7 +969,7 @@ def main():
     hmistaggensf.SetMinimum(0.0)
     hmistaggensf.SetMarkerSize(textsize)
     hmistaggensf.Draw("colztexterr")
-    c8.SaveAs(os.path.join(outputDir, "h2_mistaggen_sf"+year+"_"+wpShort+".pdf"))
+    c12.SaveAs(os.path.join(outputDir, "h2_mistaggen_sf"+year+"_"+wpShort+".pdf"))
     if printPNG: c8.SaveAs(os.path.join(outputDir, "h2_mistaggen_sf"+year+"_"+wpShort+".png"))
     hmistaggensf.SetName("h2_mistaggen_sf"+year+"_"+wpShort)
     hmistaggensf.SaveAs(os.path.join(outputDir, "h2_mistaggen_sf"+year+"_"+wpShort+".root"))
