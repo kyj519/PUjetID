@@ -12,7 +12,7 @@ import SampleListUL
 import datetime
 
 ROOT.gROOT.SetBatch()
-ROOT.gROOT.LoadMacro("/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/Helpers.h")
+ROOT.gROOT.LoadMacro("/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Analyzer/Helpers.h")
 
 def main(sample_name):
 
