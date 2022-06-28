@@ -225,9 +225,9 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
   df = df.Define("probeJet_pt",             probeJetStr+"_pt")
   df = df.Define("probeJet_jer_corr", probeJetStr+"_jer_CORR")
   if systStr == 'noJER':
-    df = df.Define("probeJet_pt_undoJER",             "probrJet_pt")
+    df = df.Define("probeJet_pt_undoJER",             "probeJet_pt")
   else:
-    df = df.Define("probeJet_pt_undoJER",             "probrJet_pt/probeJet_jer_corr")
+    df = df.Define("probeJet_pt_undoJER",             "probeJet_pt/probeJet_jer_corr")
   df = df.Define("probeJet_eta",            probeJetStr+"_eta")
   df = df.Define("probeJet_abseta",         "fabs("+probeJetStr+"_eta)")
   df = df.Define("probeJet_phi",            probeJetStr+"_phi")
