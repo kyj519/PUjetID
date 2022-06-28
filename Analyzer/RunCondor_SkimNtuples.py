@@ -21,7 +21,7 @@ Samplelist = ["DataUL17B_DoubleMuon",
  "MCUL18_DY_AMCNLO_1J","MCUL16_DY_AMCNLO_1J","MCUL17_DY_AMCNLO_1J","MCUL16APV_DY_AMCNLO_1J",
  "MCUL18_DY_AMCNLO_2J","MCUL16_DY_AMCNLO_2J","MCUL17_DY_AMCNLO_2J","MCUL16APV_DY_AMCNLO_2J"]
 
-Samplelist = ["DataUL18A_EGamma",
+Samplelist.extend(["DataUL18A_EGamma",
 "DataUL18B_EGamma",
 "DataUL18C_EGamma",
 "DataUL18D_EGamma",
@@ -37,17 +37,22 @@ Samplelist = ["DataUL18A_EGamma",
 "DataUL16APVC_DoubleEG",
 "DataUL16APVD_DoubleEG",
 "DataUL16APVE_DoubleEG",
-"DataUL16APVF_DoubleEG"]
+"DataUL16APVF_DoubleEG"])
 
-condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/condor/"
+condor_dir = os.path.realpath("./")
+condor_dir = condor_dir + "/condor_skim/"
+if not os.path.isdir(condor_dir):
+    os.makedirs(condor_dir+"job")
+    os.makedirs(condor_dir+"log")
 njobs = 0
 os.system('rm -rf '+condor_dir+'job/*')
 os.system('rm -rf '+condor_dir+'log/*')
-ncores = 20
+ncores = 4
 for sample in Samplelist:
 	f = open(condor_dir+"job/job_"+sample+".sh","w+")
 	f.write("#!/bin/bash\n")
 	f.write('source %s../RunCondor_SkimNtuples.sh %s %d' % (condor_dir,sample,ncores))
+	mem = 8192
 
 	os.system("chmod 755 "+condor_dir+"job/job_"+sample+".sh")
 	f.close()
@@ -59,9 +64,10 @@ for sample in Samplelist:
 	"getenv":"True",
 	"should_transfer_files":"YES",
 	"when_to_transfer_output" : "ON_EXIT",
-	"RequestMemory":8192*2,
+	"RequestMemory": mem,
 	"output": condor_dir+"log/"+sample+".log",
-	"error" : condor_dir+"log/"+sample+".err"}
+	"error" : condor_dir+"log/"+sample+".err",
+ 	"concurrency_limits" : 'n200.yeonjoon'}
 	sub = htcondor.Submit(submit_dic)
 	schedd = htcondor.Schedd()         
 	submit_result = schedd.submit(sub)  

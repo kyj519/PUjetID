@@ -4,7 +4,6 @@ Eras = ['UL2018','UL2017','UL2016','UL2016APV']
 orders = ['NLO']
 workingPoints = ['Loose','Medium',"Tight"]
 systs = ['central', 'jesTotalUp', 'jesTotalDown', 'noJER', 'jerUp', 'jerDown']
-systs = ['central']
 runkeys = [era+" "+order+" "+wp+" "+syst for syst in systs for wp in workingPoints for order in orders for era in Eras]
 condor_dir = "/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Fitter/condor/"
 njobs = 0
@@ -32,7 +31,7 @@ for runkey in runkeys:
 		"when_to_transfer_output" : "ON_EXIT",
 		"output": condor_dir+"log/"+runkey.replace(" ","_")+"_"+n+".log",
 		"error" : condor_dir+"log/"+runkey.replace(" ","_")+"_"+n+".err",
-  		"concurrency_limits" : "n100.yeonjoon"}
+  		"concurrency_limits" : "n200.yeonjoon"}
 
 		sub = htcondor.Submit(submit_dic)
 		schedd = htcondor.Schedd()         
