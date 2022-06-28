@@ -110,11 +110,11 @@ absEtaBinsStr.append("abseta3p0To5p0")
 #
 dphiBinsN = 100
 dphiBinSize = 0.02
-dphiBins =[round(x*dphiBinSize, 2) for x in xrange(0,dphiBinsN+1)]
+dphiBins =[round((x)*dphiBinSize, 2) for x in range(0,dphiBinsN+1)]
 dphiBinsArray = array.array('d',dphiBins)
 dphiBinsN = len(dphiBins)-1
 
-absdphim1BinsN = dphiBinsN/2
+absdphim1BinsN = 50 
 absdphim1BinsSize = dphiBinSize
 absdphim1Bins = [round(x*absdphim1BinsSize, 2) for x in xrange(0,absdphim1BinsN+1)]
 absdphim1BinsArray = array.array("d", absdphim1Bins)
@@ -223,6 +223,11 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
   df = df.Define("rho", "fixedGridRhoFastjetAll")
   probeJetStr=systStrPre+"jetSel0"
   df = df.Define("probeJet_pt",             probeJetStr+"_pt")
+  df = df.Define("probeJet_jer_corr", probeJetStr+"_jer_CORR")
+  if systStr == 'noJER':
+    df = df.Define("probeJet_pt_undoJER",             "probrJet_pt")
+  else:
+    df = df.Define("probeJet_pt_undoJER",             "probrJet_pt/probeJet_jer_corr")
   df = df.Define("probeJet_eta",            probeJetStr+"_eta")
   df = df.Define("probeJet_abseta",         "fabs("+probeJetStr+"_eta)")
   df = df.Define("probeJet_phi",            probeJetStr+"_phi")
@@ -302,10 +307,15 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
   #
   #df = df.Define("probeJet_ptbalance_good","(probeJet_dilep_ptbalance>=0.5) && (probeJet_dilep_ptbalance<1.5)")
   #df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance<0.5")
-  print("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<= %.1f * probeJet_jer_from_pt" % balanceN) 
-  df = df.Define("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<= %.1f * probeJet_jer_from_pt" % balanceN )
-  df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance_anomaly>= %.1f * probeJet_jer_from_pt" % balanceN)
-
+  if balanceN == -999.:
+    print("POG balance")
+    df = df.Define("probeJet_ptbalance_good","(probeJet_dilep_ptbalance<=1.5)&&(probeJet_dilep_ptbalance>=0.5)" )
+    df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance<=0.5")
+  else:
+    df = df.Define("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<= %.1f * probeJet_jer_from_pt" % balanceN )
+    df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance_anomaly>= %.1f * probeJet_jer_from_pt" % balanceN)
+    
+  
   #############################################
   #
   # Define Filters
@@ -384,15 +394,15 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
   for cutLevel in cutLevels:
     histoNameFinal  = "h3_%s_probeJet_pt_eta_dilep_dphi_norm%s" %(cutLevel,systStrPost)
     histoInfo = ROOT.RDF.TH3DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, dphiBinsN, dphiBinsArray)
-    Histograms3D[histoNameFinal] = df_filters[cutLevel].Histo3D(histoInfo, "probeJet_pt","probeJet_eta","probeJet_dilep_dphi_norm", weightName)
+    Histograms3D[histoNameFinal] = df_filters[cutLevel].Histo3D(histoInfo, "probeJet_pt_undoJER","probeJet_eta","probeJet_dilep_dphi_norm", weightName)
 
     histoNameFinal_absBin = "h3_%s_probeJet_pt_eta_dilep_dphi_m1_abs%s" %(cutLevel,systStrPost)
     histoInfo_absBin = ROOT.RDF.TH3DModel(histoNameFinal_absBin, histoNameFinal_absBin, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, absdphim1BinsN, absdphim1BinsArray)
-    Histograms3D[histoNameFinal_absBin] = df_filters[cutLevel].Histo3D(histoInfo_absBin, "probeJet_pt","probeJet_eta","probeJet_dilep_dphi_m1_abs", weightName)
+    Histograms3D[histoNameFinal_absBin] = df_filters[cutLevel].Histo3D(histoInfo_absBin, "probeJet_pt_undoJER","probeJet_eta","probeJet_dilep_dphi_m1_abs", weightName)
  
     histoNameFinal  = "h3_%s_probeJet_pt_eta_dilep_dphiVarBin_norm%s" %(cutLevel,systStrPost)
     histoInfo = ROOT.RDF.TH3DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, dphiVarBinsN, dphiVarBinsArray)
-    Histograms3D[histoNameFinal] = df_filters[cutLevel].Histo3D(histoInfo, "probeJet_pt","probeJet_eta","probeJet_dilep_dphi_norm", weightName_varBin)
+    Histograms3D[histoNameFinal] = df_filters[cutLevel].Histo3D(histoInfo, "probeJet_pt_undoJER","probeJet_eta","probeJet_dilep_dphi_norm", weightName_varBin)
   #
   # absEtaBins
   #
@@ -434,7 +444,7 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
   for cutLevel in cutLevels:
     histoNameFinal  = "h2_%s_probeJet_pt_eta_count%s" %(cutLevel,systStrPost)
     histoInfo = ROOT.RDF.TH2DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray)
-    Histograms2D[histoNameFinal] = df_filters[cutLevel].Histo2D(histoInfo, "probeJet_pt","probeJet_eta", weightName)
+    Histograms2D[histoNameFinal] = df_filters[cutLevel].Histo2D(histoInfo, "probeJet_pt_undoJER","probeJet_eta", weightName)
 
   print("Number of 2D histos: %s " %len(Histograms2D))
   #####################################################
@@ -445,15 +455,15 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
   if isMC:
     histoNameFinal  = "h3_%s_probeJet_pt_eta_closestgen_dR%s" %("passNJetSel",systStrPost)
     histoInfo = ROOT.RDF.TH3DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, deltaRBinsN, deltaRBinsArray)
-    Histograms3D[histoNameFinal] = df_filters["passNJetSel"].Histo3D(histoInfo, "probeJet_pt","probeJet_eta","probeJet_closestgen_dR", weightName)
+    Histograms3D[histoNameFinal] = df_filters["passNJetSel"].Histo3D(histoInfo, "probeJet_pt_undoJER","probeJet_eta","probeJet_closestgen_dR", weightName)
     #
     histoNameFinal  = "h3_%s_probeJet_pt_eta_gen_dR%s" %("passNJetSel",systStrPost)
     histoInfo = ROOT.RDF.TH3DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, deltaRBinsN, deltaRBinsArray)
-    Histograms3D[histoNameFinal] = df_filters["passNJetSel"].Histo3D(histoInfo, "probeJet_pt","probeJet_eta","probeJet_gen_dR", weightName)
+    Histograms3D[histoNameFinal] = df_filters["passNJetSel"].Histo3D(histoInfo, "probeJet_pt_undoJER","probeJet_eta","probeJet_gen_dR", weightName)
     #
     histoNameFinal  = "h2_%s_probeJet_pt_closestgen_dR%s" %("passNJetSel",systStrPost)
     histoInfo = ROOT.RDF.TH2DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, deltaRBinsN, deltaRBinsArray)
-    Histograms2D[histoNameFinal] = df_filters["passNJetSel"].Histo2D(histoInfo, "probeJet_pt","probeJet_closestgen_dR", weightName)
+    Histograms2D[histoNameFinal] = df_filters["passNJetSel"].Histo2D(histoInfo, "probeJet_pt_undoJER","probeJet_closestgen_dR", weightName)
 
   ##############################################
   #
@@ -522,9 +532,9 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
   #
   # Create directory for output
   # 
-  outDir = SampleListUL.EOSDIR+"/result_his/"+ ("N%.1f" % balanceN).replace(".","p")+"/"
+  outDir = SampleListUL.EOSDIR+"result_his/"+ ("N%.1f" % balanceN).replace(".","p")+"/"
   if not(os.path.isdir(outDir)):
-    os.mkdir(outDir)
+    os.makedirs(outDir)
 
   # Open a new ROOT file to store TH1
   if isMuCh:
