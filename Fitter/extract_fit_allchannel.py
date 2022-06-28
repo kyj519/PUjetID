@@ -163,23 +163,23 @@ def MakeDPhiFit(
     #
     # PASS
     gauss_mean_PASS_Mu  = ROOT.RooRealVar("mean_PASS_Mu","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_Mu = ROOT.RooRealVar("sigma_PASS_Mu","sigma gauss",0.03,0.015,0.12)
+    gauss_sigma_PASS_Mu = ROOT.RooRealVar("sigma_PASS_Mu","sigma gauss",0.03,0.02,0.12)
     gauss_PASS_Mu       = ROOT.RooGaussian("gauss_PASS_Mu","gauss", dphiZjet ,gauss_mean_PASS_Mu,gauss_sigma_PASS_Mu) 
     tmpxg_SIG_PASS_Mu   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_Mu","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_Mu , gauss_PASS_Mu)
 
     gauss_mean_PASS_El  = ROOT.RooRealVar("mean_PASS_El","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_El = ROOT.RooRealVar("sigma_PASS_El","sigma gauss",0.03,0.015,0.12)
+    gauss_sigma_PASS_El = ROOT.RooRealVar("sigma_PASS_El","sigma gauss",0.03,0.02,0.12)
     gauss_PASS_El       = ROOT.RooGaussian("gauss_PASS_El","gauss", dphiZjet ,gauss_mean_PASS_El,gauss_sigma_PASS_El) 
     tmpxg_SIG_PASS_El   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_El","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_El , gauss_PASS_El)
     # FAIL
     gauss_mean_FAIL_Mu  = ROOT.RooRealVar("mean_FAIL_Mu","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_Mu = ROOT.RooRealVar("sigma_FAIL_Mu","sigma gauss",0.03,0.015,0.12)
+    gauss_sigma_FAIL_Mu = ROOT.RooRealVar("sigma_FAIL_Mu","sigma gauss",0.03,0.02,0.12)
     gauss_FAIL_Mu       = ROOT.RooGaussian("gauss_FAIL_Mu","gauss", dphiZjet ,gauss_mean_FAIL_Mu,gauss_sigma_FAIL_Mu) 
     tmpxg_SIG_FAIL_Mu   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_Mu","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_Mu , gauss_FAIL_Mu)
 
 
     gauss_mean_FAIL_El  = ROOT.RooRealVar("mean_FAIL_El","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_El = ROOT.RooRealVar("sigma_FAIL_El","sigma gauss",0.03,0.015,0.12)
+    gauss_sigma_FAIL_El = ROOT.RooRealVar("sigma_FAIL_El","sigma gauss",0.03,0.02,0.12)
     gauss_FAIL_El       = ROOT.RooGaussian("gauss_FAIL_El","gauss", dphiZjet ,gauss_mean_FAIL_El,gauss_sigma_FAIL_El) 
     tmpxg_SIG_FAIL_El   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_El","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_El , gauss_FAIL_El)
     #
@@ -188,12 +188,12 @@ def MakeDPhiFit(
     #
     # PASS
     # gauss_mean_PU_PASS  = ROOT.RooRealVar("mean_PU_PASS","mean",0,-0.05,0.05)
-    # gauss_sigma_PU_PASS = ROOT.RooRealVar("sigma_PU_PASS","sigma gauss",0.03,0.015,0.12)
+    # gauss_sigma_PU_PASS = ROOT.RooRealVar("sigma_PU_PASS","sigma gauss",0.03,0.02,0.12)
     # gauss_PU_PASS       = ROOT.RooGaussian("gauss_PU_PASS","gauss", dphiZjet ,gauss_mean_PU_PASS,gauss_sigma_PU_PASS) 
     # tmpxg_PU_PASS       = ROOT.RooFFTConvPdf("tmpxg_PU_PASS","template x gauss" ,dphiZjet, pdf_template_PU_PASS , gauss_PU_PASS)
     # # FAIL
     # gauss_mean_PU_FAIL  = ROOT.RooRealVar("mean_PU_FAIL","mean",0,-0.05,0.05)
-    # gauss_sigma_PU_FAIL = ROOT.RooRealVar("sigma_PU_FAIL","sigma gauss",0.03,0.015,0.12)
+    # gauss_sigma_PU_FAIL = ROOT.RooRealVar("sigma_PU_FAIL","sigma gauss",0.03,0.02,0.12)
     # gauss_PU_FAIL       = ROOT.RooGaussian("gauss_PU_FAIL","gauss", dphiZjet ,gauss_mean_PU_FAIL,gauss_sigma_PU_FAIL) 
     # tmpxg_PU_FAIL       = ROOT.RooFFTConvPdf("tmpxg_PU_FAIL","template x gauss" ,dphiZjet, pdf_template_PU_FAIL , gauss_PU_FAIL)
     #
@@ -286,22 +286,22 @@ def MakeDPhiFit(
     #
     # PASS
     gauss_mean_PASS_badbalance_Mu  = ROOT.RooRealVar("mean_PASS_badbalance_Mu","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_badbalance_Mu = ROOT.RooRealVar("sigma_PASS_badbalance_Mu","sigma gauss",0.03,0.015,0.12)
+    gauss_sigma_PASS_badbalance_Mu = ROOT.RooRealVar("sigma_PASS_badbalance_Mu","sigma gauss",0.03,0.02,0.12)
     gauss_PASS_badbalance_Mu       = ROOT.RooGaussian("gauss_PASS_badbalance_Mu","gauss", dphiZjet ,gauss_mean_PASS_badbalance_Mu,gauss_sigma_PASS_badbalance_Mu)
     tmpxg_SIG_PASS_badbalance_Mu   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_badbalance_Mu","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_badbalance_Mu , gauss_PASS_badbalance_Mu)
 
     gauss_mean_PASS_badbalance_El  = ROOT.RooRealVar("mean_PASS_badbalance_El","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_badbalance_El = ROOT.RooRealVar("sigma_PASS_badbalance_El","sigma gauss",0.03,0.015,0.12)
+    gauss_sigma_PASS_badbalance_El = ROOT.RooRealVar("sigma_PASS_badbalance_El","sigma gauss",0.03,0.02,0.12)
     gauss_PASS_badbalance_El       = ROOT.RooGaussian("gauss_PASS_badbalance_El","gauss", dphiZjet ,gauss_mean_PASS_badbalance_El,gauss_sigma_PASS_badbalance_El)
     tmpxg_SIG_PASS_badbalance_El   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_badbalance_El","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_badbalance_El , gauss_PASS_badbalance_El)
     # FAIL
     gauss_mean_FAIL_badbalance_Mu  = ROOT.RooRealVar("mean_FAIL_badbalance_Mu","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_badbalance_Mu = ROOT.RooRealVar("sigma_FAIL_badbalance_Mu","sigma gauss",0.03,0.015,0.12)
+    gauss_sigma_FAIL_badbalance_Mu = ROOT.RooRealVar("sigma_FAIL_badbalance_Mu","sigma gauss",0.03,0.02,0.12)
     gauss_FAIL_badbalance_Mu       = ROOT.RooGaussian("gauss_FAIL_badbalance_Mu","gauss", dphiZjet ,gauss_mean_FAIL_badbalance_Mu,gauss_sigma_FAIL_badbalance_Mu)
     tmpxg_SIG_FAIL_badbalance_Mu   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_badbalance_Mu","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_badbalance_Mu , gauss_FAIL_badbalance_Mu)
 
     gauss_mean_FAIL_badbalance_El  = ROOT.RooRealVar("mean_FAIL_badbalance_El","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_badbalance_El = ROOT.RooRealVar("sigma_FAIL_badbalance_El","sigma gauss",0.03,0.015,0.12)
+    gauss_sigma_FAIL_badbalance_El = ROOT.RooRealVar("sigma_FAIL_badbalance_El","sigma gauss",0.03,0.02,0.12)
     gauss_FAIL_badbalance_El       = ROOT.RooGaussian("gauss_FAIL_badbalance_El","gauss", dphiZjet ,gauss_mean_FAIL_badbalance_El,gauss_sigma_FAIL_badbalance_El)
     tmpxg_SIG_FAIL_badbalance_El   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_badbalance_El","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_badbalance_El , gauss_FAIL_badbalance_El)
     #
@@ -310,12 +310,12 @@ def MakeDPhiFit(
     #
     # PASS
     # gauss_mean_PU_PASS_badbalance  = ROOT.RooRealVar("mean_PU_PASS_badbalance","mean",0,-0.05,0.05)
-    # gauss_sigma_PU_PASS_badbalance = ROOT.RooRealVar("sigma_PU_PASS_badbalance","sigma gauss",0.03,0.015,0.12)
+    # gauss_sigma_PU_PASS_badbalance = ROOT.RooRealVar("sigma_PU_PASS_badbalance","sigma gauss",0.03,0.02,0.12)
     # gauss_PU_PASS_badbalance       = ROOT.RooGaussian("gauss_PU_PASS_badbalance","gauss", dphiZjet ,gauss_mean_PU_PASS_badbalance,gauss_sigma_PU_PASS_badbalance) 
     # tmpxg_PU_PASS_badbalance       = ROOT.RooFFTConvPdf("tmpxg_PU_PASS_badbalance","template x gauss" ,dphiZjet, pdf_template_PU_PASS_badbalance , gauss_PU_PASS_badbalance)
     # # FAIL
     # gauss_mean_PU_FAIL  = ROOT.RooRealVar("mean_PU_FAIL_badbalance","mean",0,-0.05,0.05)
-    # gauss_sigma_PU_FAIL = ROOT.RooRealVar("sigma_PU_FAIL_badbalance","sigma gauss",0.03,0.015,0.12)
+    # gauss_sigma_PU_FAIL = ROOT.RooRealVar("sigma_PU_FAIL_badbalance","sigma gauss",0.03,0.02,0.12)
     # gauss_PU_FAIL       = ROOT.RooGaussian("gauss_PU_FAIL_badbalance","gauss", dphiZjet ,gauss_mean_PU_FAIL_badbalance, gauss_sigma_PU_FAIL_badbalance) 
     # tmpxg_PU_FAIL       = ROOT.RooFFTConvPdf("tmpxg_PU_FAIL_badbalance","template x gauss" ,dphiZjet, pdf_template_PU_FAIL_badbalance, gauss_PU_FAIL_badbalance)
     #
