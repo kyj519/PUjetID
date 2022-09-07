@@ -26,7 +26,7 @@ getListOfHist         = lambda iFile, nameList: [ (name, iFile.Get(name)) for na
 
 # symmetrize bins if it has negatives
 def symmetrizeNegativeBins(hist):
-
+  print(hist.GetName())
   outHist = hist.Clone()
   harray = rnp.hist2array(outHist, copy=False, include_overflow=True).T.flat
   sumw2  = rnp.array(outHist.GetSumw2(), copy=False).flat

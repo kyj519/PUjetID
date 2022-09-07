@@ -39,7 +39,7 @@ Samplelist.extend(["DataUL18A_EGamma",
 "DataUL16APVD_DoubleEG",
 "DataUL16APVE_DoubleEG",
 "DataUL16APVF_DoubleEG"])
-Samplelist.extend(["MCUL18_DY_AMCNLO_INCL","MCUL17_DY_AMCNLO_INCL","MCUL16_DY_AMCNLO_INCL","MCUL16APV_DY_AMCNLO_INCL"])
+#Samplelist.extend(["MCUL18_DY_AMCNLO_INCL","MCUL17_DY_AMCNLO_INCL","MCUL16_DY_AMCNLO_INCL","MCUL16APV_DY_AMCNLO_INCL"])
 condor_dir = "/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Analyzer/condor_hist/"
 njobs = 0
 
@@ -47,67 +47,68 @@ os.system('rm -rf '+condor_dir+'job/*')
 os.system('rm -rf '+condor_dir+'log/*')
 
 def submitter(ncores, memory, fname, channel, N):
-	submit_dic = {"executable": fname,
-	"jobbatchname": "PUJets_"+sample,
-	#"jobbatchname": "PUJets_histo",	
-	"universe":"vanilla",
-	"request_cpus":ncores,
-	"log":condor_dir+"condor_log/"+sample+str(N).replace(".","p")+".log",
-	"RequestMemory": memory,
-	"getenv":"True",
-	"should_transfer_files":"YES",
-	"when_to_transfer_output" : "ON_EXIT",
-	"output": condor_dir+"log/"+sample+str(N).replace(".","p")+".log",
-	"error" : condor_dir+"log/"+sample+str(N).replace(".","p")+".err",
- 	"concurrency_limits" : 'n300.yeonjoon'
+    submit_dic = {"executable": fname,
+    "jobbatchname": "PUJets_"+sample,
+    #"jobbatchname": "PUJets_histo",	
+    "universe":"vanilla",
+    "request_cpus":ncores,
+    "log":condor_dir+"condor_log/"+sample+"_method_"+str(n)+".log",
+    "RequestMemory": memory,
+    "getenv":"True",
+    "should_transfer_files":"YES",
+    "when_to_transfer_output" : "ON_EXIT",
+    "output": condor_dir+"log/"+sample+"_method_"+str(n)+".log",
+    "error" : condor_dir+"log/"+sample+"_method_"+str(n)+".err",
+    "concurrency_limits" : 'n300.yeonjoon'
    }
-	sub = htcondor.Submit(submit_dic)
-	schedd = htcondor.Schedd()         
-	submit_result = schedd.submit(sub)
-nlist=[0.4+0.2*i for i in range(0,9)]
-nlist=[1.5,-999.]
-for n in nlist:
-	for sample in Samplelist:
-		fname = condor_dir+"job/job_"+sample+"_N"+str(n).replace(".","p")+".sh"
-		if 'DoubleMuon' in sample:
-			ncores = 4
-			memory = 4*1024
-			f = open(fname ,"w+")
-			f.write("#!/bin/bash\n")
-			f.write('source %s../RunCondor_MakeHistograms.sh %s %d %.1f %s' % (condor_dir,sample,ncores,n, 'Mu'))
-			os.system("chmod 755 "+fname)
-			f.close()
-			submitter(ncores,memory,fname,"Mu",n)
-		elif 'DoubleEG' in sample or 'EGamma' in sample:
-			ncores = 4
-			memory = 4*1024	
-			f = open(fname ,"w+")
-			f.write("#!/bin/bash\n")
-			f.write('source %s../RunCondor_MakeHistograms.sh %s %d %.1f %s' % (condor_dir,sample,ncores, n,'El'))
-			os.system("chmod 755 "+fname)
-			f.close()
-			submitter(ncores,memory,fname,"El",n)
+    sub = htcondor.Submit(submit_dic)
+    schedd = htcondor.Schedd()         
+    submit_result = schedd.submit(sub)
+    
+method_list = [0,1,2,3,4]
+ 
+for n in method_list:
+    for sample in Samplelist:
+        fname = condor_dir+"job/job_"+sample+"_method_"+str(n)+".sh"
+        if 'DoubleMuon' in sample:
+            ncores = 4
+            memory = 4*1024
+            f = open(fname ,"w+")
+            f.write("#!/bin/bash\n")
+            f.write('source %s../RunCondor_MakeHistograms.sh %s %d %s %s' % (condor_dir,sample,ncores,n, 'Mu'))
+            os.system("chmod 755 "+fname)
+            f.close()
+            submitter(ncores,memory,fname,"Mu",n)
+        elif 'DoubleEG' in sample or 'EGamma' in sample:
+            ncores = 4
+            memory = 4*1024	
+            f = open(fname ,"w+")
+            f.write("#!/bin/bash\n")
+            f.write('source %s../RunCondor_MakeHistograms.sh %s %d %s %s' % (condor_dir,sample,ncores, n,'El'))
+            os.system("chmod 755 "+fname)
+            f.close()
+            submitter(ncores,memory,fname,"El",n)
 
-		elif 'MCUL' in sample:
-			f = open(fname.replace(".sh","_El.sh") ,"w+")
-			f.write("#!/bin/bash\n")
-			ncores = 8
-			memory = 8*1024
-			f.write('source %s../RunCondor_MakeHistograms.sh %s %d %.1f %s' % (condor_dir,sample,ncores, n,'El'))
-			os.system("chmod 755 "+fname.replace(".sh","_El.sh"))
-			f.close()
-			submitter(ncores,memory,fname.replace(".sh","_El.sh"),"El",n)
+        elif 'MCUL' in sample:
+            f = open(fname.replace(".sh","_El.sh") ,"w+")
+            f.write("#!/bin/bash\n")
+            ncores = 8
+            memory = 8*1024
+            f.write('source %s../RunCondor_MakeHistograms.sh %s %d %s %s' % (condor_dir,sample,ncores, n,'El'))
+            os.system("chmod 755 "+fname.replace(".sh","_El.sh"))
+            f.close()
+            submitter(ncores,memory,fname.replace(".sh","_El.sh"),"El",n)
 
-			f = open(fname.replace(".sh","_Mu.sh") ,"w+")
-			f.write("#!/bin/bash\n")
-			ncores = 8
-			memory = 8*1024
-			f.write('source %s../RunCondor_MakeHistograms.sh %s %d %.1f %s' % (condor_dir,sample,ncores, n, 'Mu'))
-			os.system("chmod 755 "+fname.replace(".sh","_Mu.sh"))
-			f.close()
-			submitter(ncores,memory,fname.replace(".sh","_Mu.sh"),"Mu",n)
+            f = open(fname.replace(".sh","_Mu.sh") ,"w+")
+            f.write("#!/bin/bash\n")
+            ncores = 8
+            memory = 8*1024
+            f.write('source %s../RunCondor_MakeHistograms.sh %s %d %s %s' % (condor_dir,sample,ncores, n, 'Mu'))
+            os.system("chmod 755 "+fname.replace(".sh","_Mu.sh"))
+            f.close()
+            submitter(ncores,memory,fname.replace(".sh","_Mu.sh"),"Mu",n)
 
   
-	
+    
 
 

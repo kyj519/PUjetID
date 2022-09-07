@@ -12,9 +12,6 @@ for subfolder in subfolder_list:
 	jobname = condor_dir+"job/"+subfolder+".sh"
 	f = open(jobname,"w+")
 	f.write("#!/bin/bash\n")
-	f.write("export X509_USER_PROXY=/u/user/yeonjoon/proxy.cert\n")
-	f.write("export LD_PRELOAD=/usr/lib64/libpdcap.so\n")
-	f.write("export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/dcap\n")
 	f.write('python %s --subfolder %s' % (python_hadd_path, subfolder))
 	f.close()
 	os.system('chmod 755 %s' % jobname)
