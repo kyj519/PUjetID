@@ -10,3 +10,8 @@ Analyzer/temp_hadd
 scratch.ipynb
 Analyzer/condor_*/
 Skimmer/filecheck/
+*.err
+*.log
+*.out
+*.png
+*.txt
