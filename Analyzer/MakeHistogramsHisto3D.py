@@ -136,7 +136,7 @@ dphiVarBinsN = len(dphiVarBinsArray)-1
 
 
 
-def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=False):
+def main(sample_name, useSkimNtuples, systStr, isMuCh,methodN,useNewTraining=False):
   isUL=False
   era = ""
   crabFiles   = []
@@ -182,7 +182,6 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
 
   # Read all files into RDataFrame
   df = ROOT.RDataFrame("Events", vec)
-  
   isMC = False
   if "MC" in sample_name:
     isMC = True
@@ -236,6 +235,11 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
   df = df.Define("probeJet_jer_from_pt", probeJetStr+"_jer_from_pt")
   df = df.Define("probeJet_jer_from_pt_nom", probeJetStr+"_jer_from_pt_nom")
   df = df.Define("probeJet_jer_from_pt_nano", probeJetStr+"_jer_from_pt_nano")
+  df = df.Define("probeJet_bestN", probeJetStr+"_bestN")
+  df = df.Define("probeJet_bestN_up", probeJetStr+"_bestN_up")
+  df = df.Define("probeJet_bestN_down", probeJetStr+"_bestN_down")
+  df = df.Define("probeJet_bestN_up_const", probeJetStr+"_bestN_up_const")
+  df = df.Define("probeJet_bestN_down_const", probeJetStr+"_bestN_down_const")
 
   #
   # Guide on how to read the pileup ID bitmap variable: 
@@ -264,14 +268,15 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
 
   
   df = df.Define("probeJet_dilep_dphi_norm","DeltaPhiNorm(probeJet_dilep_dphi)")
-  df = df.Define("probeJet_dilep_dphi_m1_abs","fabs(probeJet_dilep_dphi_norm-1)")
+  #df = df.Define("probeJet_dilep_dphi_m1_abs","fabs(probeJet_dilep_dphi_norm-1)")
   df = df.Define("probeJet_dilep_ptbalance","dilep_pt/probeJet_pt")
+  df = df.Define("probeJet_dilep_ptbalance_undoJER","dilep_pt/probeJet_pt_undoJER")
   df = df.Define("probeJet_dilep_ptbalance_anomaly", "fabs(probeJet_dilep_ptbalance-1)")
   
   
   df = df.Define("binningWeight", getVarBinWeightFormula(varBinDict,"probeJet_dilep_dphi_norm"))
-  df = df.Define("evtWeight_varBin","evtWeight*binningWeight")
-  weightName_varBin = weightName+"_varBin"
+  #df = df.Define("evtWeight_varBin","evtWeight*binningWeight")
+  #weightName_varBin = weightName+"_varBin"
   #
   # Define pileup ID cuts
   #
@@ -307,20 +312,32 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
   #
   #df = df.Define("probeJet_ptbalance_good","(probeJet_dilep_ptbalance>=0.5) && (probeJet_dilep_ptbalance<1.5)")
   #df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance<0.5")
-  if balanceN == -999.:
+  if methodN == 0:
+    print("method 0: POG p5 default")
     print("POG balance")
     df = df.Define("probeJet_ptbalance_good","(probeJet_dilep_ptbalance<=1.5)&&(probeJet_dilep_ptbalance>=0.5)" )
     df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance<=0.5")
-  else:
-    df = df.Define("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<= %.1f * probeJet_jer_from_pt" % balanceN )
-    df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance_anomaly>= %.1f * probeJet_jer_from_pt" % balanceN)
-    
-  
+  elif methodN == 1:
+    print("method 1: symmetric JER")
+    df = df.Define("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<= probeJet_bestN * probeJet_jer_from_pt"  )
+    df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance_anomaly>= probeJet_bestN * probeJet_jer_from_pt" )
+  elif methodN == 2:
+    print("method 2: asym JER")
+    df = df.Define('probeJet_ptbalance_good','(probeJet_dilep_ptbalance<(1+probeJet_bestN_up*probeJet_jer_from_pt))&&(probeJet_dilep_ptbalance>(1-probeJet_bestN_down*probeJet_jer_from_pt))')
+    df = df.Define('probeJet_ptbalance_bad','(probeJet_dilep_ptbalance>(1+probeJet_bestN_up*probeJet_jer_from_pt))||(probeJet_dilep_ptbalance<(1-probeJet_bestN_down*probeJet_jer_from_pt))')
+  elif methodN == 3:
+    print("method 3: asym const")
+    df = df.Define('probeJet_ptbalance_good','(probeJet_dilep_ptbalance<(1+probeJet_bestN_up_const))&&(probeJet_dilep_ptbalance>(1-probeJet_bestN_down_const))')
+    df = df.Define('probeJet_ptbalance_bad','(probeJet_dilep_ptbalance>(1+probeJet_bestN_up_const))||(probeJet_dilep_ptbalance<(1-probeJet_bestN_down_const))')
+  elif methodN == 4:
+    print("method 4: asym const, undoJER pt balance")
+    df = df.Define('probeJet_ptbalance_good','(probeJet_dilep_ptbalance_undoJER<(1+probeJet_bestN_up_const))&&(probeJet_dilep_ptbalance_undoJER>(1-probeJet_bestN_down_const))')
+    df = df.Define('probeJet_ptbalance_bad','(probeJet_dilep_ptbalance_undoJER>(1+probeJet_bestN_up_const))||(probeJet_dilep_ptbalance_undoJER<(1-probeJet_bestN_down_const))')
   #############################################
   #
   # Define Filters
   #
-  #############################################
+  #############################################d
   df_filters  = OrderedDict()
   if isMuCh:
     df_filters["passNJetSel"] = df.Filter("passOS").Filter(systStrPre+"passNJetSel").Filter("isMuMu") #Only muon channel at the moment
@@ -396,13 +413,13 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
     histoInfo = ROOT.RDF.TH3DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, dphiBinsN, dphiBinsArray)
     Histograms3D[histoNameFinal] = df_filters[cutLevel].Histo3D(histoInfo, "probeJet_pt_undoJER","probeJet_eta","probeJet_dilep_dphi_norm", weightName)
 
-    histoNameFinal_absBin = "h3_%s_probeJet_pt_eta_dilep_dphi_m1_abs%s" %(cutLevel,systStrPost)
-    histoInfo_absBin = ROOT.RDF.TH3DModel(histoNameFinal_absBin, histoNameFinal_absBin, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, absdphim1BinsN, absdphim1BinsArray)
-    Histograms3D[histoNameFinal_absBin] = df_filters[cutLevel].Histo3D(histoInfo_absBin, "probeJet_pt_undoJER","probeJet_eta","probeJet_dilep_dphi_m1_abs", weightName)
+    # histoNameFinal_absBin = "h3_%s_probeJet_pt_eta_dilep_dphi_m1_abs%s" %(cutLevel,systStrPost)
+    # histoInfo_absBin = ROOT.RDF.TH3DModel(histoNameFinal_absBin, histoNameFinal_absBin, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, absdphim1BinsN, absdphim1BinsArray)
+    # Histograms3D[histoNameFinal_absBin] = df_filters[cutLevel].Histo3D(histoInfo_absBin, "probeJet_pt_undoJER","probeJet_eta","probeJet_dilep_dphi_m1_abs", weightName)
  
-    histoNameFinal  = "h3_%s_probeJet_pt_eta_dilep_dphiVarBin_norm%s" %(cutLevel,systStrPost)
-    histoInfo = ROOT.RDF.TH3DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, dphiVarBinsN, dphiVarBinsArray)
-    Histograms3D[histoNameFinal] = df_filters[cutLevel].Histo3D(histoInfo, "probeJet_pt_undoJER","probeJet_eta","probeJet_dilep_dphi_norm", weightName_varBin)
+    # histoNameFinal  = "h3_%s_probeJet_pt_eta_dilep_dphiVarBin_norm%s" %(cutLevel,systStrPost)
+    # histoInfo = ROOT.RDF.TH3DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, dphiVarBinsN, dphiVarBinsArray)
+    # Histograms3D[histoNameFinal] = df_filters[cutLevel].Histo3D(histoInfo, "probeJet_pt_undoJER","probeJet_eta","probeJet_dilep_dphi_norm", weightName_varBin)
   #
   # absEtaBins
   #
@@ -518,10 +535,10 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
       Histograms = ProjectTH3(h3, Histograms, "closestgen_dR", systStrPost)
     elif "_gen_dR" in h3Name:
       Histograms = ProjectTH3(h3, Histograms, "gen_dR", systStrPost)
-    elif "_dilep_dphi_m1_abs" in h3Name:
-      Histograms = ProjectTH3(h3, Histograms, "dilep_dphi_m1_abs", systStrPost)
-    elif "dilep_dphiVarBin_norm" in h3Name:
-      Histograms = ProjectTH3(h3, Histograms, "dilep_dphiVarBin_norm", systStrPost) 
+    # elif "_dilep_dphi_m1_abs" in h3Name:
+    #   Histograms = ProjectTH3(h3, Histograms, "dilep_dphi_m1_abs", systStrPost)
+    # elif "dilep_dphiVarBin_norm" in h3Name:
+    #   Histograms = ProjectTH3(h3, Histograms, "dilep_dphiVarBin_norm", systStrPost) 
 
   print("Number of 1D histos: %s " %len(Histograms))
   ##############################################
@@ -532,7 +549,7 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
   #
   # Create directory for output
   # 
-  outDir = SampleListUL.EOSDIR+"result_his/"+ ("N%.1f" % balanceN).replace(".","p")+"/"
+  outDir = SampleListUL.EOSDIR+"result_his/"+ ("method%.0f" % methodN)+"/"
   if not(os.path.isdir(outDir)):
     os.makedirs(outDir)
 
@@ -570,13 +587,13 @@ if __name__== "__main__":
   parser = argparse.ArgumentParser("")
   parser.add_argument('--sample',         dest='sample',         type=str,  default="")
   parser.add_argument('--cores',          dest='cores',          type=int,  default=4)
-  parser.add_argument('--balanceN', dest= 'balanceN', type = float, default=2.0)
+  parser.add_argument('--methodN', dest= 'methodN', type = float, default=2.0)
   parser.add_argument('--Ch', dest='Ch', type=str, default='Mu')
   parser.add_argument('--useSkimNtuples', dest='useSkimNtuples', action='store_true')
   parser.add_argument('--useNewTraining', dest='useNewTraining', action='store_true')
-  
+
   args = parser.parse_args()
-  balanceN = args.balanceN
+  methodN = args.methodN
   if args.Ch == 'Mu':
     isMuCh = True
   elif args.Ch == 'El':
@@ -610,12 +627,12 @@ if __name__== "__main__":
   #
   # Do Nominal
   #
-  main(args.sample,args.useSkimNtuples,"",isMuCh,balanceN,args.useNewTraining)
+  main(args.sample,args.useSkimNtuples,"",isMuCh,methodN,args.useNewTraining)
   #
   # Do Systematics
   #
   for systStr in ak4Systematics:
-    main(args.sample,args.useSkimNtuples,systStr,isMuCh,balanceN,args.useNewTraining)
+    main(args.sample,args.useSkimNtuples,systStr,isMuCh,methodN,args.useNewTraining)
 
   
 

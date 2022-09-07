@@ -16,3 +16,4 @@ Skimmer/filecheck/
 *.png
 *.txt
 .vscode/settings.json
+*.root*
