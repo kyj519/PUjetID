@@ -460,7 +460,7 @@ def main():
     parser.add_argument("--useHerwig", default=False,        action='store_true')
     parser.add_argument("--usePowheg", default=False,        action='store_true')
     parser.add_argument("--syst",      dest="syst",          default="central", help="central,jerUp,jerDown,jesTotalUp,jesTotalDown", type=str)
-
+    parser.add_argument("--channel", dest="channel", default="Mu", type = str)
     args = parser.parse_args()    
     
     inputDir  = args.input
@@ -476,7 +476,7 @@ def main():
     print(useNLO)
     useHerwig = args.useHerwig
     usePowheg = args.usePowheg
-    
+    channel = args.channel
     if args.syst == "central":
         syst = ""
     else:
@@ -504,36 +504,48 @@ def main():
         if useNLO:    mc_filename   = inputDir+"/Histo_MC18_DY_AMCNLO.root"
         if useHerwig: mc_filename   = inputDir+"/Histo_MC18_DY_MG_HW.root"
     elif year == "UL2017":
-        data_filename = inputDir+"/Histo_DataUL17.root"
-        mc_filename   = inputDir+"/Histo_MCUL17_DY_MG.root"
-        if useNLO:    mc_filename   = inputDir+"/Histo_MCUL17_DY_AMCNLO.root"
+        data_filename_Mu = inputDir+"/Histo_DataUL17_Mu.root"
+        mc_filename_Mu  = inputDir+"/Histo_MCUL17_DY_MG_Mu.root"
+        if useNLO:    mc_filename_Mu   = inputDir+"/Histo_MCUL17_DY_AMCNLO_Mu.root"
+        data_filename_El = inputDir+"/Histo_DataUL17_El.root"
+        mc_filename_El   = inputDir+"/Histo_MCUL17_DY_MG_El.root"
+        if useNLO:    mc_filename_El   = inputDir+"/Histo_MCUL17_DY_AMCNLO_El.root"
         # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL17_DY_MG_HW.root"
         # if usePowheg: mc_filename   = inputDir+"/Histo_MCUL17_DYToMuMu_PHG.root"
     elif year == "UL2018":
-        data_filename = inputDir+"/Histo_DataUL18.root"
-        mc_filename   = inputDir+"/Histo_MCUL18_DY_MG.root"
-        if useNLO:    mc_filename   = inputDir+"/Histo_MCUL18_DY_AMCNLO.root"
+        data_filename_Mu = inputDir+"/Histo_DataUL18_Mu.root"
+        mc_filename_Mu   = inputDir+"/Histo_MCUL18_DY_MG_Mu.root"
+        if useNLO:    mc_filename_Mu   = inputDir+"/Histo_MCUL18_DY_AMCNLO_Mu.root"
+        # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL18_DY_MG_HW.root"
+        # if usePowheg: mc_filename   = inputDir+"/Histo_MCUL18_DYToMuMu_PHG.root"
+        data_filename_El = inputDir+"/Histo_DataUL18_El.root"
+        mc_filename_El  = inputDir+"/Histo_MCUL18_DY_MG_El.root"
+        if useNLO:    mc_filename_El = inputDir+"/Histo_MCUL18_DY_AMCNLO_El.root"
         # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL18_DY_MG_HW.root"
         # if usePowheg: mc_filename   = inputDir+"/Histo_MCUL18_DYToMuMu_PHG.root"
     elif year == "UL2016APV":
-        data_filename = inputDir+"/Histo_DataUL16APV.root"
-        mc_filename   = inputDir+"/Histo_MCUL16APV_DY_MG.root"
-        if useNLO:    mc_filename   = inputDir+"/Histo_MCUL16APV_DY_AMCNLO.root"
+        data_filename_Mu = inputDir+"/Histo_DataUL16APV_Mu.root"
+        mc_filename_Mu   = inputDir+"/Histo_MCUL16APV_DY_MG_Mu.root"
+        if useNLO:    mc_filename_Mu   = inputDir+"/Histo_MCUL16APV_DY_AMCNLO_Mu.root"
         # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL16APV_DY_MG_HW.root"
-        if usePowheg: mc_filename   = inputDir+"/Histo_MCUL16APV_DYToMuMu_PHG.root"
+        if usePowheg: mc_filename_Mu   = inputDir+"/Histo_MCUL16APV_DYToMuMu_PHG_Mu.root"
+        data_filename_El = inputDir+"/Histo_DataUL16APV_El.root"
+        mc_filename_El   = inputDir+"/Histo_MCUL16APV_DY_MG_El.root"
+        if useNLO:    mc_filename_El   = inputDir+"/Histo_MCUL16APV_DY_AMCNLO_El.root"
+        # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL16APV_DY_MG_HW.root"
+        if usePowheg: mc_filename_El   = inputDir+"/Histo_MCUL16APV_DYToMuMu_PHG_El.root"
     elif year == "UL2016":
-        data_filename = inputDir+"/Histo_DataUL16.root"
-        mc_filename   = inputDir+"/Histo_MCUL16_DY_MG.root"
-        if useNLO:    mc_filename   = inputDir+"/Histo_MCUL16_DY_AMCNLO.root"
+        data_filename_Mu = inputDir+"/Histo_DataUL16_Mu.root"
+        mc_filename_Mu   = inputDir+"/Histo_MCUL16_DY_MG_Mu.root"
+        if useNLO:    mc_filename_Mu   = inputDir+"/Histo_MCUL16_DY_AMCNLO_Mu.root"
         # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL16_DY_MG_HW.root"
-        if usePowheg: mc_filename   = inputDir+"/Histo_MCUL16_DYToMuMu_PHG.root"
-    
-    data_filename = data_filename.replace(".root","_Mu.root")
-    useINCL = False
-    if useINCL:
-        mc_filename = mc_filename.replace("_AMCNLO","_AMCNLO_INCL_Mu")
-    else:
-        mc_filename = mc_filename.replace("_AMCNLO","_AMCNLO_Mu")
+        if usePowheg: mc_filename_Mu   = inputDir+"/Histo_MCUL16_DYToMuMu_PHG_Mu.root"
+
+        data_filename_El = inputDir+"/Histo_DataUL16_El.root"
+        mc_filename_El   = inputDir+"/Histo_MCUL16_DY_MG_El.root"
+        if useNLO:    mc_filename_El   = inputDir+"/Histo_MCUL16_DY_AMCNLO_El.root"
+        # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL16_DY_MG_HW.root"
+        if usePowheg: mc_filename_El   = inputDir+"/Histo_MCUL16_DYToMuMu_PHG_El.root"
 
     
 
@@ -541,11 +553,19 @@ def main():
         if  useHerwig or usePowheg:
             raise Exception("Can't specify systematics for Herwig/Powheg samples. Only LO and NLO samples.")
         else:
-            mc_filename = mc_filename.replace("_Mu","_"+syst+"_Mu")
-
+            mc_filename_El = mc_filename_El.replace("_El.root","_"+syst+"_El.root")
+            mc_filename_Mu = mc_filename_Mu.replace("_Mu.root","_"+syst+"_Mu.root")
     ROOT.gStyle.SetOptStat(0)
     ROOT.gStyle.SetMarkerSize(0.5)
     # ROOT.gStyle.SetOptLogx()
+
+    if channel == 'Mu':
+        data_filename = data_filename_Mu
+        mc_filename = mc_filename_Mu
+    
+    elif channel == 'El':
+        data_filename = data_filename_El
+        mc_filename = mc_filename_El
 
     f_data = ROOT.TDCacheFile(data_filename,"READ")
     f_mc   = ROOT.TDCacheFile(mc_filename,  "READ")
