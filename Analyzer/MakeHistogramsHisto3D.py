@@ -222,11 +222,10 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,methodN,useNewTraining=Fal
   df = df.Define("rho", "fixedGridRhoFastjetAll")
   probeJetStr=systStrPre+"jetSel0"
   df = df.Define("probeJet_pt",             probeJetStr+"_pt")
-  df = df.Define("probeJet_jer_corr", probeJetStr+"_jer_CORR")
-  if systStr == 'noJER':
-    df = df.Define("probeJet_pt_undoJER",             "probeJet_pt")
+  if 'Data' in sample_name:
+    df = df.Define("probeJet_pt_undoJER",             probeJetStr+"_pt")
   else:
-    df = df.Define("probeJet_pt_undoJER",             "probeJet_pt/probeJet_jer_corr")
+    df = df.Define("probeJet_pt_undoJER",             probeJetStr+"_pt_undoJER")
   df = df.Define("probeJet_eta",            probeJetStr+"_eta")
   df = df.Define("probeJet_abseta",         "fabs("+probeJetStr+"_eta)")
   df = df.Define("probeJet_phi",            probeJetStr+"_phi")
@@ -333,6 +332,10 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,methodN,useNewTraining=Fal
     print("method 4: asym const, undoJER pt balance")
     df = df.Define('probeJet_ptbalance_good','(probeJet_dilep_ptbalance_undoJER<(1+probeJet_bestN_up_const))&&(probeJet_dilep_ptbalance_undoJER>(1-probeJet_bestN_down_const))')
     df = df.Define('probeJet_ptbalance_bad','(probeJet_dilep_ptbalance_undoJER>(1+probeJet_bestN_up_const))||(probeJet_dilep_ptbalance_undoJER<(1-probeJet_bestN_down_const))')
+  elif methodN == 5:
+    print("method 5: n =1.5")
+    df = df.Define("probeJet_ptbalance_good","probeJet_dilep_ptbalance_anomaly<= 1.5 * probeJet_jer_from_pt"  )
+    df = df.Define("probeJet_ptbalance_bad","probeJet_dilep_ptbalance_anomaly>= 1.5 * probeJet_jer_from_pt" )
   #############################################
   #
   # Define Filters
