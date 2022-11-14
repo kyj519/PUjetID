@@ -18,7 +18,7 @@ for runkey in runkeys:
 	for n in balanceN:
 		f = open(condor_dir+"job/job_"+runkey.replace(" ","_")+"_"+n+".sh","w+")
 		f.write("#!/bin/bash\n")
-		f.write("source "+condor_dir+"../RunCondor_Fit_onlymuon.sh "+runkey+" "+nowstr+" %s" % n)
+		f.write("source "+condor_dir+"../RunCondor_Fit_1ch.sh "+runkey+" "+nowstr+" %s" % n)
 		os.system("chmod 755 "+condor_dir+"job/job_"+runkey.replace(" ","_")+"_"+n+".sh")
 		f.close()
 		submit_dic = {"executable": condor_dir+"job/job_"+runkey.replace(" ","_")+"_"+n+".sh",
