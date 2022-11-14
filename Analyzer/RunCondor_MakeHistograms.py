@@ -65,7 +65,7 @@ def submitter(ncores, memory, fname, channel, N):
     schedd = htcondor.Schedd()         
     submit_result = schedd.submit(sub)
     
-method_list = [0,1,2,3,4]
+method_list = [0,1,2,3,4,5]
  
 for n in method_list:
     for sample in Samplelist:

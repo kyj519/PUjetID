@@ -17,3 +17,6 @@ Skimmer/filecheck/
 *.txt
 .vscode/settings.json
 *.root*
+Validation/plots_pujetid_datamc/*
+Validation/plots_pujetid_datamc_elch/*
+

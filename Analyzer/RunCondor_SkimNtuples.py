@@ -39,6 +39,25 @@ Samplelist.extend(["DataUL18A_EGamma",
 "DataUL16APVE_DoubleEG",
 "DataUL16APVF_DoubleEG"])
 
+Samplelist = [
+    "MCUL18_TTTo2L2Nu",
+    "MCUL18_WW",
+    "MCUL18_WZ",
+    "MCUL18_ZZ",
+    "MCUL17_TTTo2L2Nu",
+    "MCUL17_WW",
+    "MCUL17_WZ",
+	"MCUL17_ZZ",
+    "MCUL16APV_TTTo2L2Nu",
+    "MCUL16APV_WW",
+    "MCUL16APV_WZ",
+    "MCUL16APV_ZZ",
+    "MCUL16_TTTo2L2Nu",
+    "MCUL16_WW",
+    "MCUL16_WZ",
+    "MCUL16_ZZ"
+    ]
+
 condor_dir = os.path.realpath("./")
 condor_dir = condor_dir + "/condor_skim/"
 if not os.path.isdir(condor_dir):
