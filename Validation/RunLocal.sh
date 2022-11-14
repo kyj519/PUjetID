@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 ERALIST=(
@@ -8,7 +8,5 @@ UL16
 UL16APV
 )
 
-for ERA in ${ERALIST[@]}
-do
-	python MakeHistograms.py --era ${ERA}
-done
+python /data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Validation/MakeHistograms.py --era ${ERALIST[$1]} --ncores 32
+

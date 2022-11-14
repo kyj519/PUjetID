@@ -4,7 +4,7 @@ import collections
 import array
 import math
 
-def PlotDataMC(canvName, mcStack, dataHist, mcTotal, leg, xaxistitle, yaxistitle, year, lumi, doLogy, pdfName):
+def PlotDataMC(canvName, mcStack, dataHist, mcTotal,mcTotal_syst, leg, xaxistitle, yaxistitle, year, lumi, doLogy, pdfName, extratxt = ''):
   #
   # Make TCanvas
   #
@@ -47,6 +47,7 @@ def PlotDataMC(canvName, mcStack, dataHist, mcTotal, leg, xaxistitle, yaxistitle
   
   Internal = "#bf{CMS} Work In Progress"
   Lumi = '%s fb^{-1}' %lumi
+  extratext = extratxt
   
   latex.DrawLatex(0.15, 0.92, Internal );
   latex.SetTextSize( 0.03 );
@@ -54,7 +55,12 @@ def PlotDataMC(canvName, mcStack, dataHist, mcTotal, leg, xaxistitle, yaxistitle
     latex.DrawLatex(0.57, 0.98, Lumi+' ('+year+' 13 TeV)');
   else:
     latex.DrawLatex(0.64, 0.98, Lumi+' ('+year+' 13 TeV)');
+  latex.DrawLatex(0.15,0.88,extratext)
   latex.SetTextSize( 0.028 );
+  
+  
+  
+  
 
   #
   # Draw histogram in 1st pad
@@ -70,10 +76,10 @@ def PlotDataMC(canvName, mcStack, dataHist, mcTotal, leg, xaxistitle, yaxistitle
   #
   # Draw Error band of total bkgd
   #
-  systematics = [] 
+  systematics = mcTotal_syst 
   Syst = GetSystematicUncertaintyBand(mcTotal,systematics)
   Syst.SetFillColor( ROOT.kBlack )
-  Syst.SetFillStyle( 3245 )
+  Syst.SetFillStyle( 3001 )
   Syst.SetLineColor( ROOT.kWhite )
   Syst.SetMarkerStyle( 1 )
   Syst.Draw( 'E2same' )
@@ -123,7 +129,7 @@ def PlotDataMC(canvName, mcStack, dataHist, mcTotal, leg, xaxistitle, yaxistitle
   # Draw systematics band
   #
   SystBand.SetFillColor( ROOT.kBlack )
-  SystBand.SetFillStyle( 3245 )
+  SystBand.SetFillStyle( 3001 )
   SystBand.SetLineColor( ROOT.kWhite )
   SystBand.SetMarkerStyle( 1 )
   SystBand.Draw( 'E2same' )
@@ -140,7 +146,7 @@ def PlotDataMC(canvName, mcStack, dataHist, mcTotal, leg, xaxistitle, yaxistitle
   # Draw ratio again
   #
   Ratio.Draw( 'same' )      
-  canv.Print( pdfName + ".pdf")
+  canv.Print( pdfName + ".eps")
 
   mcStack.GetHists().Delete()
   del mcStack

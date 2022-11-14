@@ -19,11 +19,11 @@ class SFProducerPUJetId {
 
     float GetSF(float,float,bool);
 
-    float Get_EffSF_PUID(float,float,bool);
+    float Get_EffSF_PUID(float,float,bool,int);
     float Get_EffSFUnc_PUID(float,float);
     float Get_EffMC_PUID(float,float);
 
-    float Get_MistagSF_PUID(float,float,bool);
+    float Get_MistagSF_PUID(float,float,bool,int);
     float Get_MistagSFUnc_PUID(float,float);
     float Get_MistagMC_PUID(float,float);
 
@@ -98,22 +98,28 @@ void SFProducerPUJetId::LoadSF()
 //
 float SFProducerPUJetId::GetSF(float pt, float eta, bool isHSJet){
   if (isHSJet){
-    return Get_EffSF_PUID(pt,eta,true);
+    return Get_EffSF_PUID(pt,eta,true,0);
   }else{
-    return Get_MistagSF_PUID(pt,eta,false);
+    return Get_MistagSF_PUID(pt,eta,false,0);
   }
 }
 //
 //
 //
-float SFProducerPUJetId::Get_EffSF_PUID(float pt, float eta, bool isHSJet){
+float SFProducerPUJetId::Get_EffSF_PUID(float pt, float eta, bool isHSJet, int syst){
+  float uncty = 0.;
+  float sf = 1.;
   if (pt < 50 && isHSJet){// Hardcoded here
-    return GetTH2DBinContent(m_Hist_Eff_SF, pt, eta);
+    uncty =  Get_EffSFUnc_PUID(pt, eta);
+    sf = GetTH2DBinContent(m_Hist_Eff_SF, pt, eta);
+    sf = sf + ((float)syst * uncty);
+    if(sf<=0.) sf = 1e-9;
+    return sf;
   }
-  return 1.;
+  return sf;
 }
 float SFProducerPUJetId::Get_EffSFUnc_PUID(float pt, float eta){
-  return GetTH2DBinContent(m_Hist_Eff_SFUnc, pt, eta);
+    return GetTH2DBinContent(m_Hist_Eff_SFUnc, pt, eta);
 }
 float SFProducerPUJetId::Get_EffMC_PUID(float pt, float eta){
   return GetTH2DBinContent(m_Hist_Eff_MC, pt, eta);
@@ -121,18 +127,29 @@ float SFProducerPUJetId::Get_EffMC_PUID(float pt, float eta){
 //
 //
 //
-float SFProducerPUJetId::Get_MistagSF_PUID(float pt, float eta, bool isHSJet){
+float SFProducerPUJetId::Get_MistagSF_PUID(float pt, float eta, bool isHSJet, int syst){
+  float uncty = 0.;
   float sf = 1.;
   if (pt < 50. && (!isHSJet)){ // Hardcoded here
+    uncty =  Get_MistagSFUnc_PUID(pt, eta);
     sf = GetTH2DBinContent(m_Hist_Mistag_SF, pt, eta);
-    if (sf < 0.0001){ // For bins with SF == 0. TO DO: Should really check why its 0.
-      sf = 1.0;
-    }
+    sf = sf + ((float)syst * uncty);
+    if(sf<=0.) sf = 1e-9;
+    return sf;
+    // if (sf < 0.0001){ // For bins with SF == 0. TO DO: Should really check why its 0.
+    //   sf = 1.0;
+    // }
   }
   return sf;
 }
 float SFProducerPUJetId::Get_MistagSFUnc_PUID(float pt, float eta){
+ 
   return GetTH2DBinContent(m_Hist_Mistag_SFUnc, pt, eta);
+  // if (sf < 0.0001){ // For bins with SF == 0. TO DO: Should really check why its 0.
+  //   sf = 1.0;
+  // }
+  
+
 }
 float SFProducerPUJetId::Get_MistagMC_PUID(float pt, float eta){
   return GetTH2DBinContent(m_Hist_Mistag_MC, pt, eta);
