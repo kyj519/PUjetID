@@ -125,20 +125,20 @@ Samples["MCUL18_WZ"] = Sample(
   ],
   xs = 27.51 #pb
 )
-# #
-# # ZZ
-# #
-# Samples["MCUL18_ZZ"] = Sample(
-#   name="MCUL18_ZZ",
-#   crabFiles=[
-#     EOSDIR+CRABDIR+"ZZ_TuneCP5_13TeV-pythia8/JetPUId_MCUL18NanoAODv9_"+version+"/*/*/tree_*.root",
-#   ],
-#   ntupleFiles=[
-#     EOSDIR+NTUPDIR+"ntuple_MCUL18_ZZ.root"
-#   ],
-#   xs = 2.748 #pb
-# )
 #
+# ZZ
+#
+Samples["MCUL18_ZZ"] = Sample(
+  name="MCUL18_ZZ",
+  crabFiles=[
+    EOSDIR+CRABDIR+"ZZ_TuneCP5_13TeV-pythia8/JetPUId_MCUL18NanoAODv9_"+version+"/*/*/tree_*.root",
+  ],
+  ntupleFiles=[
+    EOSDIR+NTUPDIR+"ntuple_MCUL18_ZZ.root"
+  ],
+  xs = 2.748 #pb
+)
+
 # Data DoubleMuon
 #
 Samples["DataUL18A_DoubleMuon"] = Sample(
