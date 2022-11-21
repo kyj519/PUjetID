@@ -31,7 +31,7 @@ for runkey in runkeys:
 		"when_to_transfer_output" : "ON_EXIT",
 		"output": condor_dir+"log/"+runkey.replace(" ","_")+"_"+n+".log",
 		"error" : condor_dir+"log/"+runkey.replace(" ","_")+"_"+n+".err",
-  		"concurrency_limits" : "n200.yeonjoon"}
+  		"concurrency_limits" : "n500.yeonjoon"}
 
 		sub = htcondor.Submit(submit_dic)
 		schedd = htcondor.Schedd()         
