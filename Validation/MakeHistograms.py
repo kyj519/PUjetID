@@ -28,7 +28,7 @@ colorsDict = {
 prod_tag   = "DiLeptonSkim_ULNanoV9_v1p4"
 
 EOSURL     = ""
-path_inDir = "/gv0/Users/yeonjoon/ntuples/JetPUId_"+prod_tag+"/ntuples_skim/"
+path_inDir = "/gv0/Users/yeonjoon/ntuples_HEMFix/JetPUId_"+prod_tag+"/ntuples_skim/"
 
 
 
@@ -52,22 +52,26 @@ def SetupSFProducerPUJetId(fileSF, era):
 
     ROOT.gInterpreter.Declare('std::unique_ptr<SFProducerPUJetId> puIdSF_Tight(new SFProducerPUJetId(\"'+eraName+'\",\"'+fileSF+'\",\"T\"));')
     ROOT.gInterpreter.ProcessLine('puIdSF_Tight->LoadSF();')
-def ApplyBaselineSelection(df, era, isMC=True):
+def ApplyBaselineSelection(df, era,syst,isMC=True):
     #
     # Event-level flags or
     #
+    if syst == "central" or ('SF' in syst):
+      syst_str_pre = ""
+    else:
+      syst_str_pre = syst+"_"
     df = df.Define("isMuMu","(abs(lep0_pdgId)==13)&&(abs(lep1_pdgId)==13)")
     df = df.Define("isElEl","(abs(lep0_pdgId)==11)&&(abs(lep1_pdgId)==11)")
   
     #
     # Baseline
     #
-    df = df.Filter("passOS").Filter("passNJetSel").Filter("isElEl") #Only muon channel at the moment
+    df = df.Filter("passOS").Filter(syst_str_pre+"passNJetSel").Filter("isElEl") #Only muon channel at the moment
 
     #
     # Define the probeJet
     #
-    probeJetStr="jetSel0"
+    probeJetStr=syst_str_pre+"jetSel0"
     df = df.Define("probeJet_pt",     probeJetStr+"_pt")
     df = df.Define("probeJet_eta",    probeJetStr+"_eta")
     df = df.Define("probeJet_abseta", "fabs("+probeJetStr+"_eta)")
@@ -93,7 +97,6 @@ def ApplyBaselineSelection(df, era, isMC=True):
     df = df.Define("probeJet_puIdLoose_pass",  "(probeJet_pt >= 50.f) || (probeJet_pt < 50.f && probeJet_puIdFlag_Loose)")
     df = df.Define("probeJet_puIdMedium_pass", "(probeJet_pt >= 50.f) || (probeJet_pt < 50.f && probeJet_puIdFlag_Medium)")
     df = df.Define("probeJet_puIdTight_pass",  "(probeJet_pt >= 50.f) || (probeJet_pt < 50.f && probeJet_puIdFlag_Tight)")
-    
     return df
 
   # def ApplyEtaSelection(df, isMC=True, etaCut="EtaInc"):
@@ -111,64 +114,67 @@ def ApplyPUIdSelection(df, isMC=True, applyPUId=True, puIdWP="Loose", applyPUIdE
       if isMC:
         if applyPUIdEffSF:
           df = df.Define("probeJet_puId_effSF",    "puIdSF_"+puIdWP+"->Get_EffSF_PUID(probeJet_pt,probeJet_eta,probeJet_passGenMatch,0)")
-          df = df.Define("probeJet_puId_effSF_systUp",    "puIdSF_"+puIdWP+"->Get_EffSF_PUID(probeJet_pt,probeJet_eta,probeJet_passGenMatch,1)")
-          df = df.Define("probeJet_puId_effSF_systDown",    "puIdSF_"+puIdWP+"->Get_EffSF_PUID(probeJet_pt,probeJet_eta,probeJet_passGenMatch,-1)")
+          df = df.Define("probeJet_puId_effSF_SF_up",    "puIdSF_"+puIdWP+"->Get_EffSF_PUID(probeJet_pt,probeJet_eta,probeJet_passGenMatch,1)")
+          df = df.Define("probeJet_puId_effSF_SF_down",    "puIdSF_"+puIdWP+"->Get_EffSF_PUID(probeJet_pt,probeJet_eta,probeJet_passGenMatch,-1)")
         else:
           df = df.Define("probeJet_puId_effSF",    "1.f")
-          df = df.Define("probeJet_puId_effSF_systUp",    "1.f")
-          df = df.Define("probeJet_puId_effSF_systDown",    "1.f")
+          df = df.Define("probeJet_puId_effSF_SF_up",    "1.f")
+          df = df.Define("probeJet_puId_effSF_SF_down",    "1.f")
         if applyPUIdMistagSF:
           df = df.Define("probeJet_puId_mistagSF", "puIdSF_"+puIdWP+"->Get_MistagSF_PUID(probeJet_pt,probeJet_eta,probeJet_passGenMatch,0)")
-          df = df.Define("probeJet_puId_mistagSF_systUp", "puIdSF_"+puIdWP+"->Get_MistagSF_PUID(probeJet_pt,probeJet_eta,probeJet_passGenMatch,1)")
-          df = df.Define("probeJet_puId_mistagSF_systDown", "puIdSF_"+puIdWP+"->Get_MistagSF_PUID(probeJet_pt,probeJet_eta,probeJet_passGenMatch,-1)")
+          df = df.Define("probeJet_puId_mistagSF_SF_up", "puIdSF_"+puIdWP+"->Get_MistagSF_PUID(probeJet_pt,probeJet_eta,probeJet_passGenMatch,1)")
+          df = df.Define("probeJet_puId_mistagSF_SF_down", "puIdSF_"+puIdWP+"->Get_MistagSF_PUID(probeJet_pt,probeJet_eta,probeJet_passGenMatch,-1)")
         else:
           df = df.Define("probeJet_puId_mistagSF", "1.f")
-          df = df.Define("probeJet_puId_mistagSF_systUp", "1.f")
-          df = df.Define("probeJet_puId_mistagSF_systDown", "1.f")
+          df = df.Define("probeJet_puId_mistagSF_SF_up", "1.f")
+          df = df.Define("probeJet_puId_mistagSF_SF_down", "1.f")
     else:
       df = df.Define("probeJet_puId_effSF", "1.f")
       df = df.Define("probeJet_puId_mistagSF", "1.f")
-      df = df.Define("probeJet_puId_effSF_systUp", "1.f")
-      df = df.Define("probeJet_puId_mistagSF_systUp", "1.f")
-      df = df.Define("probeJet_puId_effSF_systDown", "1.f")
-      df = df.Define("probeJet_puId_mistagSF_systDown", "1.f")
+      df = df.Define("probeJet_puId_effSF_SF_up", "1.f")
+      df = df.Define("probeJet_puId_mistagSF_SF_up", "1.f")
+      df = df.Define("probeJet_puId_effSF_SF_down", "1.f")
+      df = df.Define("probeJet_puId_mistagSF_SF_down", "1.f")
 
     return df
 def ApplySelections(df, df_counts, sample, isMC, etaCutList, puIdWPList, applyPUIdEffSF=False ,applyPUIdMistagSF=False):
 
        
     cutCombinations =  ['_'.join(cuts) for cuts in list(itertools.product(etaCutList, puIdWPList))]
-    
+    itersyst = ['central','SF_up','SF_down','jesTotalDown','jesTotalUp']
+    if sample == 'data':
+      itersyst = ['central'] 
     #
     #
     #
-    df[sample]["prePuId"] = df[sample]["Baseline"]
-    df_counts[sample]["prePuId"] = df[sample]["prePuId"].Count()
-    df[sample]["prePuId"] = ApplyWeights(df[sample]["prePuId"], selLevel="prePuId", isMC=isMC)
-
-    for etaCut in etaCutList:
-      preCutStr="prePuId"
-      cutStr=etaCut+"_prePuId"
-      df[sample][cutStr] = df[sample][preCutStr].Filter("probeJet_"+etaCut)
-      df[sample][cutStr] = ApplyWeights(df[sample][cutStr], selLevel="prePuId", isMC=isMC)
-      df_counts[sample][cutStr] = df[sample][cutStr].Count()
-
-    #
-    #
-    #
-    for puIdWP in puIdWPList:
-      preCutStr="prePuId"
-      cutStr="passPuId"+puIdWP
-      df[sample][cutStr]  = ApplyPUIdSelection(df[sample][preCutStr], isMC=isMC, applyPUId=True,  puIdWP=puIdWP, applyPUIdEffSF=applyPUIdEffSF, applyPUIdMistagSF=applyPUIdMistagSF)
-      df[sample][cutStr]  = ApplyWeights(df[sample][cutStr], selLevel="passPuId"+puIdWP, isMC=isMC)
-      df_counts[sample][cutStr]  = df[sample][cutStr].Count()
+    for syst in itersyst:
+      df[sample][syst]["prePuId"] = df[sample][syst]["Baseline"]
+      df_counts[sample][syst]["prePuId"] = df[sample][syst]["prePuId"].Count()
+      df[sample][syst]["prePuId"] = ApplyWeights(df[sample][syst]["prePuId"], selLevel="prePuId", isMC=isMC)
 
       for etaCut in etaCutList:
-        preCutStr=etaCut+"_prePuId"
-        cutStr=etaCut+"_passPuId"+puIdWP
-        df[sample][cutStr]  = ApplyPUIdSelection(df[sample][preCutStr], isMC=isMC, applyPUId=True,  puIdWP=puIdWP,applyPUIdEffSF=applyPUIdEffSF, applyPUIdMistagSF=applyPUIdMistagSF)
-        df[sample][cutStr]  = ApplyWeights(df[sample][cutStr], selLevel="passPuId"+puIdWP, isMC=isMC)
-        df_counts[sample][cutStr] = df[sample][cutStr].Count()
+        preCutStr="prePuId"
+        cutStr=etaCut+"_prePuId"
+        df[sample][syst][cutStr] = df[sample][syst][preCutStr].Filter("probeJet_"+etaCut)
+        df[sample][syst][cutStr] = ApplyWeights(df[sample][syst][cutStr], selLevel="prePuId", isMC=isMC)
+        df_counts[sample][syst][cutStr] = df[sample][syst][cutStr].Count()
+
+      #
+      #
+      #
+      for puIdWP in puIdWPList:
+        preCutStr="prePuId"
+        cutStr="passPuId"+puIdWP
+        df[sample][syst][cutStr]  = ApplyPUIdSelection(df[sample][syst][preCutStr], isMC=isMC, applyPUId=True,  puIdWP=puIdWP, applyPUIdEffSF=applyPUIdEffSF, applyPUIdMistagSF=applyPUIdMistagSF)
+        df[sample][syst][cutStr]  = ApplyWeights(df[sample][syst][cutStr], selLevel="passPuId"+puIdWP, isMC=isMC)
+        df_counts[sample][syst][cutStr]  = df[sample][syst][cutStr].Count()
+
+        for etaCut in etaCutList:
+          preCutStr=etaCut+"_prePuId"
+          cutStr=etaCut+"_passPuId"+puIdWP
+          df[sample][syst][cutStr]  = ApplyPUIdSelection(df[sample][syst][preCutStr], isMC=isMC, applyPUId=True,  puIdWP=puIdWP,applyPUIdEffSF=applyPUIdEffSF, applyPUIdMistagSF=applyPUIdMistagSF)
+          df[sample][syst][cutStr]  = ApplyWeights(df[sample][syst][cutStr], selLevel="passPuId"+puIdWP, isMC=isMC)
+          df_counts[sample][syst][cutStr] = df[sample][syst][cutStr].Count()
 
     return df, df_counts
 def ApplyWeights(df, selLevel="Baseline", isMC=True, normFactor="1.f"):
@@ -196,7 +202,8 @@ def ApplyWeights(df, selLevel="Baseline", isMC=True, normFactor="1.f"):
 
 def MakePlot(histograms, histoInfos, cutName="", histoName="", dataName="", mcList=[], year="", lumi="", outDir="", extratext = '',noSF=True):
     mcListTemp = list(mcList)
-    
+    syst_list = ['central','SF_up','SF_down','jesTotalDown','jesTotalUp'] 
+    syst_list_woCentral = ['SF_up','SF_down','jesTotalDown','jesTotalUp'] 
     #
     #
     xLat,yLat = 0.25, 0.91
@@ -211,7 +218,7 @@ def MakePlot(histograms, histoInfos, cutName="", histoName="", dataName="", mcLi
     #
     #
     #
-    h_data  = histograms['nom'][dataName][cutName][histoName]
+    h_data  = histograms[dataName]['central'][cutName][histoName]
     h_dataC = h_data.Clone(dataName+"_"+cutName+"_"+h_data.GetName())
     h_dataC.SetMarkerColor(ROOT.kBlack)
     h_dataC.SetBinErrorOption(ROOT.TH1.kPoisson)
@@ -219,36 +226,31 @@ def MakePlot(histograms, histoInfos, cutName="", histoName="", dataName="", mcLi
     #
     #
     histosTemp = {}
-    stack_mc = ROOT.THStack("stack_"+histoName+"_"+cutName, histoName+"_"+cutName)
-    stack_mc_systUp = ROOT.THStack("stack_"+histoName+"_"+cutName+"_"+"systUp", histoName+"_"+cutName+"_"+"systUp")
-    stack_mc_systDown = ROOT.THStack("stack_"+histoName+"_"+cutName+"_"+"systDown", histoName+"_"+cutName+"_"+"systDown")
+    stack_mc = {}
+    h_mc_totalC = {}
+    for syst in syst_list:
+      stack_mc[syst] = ROOT.THStack("stack_"+histoName+"_"+cutName, histoName+"_"+cutName)
     for mc in mcListTemp:
-      h  = histograms['nom'][mc][cutName][histoName]
-      hC = h.Clone(mc+"_"+cutName+"_"+h.GetName())
-      hC.SetLineColor(ROOT.kBlack)
-      hC.SetLineWidth(2)
-      hC.SetFillColor(colorsDict[mc])
-      stack_mc.Add(hC)
-      
-      h_systUp  = histograms['up'][mc][cutName][histoName]
-      hC_systUp = h_systUp.Clone(mc+"_"+cutName+"_"+h_systUp.GetName()+'_systUp')
-      stack_mc_systUp.Add(hC_systUp)
-      
-      h_systDown  = histograms['down'][mc][cutName][histoName]
-      hC_systDown = h_systDown.Clone(mc+"_"+cutName+"_"+h_systDown.GetName()+'_systDown')
-      stack_mc_systDown.Add(hC_systDown)
-      
-      histosTemp[mc] = hC
-    h_mc_totalC = stack_mc.GetStack().Last().Clone(histoName+"_"+cutName+"_TotalMC")
-    h_mc_totalC_systUp = stack_mc.GetStack().Last().Clone(histoName+"_"+cutName+"_TotalMC"+'_systUp')
-    h_mc_totalC_systDown = stack_mc_systDown.GetStack().Last().Clone(histoName+"_"+cutName+"_TotalMC"+'_systDown')
+      for syst in syst_list:
+        h  = histograms[mc][syst][cutName][histoName]
+        hC = h.Clone(mc+"_"+cutName+"_"+h.GetName()+"_"+syst)
+        hC.SetLineColor(ROOT.kBlack)
+        hC.SetLineWidth(2)
+        hC.SetFillColor(colorsDict[mc])
+        stack_mc[syst].Add(hC)
+        
+        
+        histosTemp[mc][syst] = hC
+    
+    h_mc_totalC[syst] = stack_mc[syst].GetStack().Last().Clone(histoName+"_"+cutName+"_TotalMC"+"_"+syst)
+   
     #
     #
     #
     leg.AddEntry(h_dataC,"Data","p")
     mcListTemp.reverse()
     for mc in mcListTemp:
-      leg.AddEntry(histosTemp[mc],mc,"f")
+      leg.AddEntry(histosTemp[mc]['central'],mc,"f")
 
     xaxistitle = histoInfos[histoName]["xaxistitle"]
     yaxistitle = "Events"
@@ -258,7 +260,8 @@ def MakePlot(histograms, histoInfos, cutName="", histoName="", dataName="", mcLi
     pdfName= "%sh_%s_%s_%s"%(outDir,year,cutName,histoName)
     if noSF:
       pdfName = pdfName+'_noSF'
-    PlotDataMC("h_"+cutName+"_"+histoName, stack_mc, h_dataC, h_mc_totalC,[h_mc_totalC_systUp,h_mc_totalC_systDown], leg, xaxistitle, yaxistitle, year, lumi, histoInfos[histoName]["doLogy"],pdfName,extratxt=extratext)
+    syst_mc_hist = [h_mc_totalC[syst] for syst in syst_list_woCentral]
+    PlotDataMC("h_"+cutName+"_"+histoName, stack_mc, h_dataC, h_mc_totalC['central'],syst_mc_hist, leg, xaxistitle, yaxistitle, year, lumi, histoInfos[histoName]["doLogy"],pdfName,extratxt=extratext)
     
 def main():
 
@@ -469,30 +472,36 @@ def MakeValidation(era,yearStr,lumiStr):
   #
   # Data
   #
-  df_pre["Data"]["Initial"]  = ROOT.RDataFrame(inTrees["Data"])
-  df_pre["Data"]["Baseline"] = ApplyBaselineSelection(df_pre["Data"]["Initial"], era, isMC=False)
-  df_pre["Data"]["Baseline"] = ApplyWeights(df_pre["Data"]["Baseline"], "Baseline", isMC=False)
-  df_count_Data = df_pre["Data"]["Baseline"].Count()
+  df_pre["Data"]['central']["Initial"]  = ROOT.RDataFrame(inTrees["Data"])
+  df_pre["Data"]['central']["Baseline"] = ApplyBaselineSelection(df_pre["Data"]['central']["Initial"], era, 'central',isMC=False)
+  df_pre["Data"]['central']["Baseline"] = ApplyWeights(df_pre["Data"]['central']["Baseline"], "Baseline", isMC=False)
+  df_count_Data = df_pre["Data"]['central']["Baseline"].Count()
 
   #
   # Total MC
   #
-  df_pre["TotalMC"]["Initial"]  = ROOT.RDataFrame(inTrees["TotalMC"])
-  df_pre["TotalMC"]["Baseline"] = ApplyBaselineSelection(df_pre["TotalMC"]["Initial"], era, isMC=True)
-  df_pre["TotalMC"]["Baseline"] = ApplyWeights(df_pre["TotalMC"]["Baseline"], "Baseline", isMC=True)
-  df_count_totalMC = df_pre["TotalMC"]["Baseline"].Sum("evtWeight_Baseline")
+  syst_list = ['central','SF_up','SF_down','jesTotalDown','jesTotalUp']
+  for syst in syst_list:
+    df_pre["TotalMC"][syst]["Initial"]  = ROOT.RDataFrame(inTrees["TotalMC"])
+    df_pre["TotalMC"][syst]["Baseline"] = ApplyBaselineSelection(df_pre["TotalMC"][syst]["Initial"], era,syst, isMC=True)
+    df_pre["TotalMC"][syst]["Baseline"] = ApplyWeights(df_pre["TotalMC"][syst]["Baseline"], "Baseline", isMC=True)
+    if syst =='central':
+      df_count_totalMC = df_pre["TotalMC"][syst]["Baseline"].Sum("evtWeight_Baseline")
   #
   # Get the number of events in data and MC
   #
   nevents_data  = df_count_Data.GetValue()
-  nevents_mc    = df_count_totalMC.GetValue()
-  #
-  # Use this number to normalize MC to number of events in data
-  
-  scalemc2data = nevents_data/nevents_mc
   print("data = %d"  %nevents_data)
-  print("mc   = %.2f" %nevents_mc)
-  print("scalemc2data = %.3f" %scalemc2data)
+  nevents_mc={}
+  scalemc2data = {}
+  for syst in syst_list:
+    nevents_mc[syst]    = df_count_totalMC.GetValue()
+    #
+    # Use this number to normalize MC to number of events in data
+    
+    scalemc2data[syst] = nevents_data/nevents_mc
+    print("mc_%s   = %.2f" %(syst,nevents_mc[syst]))
+    print("scalemc2data_%s = %.3f" % (syst,scalemc2data[syst]))
 
   ####################################################
   #
@@ -522,15 +531,15 @@ def MakeValidation(era,yearStr,lumiStr):
   # Data
   #
   #====================================
-  df["Data"]["Initial"]        = ROOT.RDataFrame(inTrees["Data"])
+  df["Data"]['central']["Initial"]        = ROOT.RDataFrame(inTrees["Data"])
 
-  df["Data"]["Baseline"]        = ApplyBaselineSelection(df["Data"]["Initial"], era, isMC=False)
-  df_counts["Data"]["Baseline"] = df["Data"]["Baseline"].Count()
+  df["Data"]['central']["Baseline"]        = ApplyBaselineSelection(df["Data"]['central']["Initial"], era, 'central',isMC=False)
+  df_counts["Data"]['central']["Baseline"] = df["Data"]["Baseline"].Count()
 
-  df_noSF["Data"]["Initial"]        = ROOT.RDataFrame(inTrees["Data"])
+  df_noSF["Data"]['central']["Initial"]        = ROOT.RDataFrame(inTrees["Data"])
 
-  df_noSF["Data"]["Baseline"]        = ApplyBaselineSelection(df_noSF["Data"]["Initial"], era, isMC=False)
-  df_counts_noSF["Data"]["Baseline"] = df_noSF["Data"]["Baseline"].Count()
+  df_noSF["Data"]['central']["Baseline"]        = ApplyBaselineSelection(df_noSF["Data"]['central']["Initial"], era,'central', isMC=False)
+  df_counts_noSF["Data"]['central']["Baseline"] = df_noSF["Data"]['central']["Baseline"].Count()
 
   df, df_counts = ApplySelections(df, df_counts, "Data", isMC=False, etaCutList=etaCutList, puIdWPList=puIdWPList,applyPUIdEffSF=True,applyPUIdMistagSF=True)
   df_noSF, df_counts_noSF = ApplySelections(df_noSF, df_counts_noSF, "Data", isMC=False, etaCutList=etaCutList, puIdWPList=puIdWPList,applyPUIdEffSF=False,applyPUIdMistagSF=False)
@@ -541,23 +550,24 @@ def MakeValidation(era,yearStr,lumiStr):
   #====================================
 
   for sample in mcList:
-    df[sample]["Initial"] = ROOT.RDataFrame(inTrees[sample])
-    df_noSF[sample]["Initial"] = ROOT.RDataFrame(inTrees[sample])
-    #
-    #
-    #
-    df[sample]["Baseline"] = ApplyBaselineSelection(df[sample]["Initial"], era, isMC=True)
-    df[sample]["Baseline"] = ApplyWeights(df[sample]["Baseline"], selLevel="Baseline", isMC=True, normFactor=str(scalemc2data))
-    df_counts[sample]["Baseline"] = df[sample]["Baseline"].Sum("evtWeight_Baseline")
-    
-    df_noSF[sample]["Baseline"] = ApplyBaselineSelection(df_noSF[sample]["Initial"], era, isMC=True)
-    df_noSF[sample]["Baseline"] = ApplyWeights(df_noSF[sample]["Baseline"], selLevel="Baseline", isMC=True, normFactor=str(scalemc2data))
-    df_counts_noSF[sample]["Baseline"] = df_noSF[sample]["Baseline"].Sum("evtWeight_Baseline")
-    #
-    #
-    #
-    df, df_counts = ApplySelections(df, df_counts, sample, isMC=True, etaCutList=etaCutList, puIdWPList=puIdWPList,applyPUIdEffSF=True,applyPUIdMistagSF=True)
-    df_noSF, df_counts_noSF = ApplySelections(df_noSF, df_counts_noSF, sample, isMC=True, etaCutList=etaCutList, puIdWPList=puIdWPList,applyPUIdEffSF=False,applyPUIdMistagSF=False)
+    for syst in syst_list:
+      df[sample][syst]["Initial"] = ROOT.RDataFrame(inTrees[sample])
+      df_noSF[sample][syst]["Initial"] = ROOT.RDataFrame(inTrees[sample])
+      #
+      #
+      #
+      df[sample][syst]["Baseline"] = ApplyBaselineSelection(df[sample][syst]["Initial"], era, syst,isMC=True)
+      df[sample][syst]["Baseline"] = ApplyWeights(df[sample][syst]["Baseline"], selLevel="Baseline", isMC=True, normFactor=str(scalemc2data[syst]))
+      df_counts[sample][syst]["Baseline"] = df[sample][syst]["Baseline"].Sum("evtWeight_Baseline")
+      
+      df_noSF[sample][syst]["Baseline"] = ApplyBaselineSelection(df_noSF[sample][syst]["Initial"], era, isMC=True)
+      df_noSF[sample][syst]["Baseline"] = ApplyWeights(df_noSF[sample][syst]["Baseline"], selLevel="Baseline", isMC=True, normFactor=str(scalemc2data[syst]))
+      df_counts_noSF[sample][syst]["Baseline"] = df_noSF[sample][syst]["Baseline"].Sum("evtWeight_Baseline")
+      #
+      #
+      #
+      df, df_counts = ApplySelections(df, df_counts, sample, isMC=True, etaCutList=etaCutList, puIdWPList=puIdWPList,applyPUIdEffSF=True,applyPUIdMistagSF=True)
+      df_noSF, df_counts_noSF = ApplySelections(df_noSF, df_counts_noSF, sample, isMC=True, etaCutList=etaCutList, puIdWPList=puIdWPList,applyPUIdEffSF=False,applyPUIdMistagSF=False)
 
     if "subsamples" in samples[sample]:
       for subsample in samples[sample]["subsamples"]:
@@ -590,20 +600,22 @@ def MakeValidation(era,yearStr,lumiStr):
         hModelTemp = copy.copy(histoInfos[hist]["model"])
         hModelTemp.fName = sample+"_"+cut+"_"+histoInfos[hist]["model"].fName
         if "Data" in sample:
-          histo1D['nom'][sample][cut][hist] = df[sample][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"])
+          histo1D[sample]['central'][cut][hist] = df[sample]['central'][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"])
         else:
           if "Baseline"         in cut: weightName = "evtWeight_Baseline"
           elif "prePuId"        in cut: weightName = "evtWeight_prePuId"
           elif "passPuIdLoose"  in cut: weightName = "evtWeight_passPuIdLoose"
           elif "passPuIdMedium" in cut: weightName = "evtWeight_passPuIdMedium"
           elif "passPuIdTight"  in cut: weightName = "evtWeight_passPuIdTight"
-          histo1D['nom'][sample][cut][hist] = df[sample][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName)
+        
           if ("Baseline" in cut) or ("prePuId" in cut):
-            histo1D['up'][sample][cut][hist] = df[sample][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName)
-            histo1D['down'][sample][cut][hist] = df[sample][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName)
+            histo1D[sample][syst][cut][hist] = df[sample][syst][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName)
+            histo1D[sample][syst][cut][hist] = df[sample][syst][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName)
           else:
-            histo1D['up'][sample][cut][hist] = df[sample][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName+'_systUp')
-            histo1D['down'][sample][cut][hist] = df[sample][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName+'_systDown')
+            if 'SF' in syst:
+              histo1D[sample][syst][cut][hist] = df[sample][syst][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName+'_'+syst)
+            else: 
+              histo1D[sample][syst][cut][hist] = df[sample][syst][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName)
 
 
   histograms_noSF = MyDict()
@@ -614,27 +626,32 @@ def MakeValidation(era,yearStr,lumiStr):
         hModelTemp = copy.copy(histoInfos[hist]["model"])
         hModelTemp.fName = sample+"_"+cut+"_"+histoInfos[hist]["model"].fName
         if "Data" in sample:
-          histo1D_noSF['nom'][sample][cut][hist] = df_noSF[sample][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"])
+          histo1D_noSF[sample]['central'][cut][hist] = df_noSF[sample]['central'][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"])
         else:
           if "Baseline"         in cut: weightName = "evtWeight_Baseline"
           elif "prePuId"        in cut: weightName = "evtWeight_prePuId"
           elif "passPuIdLoose"  in cut: weightName = "evtWeight_passPuIdLoose"
           elif "passPuIdMedium" in cut: weightName = "evtWeight_passPuIdMedium"
           elif "passPuIdTight"  in cut: weightName = "evtWeight_passPuIdTight"
-          histo1D_noSF['nom'][sample][cut][hist] = df_noSF[sample][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName)
+
           if ("Baseline" in cut) or ("prePuId" in cut):
-            histo1D_noSF['up'][sample][cut][hist] = df_noSF[sample][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName)
-            histo1D_noSF['down'][sample][cut][hist] = df_noSF[sample][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName)
+            histo1D_noSF[sample][syst][cut][hist] = df_noSF[sample][syst][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName)
+            histo1D_noSF[sample][syst][cut][hist] = df_noSF[sample][syst][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName)
           else:
-            histo1D_noSF['up'][sample][cut][hist] = df_noSF[sample][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName+'_systUp')
-            histo1D_noSF['down'][sample][cut][hist] = df_noSF[sample][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName+'_systDown')
+            if 'SF' in syst:
+              histo1D_noSF[sample][syst][cut][hist] = df_noSF[sample][syst][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName+'_'+syst)
+            else:
+              histo1D_noSF[sample][syst][cut][hist] = df_noSF[sample][syst][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"], weightName)
   #
   # Print out Baseline yields
   #
   print("Baseline")
   for sample in mcListFinal+["Data"]:
-    nevts = df_counts[sample]["Baseline"].GetValue()
-    print(sample+":"+str(nevts))
+    for syst in syst_list:
+      if sample == "Data" and syst != 'central':
+        continue
+      nevts = df_counts[sample][syst]["Baseline"].GetValue()
+      print(sample+"_"+syst+":"+str(nevts))
     
 
   #
@@ -643,11 +660,11 @@ def MakeValidation(era,yearStr,lumiStr):
   for sample in mcListFinal+["Data"]:
     for cut in cutNames:
       for hist in histoInfos:
-        for syst in ['nom','up','down']:
-          if "Data" in sample and syst != 'nom': continue
-          histograms[syst][sample][cut][hist] = histo1D[syst][sample][cut][hist].GetValue()
+        for syst in syst_list:
+          if "Data" in sample and syst != 'central': continue
+          histograms[sample][syst][cut][hist] = histo1D[sample][syst][cut][hist].GetValue()
           print(syst,sample,cut)
-          histograms_noSF[syst][sample][cut][hist] = histo1D_noSF[syst][sample][cut][hist].GetValue()
+          histograms_noSF[sample][syst][cut][hist] = histo1D_noSF[sample][syst][cut][hist].GetValue()
 
   ####################################################
   #
