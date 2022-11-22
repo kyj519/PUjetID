@@ -38,12 +38,12 @@ Samplelist = ["DataUL18A_EGamma",
 "DataUL16APVD_DoubleEG",
 "DataUL16APVE_DoubleEG",
 "DataUL16APVF_DoubleEG"]
-
+#Samplelist = ["MCUL18_DY_AMCNLO_INCL","MCUL17_DY_AMCNLO_INCL","MCUL16APV_DY_AMCNLO_INCL","MCUL16_DY_AMCNLO_INCL"]
 condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/condor/"
 njobs = 0
 os.system('rm -rf '+condor_dir+'job/*')
 os.system('rm -rf '+condor_dir+'log/*')
-ncores = 20
+ncores = 40
 for sample in Samplelist:
 	f = open(condor_dir+"job/job_"+sample+".sh","w+")
 	f.write("#!/bin/bash\n")

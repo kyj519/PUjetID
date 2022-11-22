@@ -98,30 +98,32 @@ def GetModules(era, isMC, dataStream):
   # Modules for jet pt resolution smearing on MC and also to retrieve JEC and JER uncertainties
   #
   applyJetPtSmearing=True
+  applyHEMfix = True
   if era == "2016":
     if isMC: 
-      jetCorr_AK4_2016_mc = createJMECorrector(isMC=True, dataYear="2016", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_2016_mc = createJMECorrector(isMC=True, dataYear="2016", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
+      
   elif era == "2017":
     if isMC: 
-      jetCorr_AK4_2017_mc = createJMECorrector(isMC=True, dataYear="2017", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_2017_mc = createJMECorrector(isMC=True, dataYear="2017", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
   elif era == "2018":
     if isMC: 
-      jetCorr_AK4_2018_mc = createJMECorrector(isMC=True, dataYear="2018", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_2018_mc = createJMECorrector(isMC=True, dataYear="2018", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
   elif era == "UL2017":
     if isMC: 
-      jetCorr_AK4_UL2017_mc = createJMECorrector(isMC=True, dataYear="UL2017", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_UL2017_mc = createJMECorrector(isMC=True, dataYear="UL2017", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
   elif era == "UL2018":
     if isMC: 
-      jetCorr_AK4_UL2018_mc = createJMECorrector(isMC=True, dataYear="UL2018", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_UL2018_mc = createJMECorrector(isMC=True, dataYear="UL2018", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
     else:
       jetCorr_AK4_UL2018_Data = createJMECorrector(isMC=False, dataYear="2018", runPeriod="C", jesUncert="Total", jetType="AK4PFchs", applySmearing=False)
 
   elif era == "UL2016APV":
     if isMC: 
-      jetCorr_AK4_UL2016APV_mc = createJMECorrector(isMC=True, dataYear="UL2016_preVFP", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_UL2016APV_mc = createJMECorrector(isMC=True, dataYear="UL2016_preVFP", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
   elif era == "UL2016":
     if isMC: 
-      jetCorr_AK4_UL2016_mc = createJMECorrector(isMC=True, dataYear="UL2016", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_UL2016_mc = createJMECorrector(isMC=True, dataYear="UL2016", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
 
 
   #===========================================

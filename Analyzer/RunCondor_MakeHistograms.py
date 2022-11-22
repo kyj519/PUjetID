@@ -39,6 +39,8 @@ Samplelist.extend(["DataUL18A_EGamma",
 "DataUL16APVD_DoubleEG",
 "DataUL16APVE_DoubleEG",
 "DataUL16APVF_DoubleEG"])
+Samplelist.extend(["MCUL18_DY_AMCNLO_INCL","MCUL17_DY_AMCNLO_INCL","MCUL16APV_DY_AMCNLO_INCL","MCUL16_DY_AMCNLO_INCL"])
+
 condor_dir = "/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Analyzer/condor_hist/"
 njobs = 0
 
@@ -66,7 +68,7 @@ for n in nlist:
 		fname = condor_dir+"job/job_"+sample+"_N"+str(n).replace(".","p")+".sh"
 		if 'DoubleMuon' in sample:
 			ncores = 4
-			memory = 4*1024
+			memory = 2*1024
 			f = open(fname ,"w+")
 			f.write("#!/bin/bash\n")
 			f.write('source %s../RunCondor_MakeHistograms.sh %s %d %.1f %s' % (condor_dir,sample,ncores,n, 'Mu'))
@@ -75,7 +77,7 @@ for n in nlist:
 			submitter(ncores,memory,fname,"Mu",n)
 		elif 'DoubleEG' in sample or 'EGamma' in sample:
 			ncores = 4
-			memory = 4*1024	
+			memory = 2*1024	
 			f = open(fname ,"w+")
 			f.write("#!/bin/bash\n")
 			f.write('source %s../RunCondor_MakeHistograms.sh %s %d %.1f %s' % (condor_dir,sample,ncores, n,'El'))
@@ -87,7 +89,7 @@ for n in nlist:
 			f = open(fname.replace(".sh","_El.sh") ,"w+")
 			f.write("#!/bin/bash\n")
 			ncores = 8
-			memory = 8*1024
+			memory = 4*1024
 			f.write('source %s../RunCondor_MakeHistograms.sh %s %d %.1f %s' % (condor_dir,sample,ncores, n,'El'))
 			os.system("chmod 755 "+fname.replace(".sh","_El.sh"))
 			f.close()
@@ -96,7 +98,7 @@ for n in nlist:
 			f = open(fname.replace(".sh","_Mu.sh") ,"w+")
 			f.write("#!/bin/bash\n")
 			ncores = 8
-			memory = 8*1024
+			memory = 4*1024
 			f.write('source %s../RunCondor_MakeHistograms.sh %s %d %.1f %s' % (condor_dir,sample,ncores, n, 'Mu'))
 			os.system("chmod 755 "+fname.replace(".sh","_Mu.sh"))
 			f.close()

@@ -1,3 +1,4 @@
+from distutils import filelist
 import os, shutil
 import argparse
 import tempfile
@@ -45,6 +46,10 @@ for era in eraList:
 	for file in histlist:
 		if "DataUL" + era in file and "_El" in file:
 			datalist_by_era[targetfilename_El].append(file)
+for file in histlist:
+	print("copy inclusive MC")
+	if "AMCNLO_INCL" in file:
+		os.system("dccp -H %s%s %s &"%(tempdir,file,histodir_result))	
 
 AK4Syst = ["","_jerDown","_jerUp","_jesTotalUp","_jesTotalDown","_noJER"]
 mclist_by_era_and_syst = {}

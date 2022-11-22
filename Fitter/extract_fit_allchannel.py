@@ -86,7 +86,7 @@ def MakeDPhiFit(
 
  
     if not isData: mistag   = ROOT.RooRealVar("mistag","mistag",mistag_gen,0.,1.)
-    if iBinCount >= 39 and iBinCount <= 44: mistag   =  ROOT.RooRealVar("mistag","mistag",mistag_gen,bound_0p90 ,bound_1p10) 
+    #if iBinCount >= 39 and iBinCount <= 44: mistag   =  ROOT.RooRealVar("mistag","mistag",mistag_gen,bound_0p90 ,bound_1p10) 
     if isData: mistag   = ROOT.RooRealVar("mistag","mistag",0.1 ,0.,1.) 
     ################# What follows concerns the first 4 templates (GOOD jet/Z pt balance) #################
     #
@@ -156,23 +156,23 @@ def MakeDPhiFit(
     #
     # PASS
     gauss_mean_PASS_Mu  = ROOT.RooRealVar("mean_PASS_Mu","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_Mu = ROOT.RooRealVar("sigma_PASS_Mu","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_PASS_Mu = ROOT.RooRealVar("sigma_PASS_Mu","sigma gauss",0.04,0.02,0.2)
     gauss_PASS_Mu       = ROOT.RooGaussian("gauss_PASS_Mu","gauss", dphiZjet ,gauss_mean_PASS_Mu,gauss_sigma_PASS_Mu) 
     tmpxg_SIG_PASS_Mu   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_Mu","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_Mu , gauss_PASS_Mu)
 
     gauss_mean_PASS_El  = ROOT.RooRealVar("mean_PASS_El","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_El = ROOT.RooRealVar("sigma_PASS_El","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_PASS_El = ROOT.RooRealVar("sigma_PASS_El","sigma gauss",0.04,0.02,0.2)
     gauss_PASS_El       = ROOT.RooGaussian("gauss_PASS_El","gauss", dphiZjet ,gauss_mean_PASS_El,gauss_sigma_PASS_El) 
     tmpxg_SIG_PASS_El   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_El","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_El , gauss_PASS_El)
     # FAIL
     gauss_mean_FAIL_Mu  = ROOT.RooRealVar("mean_FAIL_Mu","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_Mu = ROOT.RooRealVar("sigma_FAIL_Mu","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_FAIL_Mu = ROOT.RooRealVar("sigma_FAIL_Mu","sigma gauss",0.04,0.02,0.2)
     gauss_FAIL_Mu       = ROOT.RooGaussian("gauss_FAIL_Mu","gauss", dphiZjet ,gauss_mean_FAIL_Mu,gauss_sigma_FAIL_Mu) 
     tmpxg_SIG_FAIL_Mu   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_Mu","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_Mu , gauss_FAIL_Mu)
 
 
     gauss_mean_FAIL_El  = ROOT.RooRealVar("mean_FAIL_El","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_El = ROOT.RooRealVar("sigma_FAIL_El","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_FAIL_El = ROOT.RooRealVar("sigma_FAIL_El","sigma gauss",0.04,0.02,0.2)
     gauss_FAIL_El       = ROOT.RooGaussian("gauss_FAIL_El","gauss", dphiZjet ,gauss_mean_FAIL_El,gauss_sigma_FAIL_El) 
     tmpxg_SIG_FAIL_El   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_El","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_El , gauss_FAIL_El)
     #
@@ -279,22 +279,22 @@ def MakeDPhiFit(
     #
     # PASS
     gauss_mean_PASS_badbalance_Mu  = ROOT.RooRealVar("mean_PASS_badbalance_Mu","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_badbalance_Mu = ROOT.RooRealVar("sigma_PASS_badbalance_Mu","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_PASS_badbalance_Mu = ROOT.RooRealVar("sigma_PASS_badbalance_Mu","sigma gauss",0.04,0.02,0.2)
     gauss_PASS_badbalance_Mu       = ROOT.RooGaussian("gauss_PASS_badbalance_Mu","gauss", dphiZjet ,gauss_mean_PASS_badbalance_Mu,gauss_sigma_PASS_badbalance_Mu)
     tmpxg_SIG_PASS_badbalance_Mu   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_badbalance_Mu","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_badbalance_Mu , gauss_PASS_badbalance_Mu)
 
     gauss_mean_PASS_badbalance_El  = ROOT.RooRealVar("mean_PASS_badbalance_El","mean",0,-0.05,0.05)
-    gauss_sigma_PASS_badbalance_El = ROOT.RooRealVar("sigma_PASS_badbalance_El","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_PASS_badbalance_El = ROOT.RooRealVar("sigma_PASS_badbalance_El","sigma gauss",0.04,0.02,0.2)
     gauss_PASS_badbalance_El       = ROOT.RooGaussian("gauss_PASS_badbalance_El","gauss", dphiZjet ,gauss_mean_PASS_badbalance_El,gauss_sigma_PASS_badbalance_El)
     tmpxg_SIG_PASS_badbalance_El   = ROOT.RooFFTConvPdf("tmpxg_SIG_PASS_badbalance_El","template x gauss" ,dphiZjet, pdf_template_SIG_PASS_badbalance_El , gauss_PASS_badbalance_El)
     # FAIL
     gauss_mean_FAIL_badbalance_Mu  = ROOT.RooRealVar("mean_FAIL_badbalance_Mu","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_badbalance_Mu = ROOT.RooRealVar("sigma_FAIL_badbalance_Mu","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_FAIL_badbalance_Mu = ROOT.RooRealVar("sigma_FAIL_badbalance_Mu","sigma gauss",0.04,0.02,0.2)
     gauss_FAIL_badbalance_Mu       = ROOT.RooGaussian("gauss_FAIL_badbalance_Mu","gauss", dphiZjet ,gauss_mean_FAIL_badbalance_Mu,gauss_sigma_FAIL_badbalance_Mu)
     tmpxg_SIG_FAIL_badbalance_Mu   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_badbalance_Mu","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_badbalance_Mu , gauss_FAIL_badbalance_Mu)
 
     gauss_mean_FAIL_badbalance_El  = ROOT.RooRealVar("mean_FAIL_badbalance_El","mean",0,-0.05,0.05)
-    gauss_sigma_FAIL_badbalance_El = ROOT.RooRealVar("sigma_FAIL_badbalance_El","sigma gauss",0.02,0.001,0.2)
+    gauss_sigma_FAIL_badbalance_El = ROOT.RooRealVar("sigma_FAIL_badbalance_El","sigma gauss",0.04,0.02,0.2)
     gauss_FAIL_badbalance_El       = ROOT.RooGaussian("gauss_FAIL_badbalance_El","gauss", dphiZjet ,gauss_mean_FAIL_badbalance_El,gauss_sigma_FAIL_badbalance_El)
     tmpxg_SIG_FAIL_badbalance_El   = ROOT.RooFFTConvPdf("tmpxg_SIG_FAIL_badbalance_El","template x gauss" ,dphiZjet, pdf_template_SIG_FAIL_badbalance_El , gauss_FAIL_badbalance_El)
     #
@@ -836,13 +836,14 @@ def main():
         # if useHerwig: mc_filename   = inputDir+"/Histo_MCUL16_DY_MG_HW.root"
         if usePowheg: mc_filename_El   = inputDir+"/Histo_MCUL16_DYToMuMu_PHG_El.root"
 
-
     if syst != "":
         if  useHerwig or usePowheg:
             raise Exception("Can't specify systematics for Herwig/Powheg samples. Only LO and NLO samples.")
         else:
             mc_filename_El = mc_filename_El.replace("_El.root","_"+syst+"_El.root")
             mc_filename_Mu = mc_filename_Mu.replace("_Mu.root","_"+syst+"_Mu.root")
+            #mc_filename_El = mc_filename_El.replace("_INCL_El.root","_INCL_"+syst+"_El.root")
+            #mc_filename_Mu = mc_filename_Mu.replace("_INCL_Mu.root","_INCL_"+syst+"_Mu.root")
     print(mc_filename_El)
     print(mc_filename_Mu)
     ROOT.gStyle.SetOptStat(0)

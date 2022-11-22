@@ -84,6 +84,12 @@ dphiBins =[round(x*dphiBinSize, 2) for x in xrange(0,dphiBinsN+1)]
 dphiBinsArray = array.array('d',dphiBins)
 dphiBinsN = len(dphiBins)-1
 
+absdphim1BinsN = dphiBinsN/2
+absdphim1BinsSize = dphiBinSize
+absdphim1Bins = [round(x*absdphim1BinsSize, 2) for x in xrange(0,absdphim1BinsN+1)]
+absdphim1BinsArray = array.array("d", absdphim1Bins)
+absdphim1BinsN = len(absdphim1BinsArray) - 1
+
 #
 #
 #
@@ -215,6 +221,7 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
 
   
   df = df.Define("probeJet_dilep_dphi_norm","DeltaPhiNorm(probeJet_dilep_dphi)")
+  df = df.Define("probeJet_dilep_dphi_m1_abs","fabs(probeJet_dilep_dphi_norm-1)")
   df = df.Define("probeJet_dilep_ptbalance","dilep_pt/probeJet_pt")
   df = df.Define("probeJet_dilep_ptbalance_anomaly", "fabs(probeJet_dilep_ptbalance-1)")
   #
@@ -335,6 +342,11 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
     histoNameFinal  = "h3_%s_probeJet_pt_eta_dilep_dphi_norm%s" %(cutLevel,systStrPost)
     histoInfo = ROOT.RDF.TH3DModel(histoNameFinal, histoNameFinal, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, dphiBinsN, dphiBinsArray)
     Histograms3D[histoNameFinal] = df_filters[cutLevel].Histo3D(histoInfo, "probeJet_pt","probeJet_eta","probeJet_dilep_dphi_norm", weightName)
+
+    histoNameFinal_absBin = "h3_%s_probeJet_pt_eta_dilep_dphi_m1_abs%s" %(cutLevel,systStrPost)
+    histoInfo_absBin = ROOT.RDF.TH3DModel(histoNameFinal_absBin, histoNameFinal_absBin, ptBinsN, ptBinsArray, etaBinsN, etaBinsArray, absdphim1BinsN, absdphim1BinsArray)
+    Histograms3D[histoNameFinal_absBin] = df_filters[cutLevel].Histo3D(histoInfo_absBin, "probeJet_pt","probeJet_eta","probeJet_dilep_dphi_m1_abs", weightName)
+ 
   #
   # absEtaBins
   #
@@ -450,6 +462,8 @@ def main(sample_name, useSkimNtuples, systStr, isMuCh,balanceN,useNewTraining=Fa
       Histograms = ProjectTH3(h3, Histograms, "closestgen_dR", systStrPost)
     elif "_gen_dR" in h3Name:
       Histograms = ProjectTH3(h3, Histograms, "gen_dR", systStrPost)
+    elif "_dilep_dphi_m1_abs" in h3Name:
+      Histograms = ProjectTH3(h3, Histograms, "dilep_dphi_m1_abs", systStrPost) 
 
   print("Number of 1D histos: %s " %len(Histograms))
   ##############################################

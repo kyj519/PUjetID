@@ -1,0 +1,48 @@
+Error in <TTree::SetBranchStatus>: unknown branch -> genWeight
+Error in <TTree::SetBranchStatus>: unknown branch -> nLHEPdfWeight
+Error in <TTree::SetBranchStatus>: unknown branch -> LHEPdfWeight
+Error in <TTree::SetBranchStatus>: unknown branch -> nLHEScaleWeight
+Error in <TTree::SetBranchStatus>: unknown branch -> LHEScaleWeight
+Error in <TTree::SetBranchStatus>: unknown branch -> nPSWeight
+Error in <TTree::SetBranchStatus>: unknown branch -> PSWeight
+Error in <TTree::SetBranchStatus>: No branch name is matching wildcard -> Pileup_*
+Error in <TTree::SetBranchStatus>: unknown branch -> nGenJet
+Error in <TTree::SetBranchStatus>: No branch name is matching wildcard -> GenJet_*
+Error in <TTree::SetBranchStatus>: unknown branch -> nGenPart
+Error in <TTree::SetBranchStatus>: No branch name is matching wildcard -> GenPart_*
+Error in <TTree::SetBranchStatus>: unknown branch -> HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL
+Error in <TTree::SetBranchStatus>: unknown branch -> HLT_TkMu17_TrkIsoVVL_TkMu8_TrkIsoVVL
+Error in <TTree::SetBranchStatus>: unknown branch -> HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
+Error in <TTree::SetBranchStatus>: unknown branch -> genWeight
+Error in <TTree::SetBranchStatus>: unknown branch -> nLHEPdfWeight
+Error in <TTree::SetBranchStatus>: unknown branch -> LHEPdfWeight
+Error in <TTree::SetBranchStatus>: unknown branch -> nLHEScaleWeight
+Error in <TTree::SetBranchStatus>: unknown branch -> LHEScaleWeight
+Error in <TTree::SetBranchStatus>: unknown branch -> nPSWeight
+Error in <TTree::SetBranchStatus>: unknown branch -> PSWeight
+Error in <TTree::SetBranchStatus>: No branch name is matching wildcard -> Pileup_*
+Error in <TTree::SetBranchStatus>: No branch name is matching wildcard -> puWeight*
+RunSkimmerLocal.py START
+args =  Namespace(dataStream='DoubleMuon', era='UL2017', isMC=0, maxEvents=1000, outDir='./DataUL17_DoubleMuon')
+era  =  UL2017
+isMC =  0
+dataStream =  DoubleMuon
+isDoubleElecData =  False
+isDoubleMuonData =  True
+Loading C++ helper from /u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Skimmer/data/muon/roccor.Run2.v5/RoccoR.cc
+Use muon pt with rochester corrections applied. Branch:corrected_pt
+
+
+Just printout what we will give to the PostProcessor
+JSON      :  /u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Skimmer/data/lumi/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt
+SELECTION :  ((nMuon>=2 && Sum$(Muon_pt>15.)>=1) || (nElectron>=2 && Sum$(Electron_pt>20.)>=1)) && (nJet>=1) && (Alt$(HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8,0) || Alt$(HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL,0))
+MODULES   :  [<PUjetID.Skimmer.MuonRocCorrProducer.MuonRocCorrProducer object at 0x7f7ed5537a90>, <PUjetID.Skimmer.SkimmerDiLepton.SkimmerDiLepton object at 0x7f7ed5540410>]
+Maximum Number of Events to run over:  1000
+Will write selected trees to ./DataUL17_DoubleMuon
+Pre-select 0 entries out of 1000 (0.00%)
+File closed successfully
+Processed 0 preselected entries from root://xrootd-cms.infn.it//store/data/Run2017B/DoubleMuon/NANOAOD/UL2017_MiniAODv2_NanoAODv9-v1/120000/7CDC57C5-1722-094A-AB1B-00B93B31CA83.root (1000 entries). Finally selected 0 entries
+Done ./DataUL17_DoubleMuon/7CDC57C5-1722-094A-AB1B-00B93B31CA83_Skim.root
+SkimmerDiLepton module ended successfully
+Total time 18.4 sec. to process 1000 events. Rate = 54.4 Hz.
+RunSkimmerLocal.py DONE
