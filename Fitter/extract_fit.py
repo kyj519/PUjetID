@@ -62,6 +62,11 @@ def MakeDPhiFit(
         n_mc_pu_fail   = h_dphi_genunmatched_FAIL.Integral() + h_dphi_genunmatched_FAIL_badbalance.Integral()
         eff_gen    = n_mc_real_pass/(n_mc_real_pass+n_mc_real_fail)
         mistag_gen = n_mc_pu_pass/(n_mc_pu_pass+n_mc_pu_fail)
+        n_dict = {}
+        n_dict['n_mc_real_pass'] = n_mc_real_pass
+        n_dict['n_mc_real_fail'] = n_mc_real_fail
+        n_dict['n_mc_pu_pass'] = n_mc_pu_pass
+        n_dict['n_mc_pu_fail'] = n_mc_pu_fail
  
 
     #
@@ -446,7 +451,7 @@ def MakeDPhiFit(
     if isData:
         return effcy.getVal(), effcy.getError(), mistag.getVal(), mistag.getError()
     else: 
-        return effcy.getVal(), effcy.getError(), mistag.getVal(), mistag.getError(), eff_gen, mistag_gen
+        return effcy.getVal(), effcy.getError(), mistag.getVal(), mistag.getError(), eff_gen, mistag_gen, n_dict
 
 def main():
 
@@ -661,6 +666,10 @@ def main():
     hmistagmc   = ROOT.TH2F("hmistagmc",  "PU ID Mistag MC, WP " +workingpoint+ ", "+year,  xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
     heffgen     = ROOT.TH2F("heffgen",     "PU ID Eff MC (Gen-Based), WP " +workingpoint+ ", "+year,     xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
     hmistaggen  = ROOT.TH2F("hmistaggen",  "PU ID Mistag MC (Gen-Based), WP " +workingpoint+ ", "+year,  xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
+    hnPUgen  = ROOT.TH2F("hnPUgen",  "PU ID N of PU Jet (Gen-Based), WP " +workingpoint+ ", "+year,  xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
+    hnRealgen  = ROOT.TH2F("hnRealgen",  "PU ID N of Real Jet (Gen-Based), WP " +workingpoint+ ", "+year,  xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
+    hnPuPassgen  = ROOT.TH2F("hnPuPassgen",  "PU ID N of Passed PU Jet (Gen-Based), WP " +workingpoint+ ", "+year,  xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
+    hnRealPassgen  = ROOT.TH2F("hnRealPassgen",  "PU ID N of Passed Real Jet (Gen-Based), WP " +workingpoint+ ", "+year,  xbinsTab.size-1,xbinsTab,ybinsTab.size-1,ybinsTab)
 
     
     heffdata.Sumw2()
@@ -669,7 +678,11 @@ def main():
     hmistagmc.Sumw2()
     heffgen.Sumw2()
     hmistaggen.Sumw2()
-
+    hnPUgen.Sumw2()
+    hnRealgen.Sumw2()
+    hnPuPassgen.Sumw2()
+    hnRealPassgen.Sumw2()
+    
     ROOT.gStyle.SetOptStat(0)
     ROOT.gStyle.SetPaintTextFormat("6.4f")
 
@@ -736,7 +749,7 @@ def main():
             #
             # Perform fit on MC
             #
-            eff_mc,eff_mc_err,mistag_mc,mistag_mc_err,eff_gen,mistag_gen=MakeDPhiFit(
+            eff_mc,eff_mc_err,mistag_mc,mistag_mc_err,eff_gen,mistag_gen,n_dict=MakeDPhiFit(
                 h_dphi_mc_genunmatched_PASS,h_dphi_mc_genmatched_PASS,h_dphi_mc_genunmatched_FAIL,h_dphi_mc_genmatched_FAIL,
                 h_dphi_mc_PASS,h_dphi_mc_FAIL, 
                 h_dphi_mc_genunmatched_PASS_badbalance, h_dphi_mc_genmatched_PASS_badbalance, h_dphi_mc_genunmatched_FAIL_badbalance, h_dphi_mc_genmatched_FAIL_badbalance, 
@@ -749,9 +762,16 @@ def main():
             heffmc.SetBinError  (i+1,j+1,    round(float(eff_mc_err),4))
             hmistagmc.SetBinContent(i+1,j+1, round(float(mistag_mc),4))
             hmistagmc.SetBinError(i+1,j+1,   round(float(mistag_mc_err),4))
-            heffgen.SetBinContent(i+1,j+1,    round(float(eff_gen),4))
-            hmistaggen.SetBinContent(i+1,j+1, round(float(mistag_gen),4))
-
+            #heffgen.SetBinContent(i+1,j+1,    round(float(eff_gen),4))
+            #hmistaggen.SetBinContent(i+1,j+1, round(float(mistag_gen),4))
+            hnPUgen.SetBinContent(i+1,j+1,   round(float(n_dict['n_mc_pu_pass']+n_dict['n_mc_pu_fail']),4))
+            hnPuPassgen.SetBinContent(i+1,j+1,   round(float(n_dict['n_mc_pu_pass']),4))
+            hnRealgen.SetBinContent(i+1,j+1,   round(float(n_dict['n_mc_real_pass']+n_dict['n_mc_real_fail']),4))
+            hnRealPassgen.SetBinContent(i+1,j+1,   round(float(n_dict['n_mc_real_pass']),4))
+            hnPUgen.SetBinError(i+1,j+1,   round(float(n_dict['n_mc_pu_pass']+n_dict['n_mc_pu_fail'])**0.5,4))
+            hnPuPassgen.SetBinError(i+1,j+1,   round(float(n_dict['n_mc_pu_pass'])**0.5,4))
+            hnRealgen.SetBinError(i+1,j+1,   round(float(n_dict['n_mc_real_pass']+n_dict['n_mc_real_fail'])**0.5,4))
+            hnRealPassgen.SetBinError(i+1,j+1,   round(float(n_dict['n_mc_real_pass'])**0.5,4))
             #
             # Perform fit on Data
             #
@@ -944,6 +964,11 @@ def main():
     PlotPtSlices(_pt, hmistagsf, "h_mistag_sf"+year+"_"+wpShort, os.path.join(outputDir, "h_mistag_sf"+year+"_"+wpShort+"_ptBins_eta.pdf"))
   
     c9 = ROOT.TCanvas("c9","c9",600,600)
+    heffgen = hnRealPassgen.Clone("heffgen")
+    #heffgen.Sumw2()
+    #hnRealgen.Sumw2()
+    heffgen.Divide(hnRealgen)
+    heffgen.SetNameTitle("effgen","PU ID Eff MC (Gen-Based), WP " +workingpoint+ ", "+year)
     heffgen.SetMinimum(0.4)
     heffgen.SetMaximum(1.0)
     heffgen.SetMarkerSize(textsize)
@@ -955,6 +980,11 @@ def main():
     # PlotPtSlices(_pt, heffgen, "h_effgen_mc"+year+"_"+wpShort, os.path.join(outputDir, "h_effgen_mc"+year+"_"+wpShort+"_ptBins_eta.pdf"))
 
     c10 = ROOT.TCanvas("c10","c10",600,600)
+    hmistaggen = hnPuPassgen.Clone("mistaggen")
+    #hmistaggen.Sumw2()
+    #hnPUgen.Sumw2()
+    hmistaggen.Divide(hnPUgen)
+    hmistaggen.SetNameTitle("hmistaggen",  "PU ID Mistag MC (Gen-Based), WP " +workingpoint+ ", "+year)
     hmistaggen.SetMinimum(0.0)
     hmistaggen.SetMaximum(0.5)
     hmistaggen.SetMarkerSize(textsize)
@@ -966,7 +996,7 @@ def main():
     # PlotPtSlices(_pt, hmistaggen, "h_mistaggen_mc"+year+"_"+wpShort, os.path.join(outputDir, "h_mistaggen_mc"+year+"_"+wpShort+"_ptBins_eta.pdf"))
 
     c11 = ROOT.TCanvas("c11","c11",600,600)
-    heffgen.Sumw2()
+    #heffgen.Sumw2()
     heffgensf = heffdata.Clone("heffgensf")
     heffgensf.Divide(heffgen)
     heffgensf.SetNameTitle("effgensf","Efficiency(Gen) SF , WP " +workingpoint+ ", "+year)
@@ -981,7 +1011,7 @@ def main():
     # PlotPtSlices(_pt, heffsf, "h_effgen_sf"+year+"_"+wpShort, os.path.join(outputDir, "h_effgen_sf"+year+"_"+wpShort+"_ptBins_eta.pdf"))
 
     c12 = ROOT.TCanvas("c12","c12",600,600)
-    hmistaggen.Sumw2()
+    #hmistaggen.Sumw2()
     hmistaggensf = hmistagdata.Clone("hmistaggesf")
     hmistaggensf.Divide(hmistaggen)
     hmistaggensf.SetNameTitle("histaggensf","Mistag(Gen) SF, WP " +workingpoint+ ", "+year)
@@ -994,8 +1024,42 @@ def main():
     hmistaggensf.SetName("h2_mistaggen_sf"+year+"_"+wpShort)
     hmistaggensf.SaveAs(os.path.join(outputDir, "h2_mistaggen_sf"+year+"_"+wpShort+".root"))
     # PlotPtSlices(_pt, hmistaggensf, "h_mistaggen_sf"+year+"_"+wpShort, os.path.join(outputDir, "h_mistaggen_sf"+year+"_"+wpShort+"_ptBins_eta.pdf"))
-
-    del c2, c3, c4, c6, c7, c8, c9, c10, c11, c12
+    c13 = ROOT.TCanvas("c13","c13",600,600)
+    #hmistaggen.Sumw2()
+    hnPUgen.SetMarkerSize(textsize)
+    hnPUgen.Draw("colztexterr")
+    c13.SaveAs(os.path.join(outputDir, "h2_nPUgen"+year+"_"+wpShort+".pdf"))
+    if printPNG: c8.SaveAs(os.path.join(outputDir, "h2_mistaggen"+year+"_"+wpShort+".png"))
+    hnPUgen.SetName("h2_nPUgen"+year+"_"+wpShort)
+    hnPUgen.SaveAs(os.path.join(outputDir, "h2_nPUgen"+year+"_"+wpShort+".root"))
+    
+    c14 = ROOT.TCanvas("c14","c14",600,600)
+    #hmistaggen.Sumw2()
+    hnPuPassgen.SetMarkerSize(textsize)
+    hnPuPassgen.Draw("colztexterr")
+    c14.SaveAs(os.path.join(outputDir, "h2_hnPuPassgen"+year+"_"+wpShort+".pdf"))
+    if printPNG: c8.SaveAs(os.path.join(outputDir, "h2_hnPuPassgen"+year+"_"+wpShort+".png"))
+    hnPuPassgen.SetName("h2_hnPuPassgen"+year+"_"+wpShort)
+    hnPuPassgen.SaveAs(os.path.join(outputDir, "h2_hnPuPassgen"+year+"_"+wpShort+".root"))
+    
+    c15 = ROOT.TCanvas("c15","c15",600,600)
+    #hmistaggen.Sumw2()
+    hnRealgen.SetMarkerSize(textsize)
+    hnRealgen.Draw("colztexterr")
+    c15.SaveAs(os.path.join(outputDir, "h2_hnRealgen"+year+"_"+wpShort+".pdf"))
+    if printPNG: c8.SaveAs(os.path.join(outputDir, "h2_mistaggen"+year+"_"+wpShort+".png"))
+    hnRealgen.SetName("h2_hnRealgen"+year+"_"+wpShort)
+    hnRealgen.SaveAs(os.path.join(outputDir, "h2_hnRealgen"+year+"_"+wpShort+".root"))
+    
+    c16 = ROOT.TCanvas("c16","c16",600,600)
+    #hmistaggen.Sumw2()
+    hnRealPassgen.SetMarkerSize(textsize)
+    hnRealPassgen.Draw("colztexterr")
+    c16.SaveAs(os.path.join(outputDir, "h2_hnRealPassgen"+year+"_"+wpShort+".pdf"))
+    if printPNG: c8.SaveAs(os.path.join(outputDir, "h2_mistaggen"+year+"_"+wpShort+".png"))
+    hnRealPassgen.SetName("h2_hnRealPassgen"+year+"_"+wpShort)
+    hnRealPassgen.SaveAs(os.path.join(outputDir, "h2_hnRealPassgen"+year+"_"+wpShort+".root"))
+    del c2, c3, c4, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16
     
 if __name__ == '__main__':
     main()
