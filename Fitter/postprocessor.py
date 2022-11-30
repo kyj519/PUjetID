@@ -52,7 +52,7 @@ def readFiles(folder_path,methodN):
         syst_hist_f[key] = {}
     
     syst_hist['gen'] = {}
-    syst_hist['systUncty_Total'] = {}
+    syst_hist['Systuncty_Total'] = {}
     syst_hist['fitUncty'] = {}
     syst_hist_f['gen'] = {}
 
@@ -73,38 +73,43 @@ def readFiles(folder_path,methodN):
 def combine_systerr(syst_hist):
     final_root = ROOT.TFile(final_root_path,'RECREATE')
     for key, item in syst_hist['central'].items():
-        syst_hist['systUncty_Total'][key] = ROOT.TH2F('%s_systUncty_Total'% key,'%s_systUncty_Total'% key,len(ptbin)-1,ptbin,len(etabin)-1,etabin)
+        syst_hist['Systuncty_Total'][key] = ROOT.TH2F('%s_Systuncty_Total'% key,'%s_Systuncty_Total'% key,len(ptbin)-1,ptbin,len(etabin)-1,etabin)
         syst_hist['fitUncty'][key] = ROOT.TH2F('%s_fitUncty'% key,'%s_fitUncty'% key,len(ptbin)-1,ptbin,len(etabin)-1,etabin)
-        syst_hist['systUncty_Total'][key].SetMaximum(0.1)
+        syst_hist['Systuncty_Total'][key].SetMaximum(0.1)
         syst_hist['fitUncty'][key].SetMaximum(0.05)
-        for binN in iterBin(syst_hist['systUncty_Total'][key],ptbin,etabin):
-            systUncty_Total = 0
+        for binN in iterBin(syst_hist['Systuncty_Total'][key],ptbin,etabin):
+            Systuncty_Total = 0
             for syst in systs:
                 central = syst_hist['central'][key].GetBinContent(binN)
                 up = syst_hist['%sUp'%syst][key].GetBinContent(binN)
                 down = syst_hist['%sDown'%syst][key].GetBinContent(binN)
                 maxUncty = max(np.abs(central-up),np.abs(central-down))
-                systUncty_Total = systUncty_Total**2+maxUncty**2
-                systUncty_Total = np.sqrt(systUncty_Total)
-                
-            syst_hist['systUncty_Total'][key].SetBinContent(binN,systUncty_Total)
+                Systuncty_Total = Systuncty_Total**2+maxUncty**2
+                Systuncty_Total = np.sqrt(Systuncty_Total)
             staterr = syst_hist['central'][key].GetBinError(binN)
             syst_hist['fitUncty'][key].SetBinContent(binN,staterr)
+            Systuncty_Total = Systuncty_Total**2 + staterr**2
+            Systuncty_Total = np.sqrt(Systuncty_Total)
+                
+            syst_hist['Systuncty_Total'][key].SetBinContent(binN,Systuncty_Total)
+
         random_str = str(uuid.uuid4())
         c1 = ROOT.TCanvas(random_str,random_str,4800,1600)
         c1.Divide(3,1)
         c1.cd(1)
         syst_hist['central'][key].Draw('COLZ TEXT')
         c1.cd(2)
-        syst_hist['systUncty_Total'][key].Draw('COLZ TEXT')
+        syst_hist['Systuncty_Total'][key].Draw('COLZ TEXT')
         c1.cd(3)
         syst_hist['fitUncty'][key].Draw('COLZ TEXT')
         c1.Draw() 
         make_not_exist_dir(os.path.join(folder_path,'method%s/postprocessed/Plot'%methodN))
         c1.SaveAs(os.path.join(folder_path,'method%s/postprocessed/Plot'%methodN,key+'.png'))
         final_root.cd()
-        syst_hist['systUncty_Total'][key].Write()
+        syst_hist['Systuncty_Total'][key].Write()
         syst_hist['central'][key].Write()
+        if not 'data' in key:
+            syst_hist['gen'][key].Write()
     final_root.Close()
     
 def condor_submit(target_path, methodN):
@@ -143,7 +148,8 @@ if __name__ == '__main__':
         combine_systerr(syst_hist=syst_hist_dict)
     else:
         import htcondor
-        condor_submit(folder_path, 3)
+        for i in range(6):
+            condor_submit(folder_path, i)
     
     
     

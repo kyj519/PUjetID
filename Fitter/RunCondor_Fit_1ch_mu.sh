@@ -16,5 +16,5 @@ OUTDIR="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Fitter/result/${5}/${6}"
 #
 #############################################################################
 
-python /data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Fitter/extract_fit.py --input $INDIR --output ${OUTDIR}/${2}_${4}/${1}_WP${3}/  --year $1 --wp $3 --syst $4 --order $2 --channel El 
+python /data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Fitter/extract_fit.py --input $INDIR --output ${OUTDIR}/${2}_${4}/${1}_WP${3}/  --year $1 --wp $3 --syst $4 --order $2 --channel Mu 
  
