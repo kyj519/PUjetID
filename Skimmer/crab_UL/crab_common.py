@@ -31,8 +31,8 @@ config.JobType.inputFiles = [
 config.JobType.sendPythonFolder  = True
 config.JobType.outputFiles = ['tree.root']
 #
-config.Data.splitting    = 'LumiBased'
-config.Data.unitsPerJob = 200
+config.Data.splitting    = 'FileBased'
+config.Data.unitsPerJob = 1
 config.Data.publication  = False
 config.Data.allowNonValidInputDataset = True
 config.JobType.allowUndistributedCMSSW = True
@@ -54,10 +54,7 @@ config.JobType.maxMemoryMB = 2500
 config.Data.ignoreLocality = True
 whitelist_sites=[
 'T2_CH_CERN',
-'T2_UK_*',
-'T2_FI_*',
-'T2_DE_*',
-'T2_FR_*'
+
 ]
 config.Site.whitelist = whitelist_sites
 blacklist_sites=['T2_FR_GRIF_LLR','T2_UK_London_Brunel']

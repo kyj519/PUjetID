@@ -81,6 +81,19 @@ from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016_mc
 from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016_data_dielectron
 from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016_data_dimuon 
 
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2017_JMENanoV1_mc
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2017_JMENanoV1_data_dielectron
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2017_JMENanoV1_data_dimuon 
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2018_JMENanoV1_mc
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2018_JMENanoV1_data_dielectron
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2018_JMENanoV1_data_dimuon 
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016APV_JMENanoV1_mc
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016APV_JMENanoV1_data_dielectron
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016APV_JMENanoV1_data_dimuon 
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016_JMENanoV1_mc
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016_JMENanoV1_data_dielectron
+from PUjetID.Skimmer.SkimmerDiLepton import SkimmerDiLepton_UL2016_JMENanoV1_data_dimuon 
+
 from PUjetID.Skimmer.PUIDCalculator import PUIDCalculator_UL2017 
 
 from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetHelperRun2 import * 
@@ -92,36 +105,38 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer im
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import puWeight_UL2016
 
 
-def GetModules(era, isMC, dataStream):
+def GetModules(era, isMC, dataStream, useJMENano):
   modules = []
   #
   # Modules for jet pt resolution smearing on MC and also to retrieve JEC and JER uncertainties
   #
   applyJetPtSmearing=True
+  applyHEMfix = True
   if era == "2016":
     if isMC: 
-      jetCorr_AK4_2016_mc = createJMECorrector(isMC=True, dataYear="2016", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_2016_mc = createJMECorrector(isMC=True, dataYear="2016", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
+      
   elif era == "2017":
     if isMC: 
-      jetCorr_AK4_2017_mc = createJMECorrector(isMC=True, dataYear="2017", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_2017_mc = createJMECorrector(isMC=True, dataYear="2017", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
   elif era == "2018":
     if isMC: 
-      jetCorr_AK4_2018_mc = createJMECorrector(isMC=True, dataYear="2018", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_2018_mc = createJMECorrector(isMC=True, dataYear="2018", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
   elif era == "UL2017":
     if isMC: 
-      jetCorr_AK4_UL2017_mc = createJMECorrector(isMC=True, dataYear="UL2017", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_UL2017_mc = createJMECorrector(isMC=True, dataYear="UL2017", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
   elif era == "UL2018":
     if isMC: 
-      jetCorr_AK4_UL2018_mc = createJMECorrector(isMC=True, dataYear="UL2018", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_UL2018_mc = createJMECorrector(isMC=True, dataYear="UL2018", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
     else:
       jetCorr_AK4_UL2018_Data = createJMECorrector(isMC=False, dataYear="2018", runPeriod="C", jesUncert="Total", jetType="AK4PFchs", applySmearing=False)
 
   elif era == "UL2016APV":
     if isMC: 
-      jetCorr_AK4_UL2016APV_mc = createJMECorrector(isMC=True, dataYear="UL2016_preVFP", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_UL2016APV_mc = createJMECorrector(isMC=True, dataYear="UL2016_preVFP", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
   elif era == "UL2016":
     if isMC: 
-      jetCorr_AK4_UL2016_mc = createJMECorrector(isMC=True, dataYear="UL2016", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing)
+      jetCorr_AK4_UL2016_mc = createJMECorrector(isMC=True, dataYear="UL2016", runPeriod="", jesUncert="Total", jetType="AK4PFchs", applySmearing=applyJetPtSmearing, applyHEMfix = applyHEMfix)
 
 
   #===========================================
@@ -162,6 +177,7 @@ def GetModules(era, isMC, dataStream):
         modules=[muonRocCor2018(), SkimmerDiLepton_2018_data_dimuon()]
       elif "EGamma" in dataStream:
         modules=[muonRocCor2018(), SkimmerDiLepton_2018_data_dielectron()]
+  
   #
   # UL 2017
   #
@@ -200,12 +216,55 @@ def GetModules(era, isMC, dataStream):
   #
   elif era == "UL2016":
     if isMC: 
-      modules=[puWeight_UL2016(), muonRocCorUL2016(), jetCorr_AK4_UL2016_mc(), SkimmerDiLepton_UL2016_mc()]
+      modules=[puWeight_UL2016(), muonRocCorUL2016(), jetCorr_AK4_UL2016_mc(), SkimmerDiLepton_UL2016_JMENanoV1_mc()]
     else:              
       if "DoubleMuon" in dataStream:
-        modules=[muonRocCorUL2016(), SkimmerDiLepton_UL2016_data_dimuon()]
+        modules=[muonRocCorUL2016(), SkimmerDiLepton_UL2016_JMENanoV1_data_dimuon()]
       elif "DoubleEG" in dataStream:
-        modules=[muonRocCorUL2016(), SkimmerDiLepton_UL2016_data_dielectron()]
+        modules=[muonRocCorUL2016(), SkimmerDiLepton_UL2016_JMENanoV1_data_dielectron()]
+        
+  if useJMENano:
+    if era == "UL2017":
+      if isMC: 
+        modules=[puWeight_UL2017(), muonRocCorUL2017(), jetCorr_AK4_UL2017_mc(), SkimmerDiLepton_UL2017_JMENanoV1_mc()]
+      else:              
+        if "DoubleMuon" in dataStream:
+          modules=[muonRocCorUL2017(),SkimmerDiLepton_UL2017_JMENanoV1_data_dimuon()]
+        elif "DoubleEG" in dataStream:
+          modules=[muonRocCorUL2017(), SkimmerDiLepton_UL2017_JMENanoV1_data_dielectron()]
+    #
+    # UL 2018
+    #
+    elif era == "UL2018":
+      if isMC: 
+        modules=[puWeight_UL2018(), muonRocCorUL2018(), jetCorr_AK4_UL2018_mc(), SkimmerDiLepton_UL2018_JMENanoV1_mc()]
+      else:              
+        if "DoubleMuon" in dataStream:
+          modules=[muonRocCorUL2018(),SkimmerDiLepton_UL2018_JMENanoV1_data_dimuon()]
+        elif "EGamma" in dataStream:
+          modules=[muonRocCorUL2018(), SkimmerDiLepton_UL2018_JMENanoV1_data_dielectron()]
+    #
+    # UL 2016APV
+    #
+    elif era == "UL2016APV":
+      if isMC: 
+        modules=[puWeight_UL2016(), muonRocCorUL2016APV(), jetCorr_AK4_UL2016APV_mc(), SkimmerDiLepton_UL2016APV_JMENanoV1_mc()]
+      else:              
+        if "DoubleMuon" in dataStream:
+          modules=[muonRocCorUL2016APV(), SkimmerDiLepton_UL2016APV_JMENanoV1_data_dimuon()]
+        elif "DoubleEG" in dataStream:
+          modules=[muonRocCorUL2016APV(), SkimmerDiLepton_UL2016APV_JMENanoV1_data_dielectron()]
+    #
+    # UL 2016
+    #
+    elif era == "UL2016":
+      if isMC: 
+        modules=[puWeight_UL2016(), muonRocCorUL2016(), jetCorr_AK4_UL2016_mc(), SkimmerDiLepton_UL2016_JMENanoV1_mc()]
+      else:              
+        if "DoubleMuon" in dataStream:
+          modules=[muonRocCorUL2016(), SkimmerDiLepton_UL2016_JMENanoV1_data_dimuon()]
+        elif "DoubleEG" in dataStream:
+          modules=[muonRocCorUL2016(), SkimmerDiLepton_UL2016_JMENanoV1_data_dielectron()]
 
   return modules
 

@@ -2,7 +2,7 @@ import sys
 import crab_common 
 import helpers
 
-crab_common.config.JobType.maxJobRuntimeMin = 240
+crab_common.config.JobType.maxJobRuntimeMin = 600
 crab_common.config.JobType.scriptArgs = [
   'era=UL2016APV',
   'isMC=1',
@@ -24,6 +24,8 @@ if __name__ == '__main__':
   for i, dataset in enumerate(samplelist):
     print "%d/%d:Sending CRAB job: %s" % (i+1,len(samplelist), dataset)
     crab_common.config.Data.inputDataset = dataset
+    if 'JMENano' in dataset:
+      crab_common.config.JobType.scriptArgs.append('useJMENano')
     #
     # Have to make unique requestName. 
     #
@@ -38,6 +40,7 @@ if __name__ == '__main__':
     # TO DO: Fix This
     #
     secondaryName = dataset.split('/')[2]
+    secondaryName = secondaryName.replace("RunIISummer20UL16APVNanoAODv9-20UL16APVJMENano","MCUL16APVNanoAODv9")#RENAME CAMPAIGN. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("RunIISummer20UL16NanoAODAPVv9-","MCUL16APVNanoAODv9")#RENAME CAMPAIGN. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("106X_mcRun2_asymptotic_preVFP_v11","") #REMOVE GT. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("-v1","")# 

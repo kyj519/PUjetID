@@ -338,6 +338,19 @@ class SkimmerDiLepton(Module):
                 self.out.branch(jetSystPreFix+"jetSel" +
                                 str(i)+"_jer_from_pt_nano",         "F")
                 self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_bestN",         "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_bestN_up",         "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_bestN_down",         "F")				
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_bestN_up_const",         "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_bestN_down_const",         "F")
+                self.out.branch(jetSystPreFix+"jetSel"+str(i)+"_pt_undoJER","F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_jer_CORR",         "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
                                 str(i)+"_pt",         "F")
                 self.out.branch(jetSystPreFix+"jetSel" +
                                 str(i)+"_pt_nom",     "F")
@@ -380,6 +393,38 @@ class SkimmerDiLepton(Module):
                                 str(i)+"_muEF",       "F")
                 self.out.branch(jetSystPreFix+"jetSel" +
                                 str(i)+"_dilep_dphi", "F")
+                ########PUID Training variable#######
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_PV_npvsGood", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_beta", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_dR2Mean", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_frac01", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_frac02", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_frac03", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_frac04", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_majW", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_minW", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_jetR", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_jetRchg", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_nConstituents", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_nCharged", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_ptD", "F")
+                self.out.branch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_pull", "F")
+       
                 if(self.isMC):
                     self.out.branch(jetSystPreFix+"jetSel" +
                                     str(i)+"_partflav",     "I")
@@ -451,7 +496,7 @@ class SkimmerDiLepton(Module):
         self.fillZBosonBranches(event)
 
         #
-        # Get AK4 jets.
+        # Get jets.
         # Skip event and don't store in tree if this selection
         # doesn't pass nominal and any systematic variations
         #
@@ -590,7 +635,7 @@ class SkimmerDiLepton(Module):
                                 if x.pt > 20. and x.mvaFall17V2Iso_WP90
                                 and abs(x.deltaEtaSC+x.eta) < 2.5
                                 # ignore electrons in gap region
-                                and not(abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566)
+                                and not((abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566))
                                 ]
 
         event.pass0VetoElectrons = len(event.electronsVeto) == 0
@@ -744,6 +789,32 @@ class SkimmerDiLepton(Module):
         event.dilep_p4 = event.lep0_p4 + event.lep1_p4
         return True if event.dilep_p4.M() > 70. and event.dilep_p4.M() < 110. else False
 
+    def getUndoJERandCORR(self,jetSyst,this_jet,return_CORR = False):
+        ## note for jes and jer systematic##
+        # 1.pt_nom: jer_nomVal+jes_nomVal
+        # 2.pt:jes_nom
+        # 3.pt_jerUp:jer_upVal+jes_NomVal
+        # 4.pt_jerDown:jer_upVal+jes_NomVal
+        # 5.pt_jesTotalDown: jer_nomVal+jes_downVal
+        # 6.pt_jesTotalup: jer_nomVal+jes_upVal
+        jetPtName, jetMassName = self.getJetPtAndMassForSyst(jetSyst)
+        pt_undoJER = getattr(this_jet,'pt')
+        corr = getattr(this_jet,jetPtName)/pt_undoJER
+        if jetSyst=="noJER":
+            pt_undoJER = getattr(this_jet,jetPtName) 
+            corr = 1.
+        elif 'jer' in jetSyst:
+            pt_undoJER = getattr(this_jet,'pt')
+            corr = getattr(this_jet,jetPtName)/pt_undoJER
+        
+        if 'jes' in jetSyst:
+            corr = getattr(this_jet,'pt_nom')/getattr(this_jet,'pt')
+            pt_undoJER = getattr(this_jet, jetPtName)/corr
+        if return_CORR:
+            return pt_undoJER, corr
+        else:
+            return pt_undoJER
+
     def passJetSelection(self, event, jetSyst=""):
         #######################
         #
@@ -761,7 +832,7 @@ class SkimmerDiLepton(Module):
         # jetPtCutMin=10 # JMENano can go as low as 10 GeV
 
         event.jetsSel = [x for x in event.jetsAll
-                         if abs(x.eta) < 5. and getattr(x, jetPtName) > jetPtCutMin
+                         if abs(x.eta) < 5. and self.getUndoJERandCORR(jetSyst,x) > jetPtCutMin
                          and (x.jetId & (1 << 1))  # 'Tight' WP for jet ID
                          and x.DeltaR(event.lep0_p4) > 0.4 and x.DeltaR(event.lep1_p4) > 0.4
                          ]
@@ -788,12 +859,12 @@ class SkimmerDiLepton(Module):
         # NOTE: Apply this at analysis level. Save flag
         #
         event.jetsSelPt30Eta5p0 = [x for x in event.jetsSel
-                                   if abs(x.eta) < 5. and getattr(x, jetPtName) > 30.
+                                   if abs(x.eta) < 5. and self.getUndoJERandCORR(jetSyst,x) > 30.
                                    ]
         event.nJetSelPt30Eta5p0 = len(event.jetsSelPt30Eta5p0)
 
         event.jetsSelPt20Eta2p4 = [x for x in event.jetsSel
-                                   if abs(x.eta) < 2.4 and getattr(x, jetPtName) > 20.
+                                   if abs(x.eta) < 2.4 and self.getUndoJERandCORR(jetSyst,x) > 20.
                                    ]
         event.nJetSelPt20Eta2p4 = len(event.jetsSelPt20Eta2p4)
 
@@ -846,6 +917,13 @@ class SkimmerDiLepton(Module):
             self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_jer_from_pt",      -9.)
             self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_jer_from_pt_nom",      -9.)
             self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_jer_from_pt_nano",      -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +str(i)+"_bestN",         -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +str(i)+"_bestN_up",         -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +str(i)+"_bestN_down",         -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +str(i)+"_bestN_up_const",         -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +str(i)+"_bestN_down_const",         -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_jer_CORR",      -9.)	
+            self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_pt_undoJER", -9.)
             self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_pt",      -9.)
             self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_pt_nom",  -9.)
             self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_pt_nano", -9.)
@@ -867,6 +945,36 @@ class SkimmerDiLepton(Module):
             self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_muEF",   -9.)
             self.out.fillBranch(jetSystPreFix+"jetSel" +
                                 str(i)+"_dilep_dphi", -9.)
+            ##########PUID training var#########
+            self.out.fillBranch(jetSystPreFix+"jetSel" +str(i)+"_PV_npvsGood", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_beta", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_dR2Mean", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_frac01", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_frac02", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_frac03", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_frac04", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_majW", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_minW", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_jetR", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_jetRchg", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_nConstituents", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_nCharged", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_ptD", -9.)
+            self.out.fillBranch(jetSystPreFix+"jetSel" +
+                            str(i)+"_puId_pull", -9.)
             if self.isMC:
                 self.out.fillBranch(
                     jetSystPreFix+"jetSel"+str(i)+"_partflav", -9)
@@ -895,8 +1003,55 @@ class SkimmerDiLepton(Module):
         jeteta = eta
         if jeteta <= -4.7: jeteta = -4.69
         if jeteta >= 4.7: jeteta = 4.69
+
         return jeteta
+
+    def getBestN(self,jet_pt,jet_eta):
+        import os
+        print(os.getcwd())
+        f = ROOT.TFile('/srv/CMSSW_10_6_30/python/PUjetID/Skimmer/balanceHist.root','READ')
+        histkey = '%s_best_N' % (self.era)
+        hist = f.Get(histkey)
+        binXn = hist.GetXaxis().FindBin(jet_pt)
+        binYn = hist.GetYaxis().FindBin(jet_eta)
+        binN = hist.GetBin(binXn,binYn,0)
+        N = hist.GetBinContent(binN)
+
+        return N
         
+    def getBestN_asym(self,jet_pt,jet_eta):
+        import os
+        print(os.getcwd())
+        f = ROOT.TFile('/srv/CMSSW_10_6_30/python/PUjetID/Skimmer/balanceHist_asym.root','READ')
+        histkey_up = '%s_best_N_up' % (self.era)
+        histkey_low = '%s_best_N_low' % (self.era)
+        hist_up = f.Get(histkey_up)
+        hist_low = f.Get(histkey_low)
+        binXn = hist_up.GetXaxis().FindBin(jet_pt)
+        binYn = hist_up.GetYaxis().FindBin(jet_eta)
+        binN = hist_up.GetBin(binXn,binYn,0)
+        N_up = hist_up.GetBinContent(binN)
+        N_low = hist_low.GetBinContent(binN)
+
+        return N_up, N_low
+
+    def getBestN_asym_const(self,jet_pt,jet_eta):
+        import os
+        print(os.getcwd())
+        f = ROOT.TFile('/srv/CMSSW_10_6_30/python/PUjetID/Skimmer/balanceHist_asym_const.root','READ')
+        histkey_up = '%s_best_N_up' % (self.era)
+        histkey_low = '%s_best_N_low' % (self.era)
+        hist_up = f.Get(histkey_up)
+        hist_low = f.Get(histkey_low)
+        binXn = hist_up.GetXaxis().FindBin(jet_pt)
+        binYn = hist_up.GetYaxis().FindBin(jet_eta)
+        binN = hist_up.GetBin(binXn,binYn,0)
+        N_up = hist_up.GetBinContent(binN)
+        N_low = hist_low.GetBinContent(binN)
+
+        return N_up, N_low
+        
+    
     def fillJetBranches(self, event, jetSyst):
         # fill jet branches
         jetSystPreFix = self.getJetSystBranchPrefix(jetSyst)
@@ -926,6 +1081,26 @@ class SkimmerDiLepton(Module):
                                 str(i)+"_pt",      getattr(jet, jetPtName))
             self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_pt_nom",  getattr(
                 jet, "pt_nom") if self.isMC and hasattr(jet, "pt_nom") else jet.pt)  # Fix this
+
+            if self.isDATA:
+                self.out.fillBranch(jetSystPreFix+"jetSel" + str(i)+"_bestN",self.getBestN(jet.pt,jet.eta))
+                n_up, n_down = self.getBestN_asym(jet.pt,jet.eta)
+                self.out.fillBranch(jetSystPreFix+"jetSel" + str(i)+"_bestN_up",n_up)
+                self.out.fillBranch(jetSystPreFix+"jetSel" + str(i)+"_bestN_down",n_down)
+                n_up_const, n_down_const = self.getBestN_asym_const(jet.pt,jet.eta)
+                self.out.fillBranch(jetSystPreFix+"jetSel" + str(i)+"_bestN_up_const",n_up_const)
+                self.out.fillBranch(jetSystPreFix+"jetSel" + str(i)+"_bestN_down_const",n_down_const)
+            else:
+                pt_jerUndo, corr =  self.getUndoJERandCORR(jetSyst,jet,return_CORR = True) 
+                self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_jer_CORR",  corr)  # Fix this
+                self.out.fillBranch(jetSystPreFix+"jetSel"+str(i)+"_pt_undoJER",pt_jerUndo)
+                self.out.fillBranch(jetSystPreFix+"jetSel" + str(i)+"_bestN",self.getBestN(pt_jerUndo,jet.eta))
+                n_up, n_down = self.getBestN_asym(pt_jerUndo,jet.eta)
+                self.out.fillBranch(jetSystPreFix+"jetSel" + str(i)+"_bestN_up",n_up)
+                self.out.fillBranch(jetSystPreFix+"jetSel" + str(i)+"_bestN_down",n_down)
+                n_up_const, n_down_const = self.getBestN_asym_const(pt_jerUndo,jet.eta)
+                self.out.fillBranch(jetSystPreFix+"jetSel" + str(i)+"_bestN_up_const",n_up_const)
+                self.out.fillBranch(jetSystPreFix+"jetSel" + str(i)+"_bestN_down_const",n_down_const)
             self.out.fillBranch(jetSystPreFix+"jetSel" +
                                 str(i)+"_pt_nano", jet.pt)
             self.out.fillBranch(jetSystPreFix+"jetSel" +
@@ -969,6 +1144,37 @@ class SkimmerDiLepton(Module):
             jetPuIdDiscOTF = -9.
             if self.calcBDTDiscOTF:
                 jetPuIdDiscOTF = self.calcPUIDBDTDisc(event, jet)
+                ##########PUID training var#########
+                self.out.fillBranch(jetSystPreFix+"jetSel" +str(i)+"_PV_npvsGood", event.PV_npvsGood)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_beta", jet.puId_beta)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_dR2Mean", jet.puId_dR2Mean)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_frac01", jet.puId_frac01)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_frac02", jet.puId_frac02)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_frac03", jet.puId_frac03)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_frac04", jet.puId_frac04)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_majW", jet.puId_majW)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_minW", jet.puId_minW)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_jetR", jet.puId_jetR)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_jetRchg", jet.puId_jetRchg)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_nConstituents", jet.nConstituents)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_nCharged", jet.puId_nCharged)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_ptD", jet.puId_ptD)
+                self.out.fillBranch(jetSystPreFix+"jetSel" +
+                                str(i)+"_puId_pull", jet.puId_pull)
+
             self.out.fillBranch(jetSystPreFix+"jetSel" +
                                 str(i)+"_puIdDiscOTF", jetPuIdDiscOTF)
             #
@@ -1047,21 +1253,7 @@ def SkimmerDiLepton_2018_data_dimuon(): return SkimmerDiLepton(
 
 
 def SkimmerDiLepton_2018_mc(): return SkimmerDiLepton(isMC=True,  era="2018")
-#
-# Ultra-Legacy 2017 (Compatible with JMENanoV1)
-#
 
-
-def SkimmerDiLepton_UL2017_JMENanoV1_data_dielectron(): return SkimmerDiLepton(
-    isMC=False, era="UL2017", isDoubleElecData=True, doOTFPUJetIDBDT=True)
-
-
-def SkimmerDiLepton_UL2017_JMENanoV1_data_dimuon(): return SkimmerDiLepton(
-    isMC=False, era="UL2017", isDoubleMuonData=True, doOTFPUJetIDBDT=True)
-
-
-def SkimmerDiLepton_UL2017_JMENanoV1_mc(): return SkimmerDiLepton(
-    isMC=True,  era="UL2017", doOTFPUJetIDBDT=True)
 #
 # Ultra-Legacy 2017 (Compatible with ULNanoAODv9)
 #
@@ -1119,3 +1311,70 @@ def SkimmerDiLepton_UL2016_data_dimuon(): return SkimmerDiLepton(
 
 
 def SkimmerDiLepton_UL2016_mc(): return SkimmerDiLepton(isMC=True,  era="UL2016")
+
+#
+# Ultra-Legacy 2017 (Compatible with JMENanoV1)
+#
+
+
+def SkimmerDiLepton_UL2017_JMENanoV1_data_dielectron(): return SkimmerDiLepton(
+    isMC=False, era="UL2017", isDoubleElecData=True, doOTFPUJetIDBDT=True)
+
+
+def SkimmerDiLepton_UL2017_JMENanoV1_data_dimuon(): return SkimmerDiLepton(
+    isMC=False, era="UL2017", isDoubleMuonData=True, doOTFPUJetIDBDT=True)
+
+
+def SkimmerDiLepton_UL2017_JMENanoV1_mc(): return SkimmerDiLepton(
+    isMC=True,  era="UL2017", doOTFPUJetIDBDT=True)
+
+
+#
+# Ultra-Legacy 2018 (Compatible with JMENanoV1)
+#
+
+
+def SkimmerDiLepton_UL2018_JMENanoV1_data_dielectron(): return SkimmerDiLepton(
+    isMC=False, era="UL2018", isDoubleElecData=True, doOTFPUJetIDBDT=True)
+
+
+def SkimmerDiLepton_UL2018_JMENanoV1_data_dimuon(): return SkimmerDiLepton(
+    isMC=False, era="UL2018", isDoubleMuonData=True, doOTFPUJetIDBDT=True)
+
+
+def SkimmerDiLepton_UL2018_JMENanoV1_mc(): return SkimmerDiLepton(
+    isMC=True,  era="UL2018", doOTFPUJetIDBDT=True)
+
+
+#
+# Ultra-Legacy 2016 (Compatible with JMENanoV1)
+#
+
+
+def SkimmerDiLepton_UL2016_JMENanoV1_data_dielectron(): return SkimmerDiLepton(
+    isMC=False, era="UL2016", isDoubleElecData=True, doOTFPUJetIDBDT=True)
+
+
+def SkimmerDiLepton_UL2016_JMENanoV1_data_dimuon(): return SkimmerDiLepton(
+    isMC=False, era="UL2016", isDoubleMuonData=True, doOTFPUJetIDBDT=True)
+
+
+def SkimmerDiLepton_UL2016_JMENanoV1_mc(): return SkimmerDiLepton(
+    isMC=True,  era="UL2016", doOTFPUJetIDBDT=True)
+
+
+#
+# Ultra-Legacy 2016APV (Compatible with JMENanoV1)
+#
+
+
+def SkimmerDiLepton_UL2016APV_JMENanoV1_data_dielectron(): return SkimmerDiLepton(
+    isMC=False, era="UL2016APV", isDoubleElecData=True, doOTFPUJetIDBDT=True)
+
+
+def SkimmerDiLepton_UL2016APV_JMENanoV1_data_dimuon(): return SkimmerDiLepton(
+    isMC=False, era="UL2016APV", isDoubleMuonData=True, doOTFPUJetIDBDT=True)
+
+
+def SkimmerDiLepton_UL2016APV_JMENanoV1_mc(): return SkimmerDiLepton(
+    isMC=True,  era="UL2016APV", doOTFPUJetIDBDT=True)
