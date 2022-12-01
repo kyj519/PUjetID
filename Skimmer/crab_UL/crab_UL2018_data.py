@@ -45,7 +45,7 @@ if __name__ == '__main__':
     # TO DO: Fix This
     #
     secondaryName = dataset.split('/')[2]
-    secondaryName = secondaryName.replace("UL2018_MiniAODv2_JMENanoAODv9","DataUL18NanoAODv9") #CHECK
+    secondaryName = secondaryName.replace("UL2018_MiniAODv2_JMENanoAODv9_","DataUL18NanoAODv9") #CHECK
     secondaryName = secondaryName.replace("UL2018_MiniAODv2_NanoAODv9","DataUL18NanoAODv9") #CHECK
     secondaryName = secondaryName.replace("-v1","") #CHECK
     secondaryName = secondaryName.replace("-v2","") #CHECK

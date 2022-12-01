@@ -40,7 +40,7 @@ if __name__ == '__main__':
     # TO DO: Fix This
     #
     secondaryName = dataset.split('/')[2]
-    secondaryName = secondaryName.replace("RunIISummer20UL17NanoAODv9-20UL17JMENano","MCUL17NanoAODv9")#RENAME CAMPAIGN. CHECK ITS UPDATED
+    secondaryName = secondaryName.replace("RunIISummer20UL17NanoAODv9-20UL17JMENano_","MCUL17NanoAODv9")#RENAME CAMPAIGN. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("RunIISummer20UL17NanoAODv9-","MCUL17NanoAODv9")#RENAME CAMPAIGN. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("106X_mc2017_realistic_v9","") #REMOVE GT. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("-v1","")# 
