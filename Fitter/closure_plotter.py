@@ -1,22 +1,22 @@
-import ROOT,os,array,uuid
+import ROOT,os,array,uuid,itertools
 ROOT.gStyle.SetOptStat(0)
 etabin = array.array('d',[-5.0, -3.0,-2.75,-2.5,-2.0,-1.479,0.0,1.479,2.0,2.5,2.75,3.0, 5.0])
 ptbin = array.array('d',[20.0,25.0,30.0,40.0,50.0])
 def set_Style(hist1,hist2):
     hist1.SetMarkerStyle(ROOT.kOpenDiamond)
     hist2.SetMarkerStyle(ROOT.kOpenTriangleUp)
-    hist1.SetLineColor(ROOT.kRed)
-    hist2.SetLineColor(ROOT.kBlue)
-    hist1.SetMarkerColor(ROOT.kRed)
-    hist2.SetMarkerColor(ROOT.kBlue)
+    hist1.SetMarkerColor(46)
+    hist2.SetMarkerColor(38)
+    hist1.SetLineColorAlpha(46,1)
+    hist2.SetLineColorAlpha(38,0.7)
     hist1.SetMarkerSize(1.5)
     hist2.SetMarkerSize(1.5)
     hist1.SetLineWidth(2)
     hist2.SetLineWidth(2)
-def get_legend(hist1,hist2):
+def get_legend(hist1,hist2,param):
     legend = ROOT.TLegend(0.70,0.72,0.90,0.88)
-    legend.AddEntry(hist1)
-    legend.AddEntry(hist2)
+    legend.AddEntry(hist1,param['leg_str'][0])
+    legend.AddEntry(hist2,param['leg_str'][1])
     return legend
 def get_bound(hist1,hist2):
     return max(hist1.GetMaximum(),hist2.GetMaximum())*1.2, min(hist1.GetMinimum(),hist2.GetMinimum())*0.8
@@ -31,7 +31,7 @@ def errtoHist(hist,binx,biny):
     binlist = get_binN(hist,binx,biny,sliced=False)
     new_hist = ROOT.TH2D(get_random_str(),get_random_str(),len(ptbin)-1,ptbin,len(etabin)-1,etabin)
     for n in binlist:
-        err = hist.GetBinContent(n)
+        err = hist.GetBinError(n)
         new_hist.SetBinContent(n,err)
     return new_hist
 def get_binN(hist,binx,biny,sliced = True):
@@ -71,7 +71,7 @@ def get_compare_stack(hist1,hist2,errhist1,errhist2,binx,biny):
         stack.append(hist2_slice)
         stacks.append(stack)
     return stacks
-def draw_stack(file_1,file_2,histkey,save_path):
+def draw_stack(file_1,file_2,histkey,save_path,param):
     save_path = os.path.join(save_path,histkey)
     make_not_exist_dir(save_path)
     hist1 = file_1.Get(histkey)
@@ -94,17 +94,31 @@ def draw_stack(file_1,file_2,histkey,save_path):
         stack[1].SetMaximum(ubound)
         stack[1].SetMinimum(lbound)
         c1.cd()
-        stack[0].Draw("PE0")
-        stack[1].Draw("PE0 same")
-        leg = get_legend(stack[0],stack[1])
+        stack[0].Draw("PE1")
+        stack[1].Draw("PE1 same")
+        leg = get_legend(stack[0],stack[1],param)
+        leg.SetFillStyle(0)
         leg.Draw('same')
         c1.Draw()
         c1.SaveAs(os.path.join(save_path,namestr + '.pdf'))
-    
+def get_histkey(what, isMC,era,wp):
+    return 'h2_%s_%sUL%s_%s' %  (what, 'mc', era, wp) if isMC else 'h2_%s_%sUL%s_%s' %  (what, 'data', era, wp) 
 
 if __name__ == "__main__":
     target_1 = '/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Fitter/result/Muon_Single_Ch/method3/postprocessed/result.root'
     target_2 = '/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Fitter/result/Electron_Single_Ch/method3/postprocessed/result.root'
     file_1 = ROOT.TFile(target_1,'READ')
     file_2= ROOT.TFile(target_2,'READ')
-    draw_stack(file_1,file_2,'h2_mistag_mcUL2018_T','./Plot')
+    eras = ['2018','2017','2016APV','2016']
+    whats = ['eff','effgen','mistag','mistaggen']
+    wps = ['T','M','L']
+    isMCs = [True,False]
+    param = {}
+    param['leg_str']=['Muon Ch.','Electron Ch.']
+    for tup in itertools.product(whats,isMCs,eras,wps):
+        if 'gen' in tup[0] and not tup[1]: 
+            continue
+        histkey = get_histkey(tup[0],tup[1],tup[2],tup[3])
+        draw_stack(file_1,file_2,histkey,'./Plot',param)
+        if tup[1]:
+            draw_stack(file_1,file_2,histkey.replace('mc','sf'),'./Plot',param)
