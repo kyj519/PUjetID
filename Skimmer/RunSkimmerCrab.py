@@ -13,16 +13,19 @@ parser.add_argument('-jobNum','--jobNum', type=int, default=1 ) #NOTE: This will
 parser.add_argument('--era',              type=str, default="")
 parser.add_argument('--isMC',             type=int ,default=0)
 parser.add_argument('--dataStream',       type=str ,default="")
+parser.add_argument('--useJMENano', action='store_true')
 
 args = parser.parse_args()
 era  = args.era
 isMC = args.isMC
 dataStream = args.dataStream
+useJMENano = args.useJMENano
 
 print "args = ", args
 print "era  = ", era
 print "isMC = ", isMC 
 print "dataStream = ", dataStream
+print 'useJMENano', useJMENano  
 
 isDoubleElecData=False
 isDoubleMuonData=False
@@ -55,7 +58,7 @@ selection = GetSelection(era)
 #
 # Get list of modules modules
 #
-modules = GetModules(era,isMC,dataStream)
+modules = GetModules(era,isMC,dataStream,useJMENano)
 
 print "\n"
 print "Just printout what we will give to the PostProcessor"

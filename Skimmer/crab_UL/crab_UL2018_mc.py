@@ -7,7 +7,7 @@ crab_common.config.JobType.maxJobRuntimeMin = 600
 crab_common.config.JobType.scriptArgs = [
   'era=UL2018',
   'isMC=1',
-  'dataStream=MC',
+  'dataStream=MC'
 ]
 
 if __name__ == '__main__':
@@ -23,6 +23,8 @@ if __name__ == '__main__':
 
   from CRABAPI.RawCommand import crabCommand
   for i, dataset in enumerate(samplelist):
+    if 'JMENano' in dataset:
+      crab_common.config.JobType.scriptArgs.append('useJMENano')
     print "%d/%d:Sending CRAB job: %s" % (i+1,len(samplelist), dataset)
     crab_common.config.Data.inputDataset = dataset
     #
@@ -39,6 +41,7 @@ if __name__ == '__main__':
     # TO DO: Fix This
     #
     secondaryName = dataset.split('/')[2]
+    secondaryName = secondaryName.replace("RunIISummer20UL18NanoAODv9-20UL18JMENano","MCUL18NanoAODv9")#RENAME CAMPAIGN. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("RunIISummer20UL18NanoAODv9-","MCUL18NanoAODv9")#RENAME CAMPAIGN. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("106X_upgrade2018_realistic_v16_L1v1","") #REMOVE GT. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("-v1","")# 

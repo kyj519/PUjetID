@@ -23,6 +23,8 @@ if __name__ == '__main__':
 
   from CRABAPI.RawCommand import crabCommand
   for i, dataset in enumerate(samplelist):
+    if 'JMENano' in dataset:
+      crab_common.config.JobType.scriptArgs.append('useJMENano')
     print "%d/%d:Sending CRAB job: %s" % (i+1,len(samplelist), dataset)
     crab_common.config.Data.inputDataset = dataset
     #
@@ -39,6 +41,7 @@ if __name__ == '__main__':
     # TO DO: Fix This
     #
     secondaryName = dataset.split('/')[2]
+    secondaryName = secondaryName.replace("RunIISummer20UL16NanoAODv9-20UL16JMENano","MCUL16NanoAODv9")#RENAME CAMPAIGN. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("RunIISummer20UL16NanoAODv9-","MCUL16NanoAODv9")#RENAME CAMPAIGN. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("106X_mcRun2_asymptotic_v17","") #REMOVE GT. CHECK ITS UPDATED
     secondaryName = secondaryName.replace("-v1","")# 
