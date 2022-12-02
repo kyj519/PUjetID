@@ -25,7 +25,7 @@ if __name__ == '__main__':
     print "%d/%d:Sending CRAB job: %s" % (i+1,len(samplelist), dataset)
     crab_common.config.Data.inputDataset = dataset
     if 'JMENano' in dataset:
-      crab_common.config.JobType.scriptArgs.append('useJMENano')
+      crab_common.config.JobType.scriptArgs.append('useJMENano=1')
     #
     # Have to make unique requestName. 
     #

@@ -13,13 +13,13 @@ parser.add_argument('-jobNum','--jobNum', type=int, default=1 ) #NOTE: This will
 parser.add_argument('--era',              type=str, default="")
 parser.add_argument('--isMC',             type=int ,default=0)
 parser.add_argument('--dataStream',       type=str ,default="")
-parser.add_argument('--useJMENano', action='store_true')
+parser.add_argument('--useJMENano', type=int, default = 0)
 
 args = parser.parse_args()
 era  = args.era
 isMC = args.isMC
 dataStream = args.dataStream
-useJMENano = args.useJMENano
+useJMENano = True if args.useJMENano else False
 
 print "args = ", args
 print "era  = ", era

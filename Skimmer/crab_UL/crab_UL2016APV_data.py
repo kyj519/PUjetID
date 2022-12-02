@@ -37,7 +37,7 @@ if __name__ == '__main__':
       'runPeriod='+runPeriod
     ]
     if 'JMENano' in dataset:
-      crab_common.config.JobType.scriptArgs.append('useJMENano')
+      crab_common.config.JobType.scriptArgs.append('useJMENano=1')
     #
     # Have to make unique requestName. 
     #

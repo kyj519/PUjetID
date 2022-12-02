@@ -1,11 +1,20 @@
 import os, htcondor
 from datetime import datetime
+def make_not_exist_dir(path):
+    if os.path.isdir(path):
+        return
+    else:
+        os.makedirs(path)
 Eras = ['UL2018','UL2017','UL2016','UL2016APV']
 orders = ['NLO']
 workingPoints = ['Loose','Medium',"Tight"]
 systs = ['central', 'jesTotalUp', 'jesTotalDown', 'noJER', 'jerUp', 'jerDown']
 runkeys = [era+" "+order+" "+wp+" "+syst for syst in systs for wp in workingPoints for order in orders for era in Eras]
+
 condor_dir = "/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Fitter/condor/"
+make_not_exist_dir(condor_dir)
+make_not_exist_dir(os.path.join(condor_dir,'job'))
+make_not_exist_dir(os.path.join(condor_dir,'log'))
 njobs = 0
 os.system('rm -rf '+condor_dir+'job/*')
 os.system('rm -rf '+condor_dir+'log/*')

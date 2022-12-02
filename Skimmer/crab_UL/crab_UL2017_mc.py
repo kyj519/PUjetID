@@ -23,7 +23,7 @@ if __name__ == '__main__':
   from CRABAPI.RawCommand import crabCommand
   for i, dataset in enumerate(samplelist):
     if 'JMENano' in dataset:
-      crab_common.config.JobType.scriptArgs.append('useJMENano')
+      crab_common.config.JobType.scriptArgs.append('useJMENano=1')
     print "%d/%d:Sending CRAB job: %s" % (i+1,len(samplelist), dataset)
     crab_common.config.Data.inputDataset = dataset
     #
