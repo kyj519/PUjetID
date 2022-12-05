@@ -5,7 +5,10 @@ echo Check if TTY
 if [ "`tty`" != "not a tty" ]; then
   echo "YOU SHOULD NOT RUN THIS IN INTERACTIVE, IT DELETES YOUR LOCAL FILES"
 else
-
+cd $/src
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+cmsenv
+cd -
 ls -lR .
 echo "ENV..................................."
 env 
@@ -25,5 +28,5 @@ mv module $CMSSW_BASE/module
 mv python $CMSSW_BASE/python
 
 echo Found Proxy in: $X509_USER_PROXY
-python RunSkimmerCrab.py --jobNum=$1 --$2 --$3 --$4 --$5
+python RunSkimmerCrab.py --jobNum=$1 --$2 --$3 --$4 --${@: -1}
 fi

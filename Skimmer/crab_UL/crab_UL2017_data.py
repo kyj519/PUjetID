@@ -37,7 +37,7 @@ if __name__ == '__main__':
       'runPeriod='+runPeriod
     ]
     if 'JMENano' in dataset:
-      crab_common.config.JobType.scriptArgs.append('useJMENano')
+      crab_common.config.JobType.scriptArgs.append('useJMENano=1')
     #
     # Have to make unique requestName. 
     #
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     # TO DO: Fix This
     #
     secondaryName = dataset.split('/')[2]
-    secondaryName = secondaryName.replace("UL2017_MiniAODv2_JMENanoAODv9","DataUL17NanoAODv9") #CHECK
+    secondaryName = secondaryName.replace("UL2017_MiniAODv2_JMENanoAODv9_","DataUL17NanoAODv9") #CHECK
     secondaryName = secondaryName.replace("UL2017_MiniAODv2_NanoAODv9","DataUL17NanoAODv9") #CHECK
     secondaryName = secondaryName.replace("-v1","") #CHECK
     secondaryName = secondaryName.replace("-v2","") #CHECK
