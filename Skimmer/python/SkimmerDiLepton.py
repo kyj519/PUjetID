@@ -1143,7 +1143,8 @@ class SkimmerDiLepton(Module):
             #
             jetPuIdDiscOTF = -9.
             if self.calcBDTDiscOTF:
-                jetPuIdDiscOTF = self.calcPUIDBDTDisc(event, jet)
+                #jetPuIdDiscOTF = self.calcPUIDBDTDisc(event, jet)
+                jetPuIdDiscOTF = -9.
                 ##########PUID training var#########
                 self.out.fillBranch(jetSystPreFix+"jetSel" +str(i)+"_PV_npvsGood", event.PV_npvsGood)
                 self.out.fillBranch(jetSystPreFix+"jetSel" +
