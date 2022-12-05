@@ -181,48 +181,7 @@ def GetModules(era, isMC, dataStream, useJMENano):
   #
   # UL 2017
   #
-  elif era == "UL2017":
-    if isMC: 
-      modules=[puWeight_UL2017(), muonRocCorUL2017(), jetCorr_AK4_UL2017_mc(), SkimmerDiLepton_UL2017_mc()]
-    else:              
-      if "DoubleMuon" in dataStream:
-        modules=[muonRocCorUL2017(),SkimmerDiLepton_UL2017_data_dimuon()]
-      elif "DoubleEG" in dataStream:
-        modules=[muonRocCorUL2017(), SkimmerDiLepton_UL2017_data_dielectron()]
-  #
-  # UL 2018
-  #
-  elif era == "UL2018":
-    if isMC: 
-      modules=[puWeight_UL2018(), muonRocCorUL2018(), jetCorr_AK4_UL2018_mc(), SkimmerDiLepton_UL2018_mc()]
-    else:              
-      if "DoubleMuon" in dataStream:
-        modules=[muonRocCorUL2018(),SkimmerDiLepton_UL2018_data_dimuon()]
-      elif "EGamma" in dataStream:
-        modules=[muonRocCorUL2018(), SkimmerDiLepton_UL2018_data_dielectron()]
-  #
-  # UL 2016APV
-  #
-  elif era == "UL2016APV":
-    if isMC: 
-      modules=[puWeight_UL2016(), muonRocCorUL2016APV(), jetCorr_AK4_UL2016APV_mc(), SkimmerDiLepton_UL2016APV_mc()]
-    else:              
-      if "DoubleMuon" in dataStream:
-        modules=[muonRocCorUL2016APV(), SkimmerDiLepton_UL2016APV_data_dimuon()]
-      elif "DoubleEG" in dataStream:
-        modules=[muonRocCorUL2016APV(), SkimmerDiLepton_UL2016APV_data_dielectron()]
-  #
-  # UL 2016
-  #
-  elif era == "UL2016":
-    if isMC: 
-      modules=[puWeight_UL2016(), muonRocCorUL2016(), jetCorr_AK4_UL2016_mc(), SkimmerDiLepton_UL2016_JMENanoV1_mc()]
-    else:              
-      if "DoubleMuon" in dataStream:
-        modules=[muonRocCorUL2016(), SkimmerDiLepton_UL2016_JMENanoV1_data_dimuon()]
-      elif "DoubleEG" in dataStream:
-        modules=[muonRocCorUL2016(), SkimmerDiLepton_UL2016_JMENanoV1_data_dielectron()]
-        
+      
   if useJMENano:
     if era == "UL2017":
       if isMC: 
@@ -265,7 +224,49 @@ def GetModules(era, isMC, dataStream, useJMENano):
           modules=[muonRocCorUL2016(), SkimmerDiLepton_UL2016_JMENanoV1_data_dimuon()]
         elif "DoubleEG" in dataStream:
           modules=[muonRocCorUL2016(), SkimmerDiLepton_UL2016_JMENanoV1_data_dielectron()]
-
+  else:
+    if era == "UL2017":
+      if isMC: 
+        modules=[puWeight_UL2017(), muonRocCorUL2017(), jetCorr_AK4_UL2017_mc(), SkimmerDiLepton_UL2017_mc()]
+      else:              
+        if "DoubleMuon" in dataStream:
+          modules=[muonRocCorUL2017(),SkimmerDiLepton_UL2017_data_dimuon()]
+        elif "DoubleEG" in dataStream:
+          modules=[muonRocCorUL2017(), SkimmerDiLepton_UL2017_data_dielectron()]
+    #
+    # UL 2018
+    #
+    elif era == "UL2018":
+      if isMC: 
+        modules=[puWeight_UL2018(), muonRocCorUL2018(), jetCorr_AK4_UL2018_mc(), SkimmerDiLepton_UL2018_mc()]
+      else:              
+        if "DoubleMuon" in dataStream:
+          modules=[muonRocCorUL2018(),SkimmerDiLepton_UL2018_data_dimuon()]
+        elif "EGamma" in dataStream:
+          modules=[muonRocCorUL2018(), SkimmerDiLepton_UL2018_data_dielectron()]
+    #
+    # UL 2016APV
+    #
+    elif era == "UL2016APV":
+      if isMC: 
+        modules=[puWeight_UL2016(), muonRocCorUL2016APV(), jetCorr_AK4_UL2016APV_mc(), SkimmerDiLepton_UL2016APV_mc()]
+      else:              
+        if "DoubleMuon" in dataStream:
+          modules=[muonRocCorUL2016APV(), SkimmerDiLepton_UL2016APV_data_dimuon()]
+        elif "DoubleEG" in dataStream:
+          modules=[muonRocCorUL2016APV(), SkimmerDiLepton_UL2016APV_data_dielectron()]
+    #
+    # UL 2016
+    #
+    elif era == "UL2016":
+      if isMC: 
+        modules=[puWeight_UL2016(), muonRocCorUL2016(), jetCorr_AK4_UL2016_mc(), SkimmerDiLepton_UL2016_JMENanoV1_mc()]
+      else:              
+        if "DoubleMuon" in dataStream:
+          modules=[muonRocCorUL2016(), SkimmerDiLepton_UL2016_JMENanoV1_data_dimuon()]
+        elif "DoubleEG" in dataStream:
+          modules=[muonRocCorUL2016(), SkimmerDiLepton_UL2016_JMENanoV1_data_dielectron()]
+    
   return modules
 
 

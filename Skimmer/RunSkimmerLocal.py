@@ -43,12 +43,12 @@ print "isDoubleMuonData = ", isDoubleMuonData
 if isMC and (isDoubleElecData or isDoubleMuonData):
   raise Exception('isMC flag cannot be set to true with isDoubleMuonData or isDoubleElecData. Please check! (isMC={},isDoubleMuonData={},isDoubleElecData={})'.format(isMC,isDoubleMuonData,isDoubleElecData))
 
-CMSXROOTD="root://xrootd-cms.infn.it/"
+CMSXROOTD="root://cms-xrd-global.cern.ch//"
 files=[]
 
 if era == "UL2017":
   if isMC:
-    files = ["/store/mc/RunIISummer20UL17NanoAODv9/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/106X_mc2017_realistic_v9-v1/70000/96891E58-6248-4046-8701-CDC485783799.root"]
+    files = ["/store/mc/RunIISummer20UL17NanoAODv9/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/20UL17JMENano_106X_mc2017_realistic_v9-v1/2430000/0DBEF8A7-C29A-C64D-90FA-2DB21FB5876C.root "]
   else:
     if isDoubleMuonData: files = [
       # "/store/data/Run2017F/DoubleMuon/NANOAOD/UL2017_MiniAODv2_NanoAODv9-v1/120000/16F764BE-E96D-A44D-B252-272721365F16.root"
@@ -88,7 +88,7 @@ selection = GetSelection(era)
 #
 # Get list of modules modules
 #
-modules = GetModules(era,isMC,dataStream)
+modules = GetModules(era,isMC,dataStream,True)
 
 print "\n"
 print "Just printout what we will give to the PostProcessor"
