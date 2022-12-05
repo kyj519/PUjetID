@@ -60,6 +60,7 @@ class SkimmerDiLepton(Module):
         self.calcBDTDiscOTF = False
         if self.doOTFPUJetIDBDT:
             if self.era == "UL2017" or self.era == "UL2018" or self.era == "UL2016APV" or self.era == "UL2016":
+                self.setupTMVAReader()
                 self.calcBDTDiscOTF = True 
 
         ########Loading Jet res file#######
