@@ -57,7 +57,7 @@ Samplelist = [
     "MCUL16_WZ",
     "MCUL16_ZZ"
     ]
-
+Samplelist=['MCUL18_DY_MG','MCUL17_DY_MG','MCUL16_DY_MG','MCUL16APV_DY_MG']
 condor_dir = os.path.realpath("./")
 condor_dir = condor_dir + "/condor_skim/"
 if not os.path.isdir(condor_dir):
@@ -66,12 +66,12 @@ if not os.path.isdir(condor_dir):
 njobs = 0
 os.system('rm -rf '+condor_dir+'job/*')
 os.system('rm -rf '+condor_dir+'log/*')
-ncores = 4
+ncores = 32
 for sample in Samplelist:
 	f = open(condor_dir+"job/job_"+sample+".sh","w+")
 	f.write("#!/bin/bash\n")
 	f.write('source %s../RunCondor_SkimNtuples.sh %s %d' % (condor_dir,sample,ncores))
-	mem = 8192
+	mem = 8192*4
 
 	os.system("chmod 755 "+condor_dir+"job/job_"+sample+".sh")
 	f.close()

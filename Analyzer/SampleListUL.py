@@ -11,7 +11,7 @@ version="DiLeptonSkim_ULNanoV9_v1p4"
 
 #EOSURL="root://cluster142.knu.ac.kr/"
 EOSURL=""
-EOSDIR="/gv0/Users/yeonjoon/ntuples/"
+EOSDIR="/gv0/Users/yeonjoon/ntuples_JMENano/"
 CRABDIR="JetPUId_"+version+"/CRABOUTPUT/"
 NTUPDIR="JetPUId_"+version+"/ntuples_skim/"
 Samples = collections.OrderedDict()
@@ -33,7 +33,7 @@ Samples["MCUL18_DY_MG"] = Sample(
   name="MCUL18_DY_MG",
   crabFiles=[
     EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/JetPUId_MCUL18NanoAODv9_"+version+"/*/*/tree_*.root",
-    EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/JetPUId_MCUL18NanoAODv9_ext1_"+version+"/*/*/tree_*.root",
+    #EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/JetPUId_MCUL18NanoAODv9_ext1_"+version+"/*/*/tree_*.root",
   ],
   ntupleFiles=[
     EOSDIR+NTUPDIR+"ntuple_MCUL18_DY_MG.root"
@@ -238,7 +238,7 @@ Samples["MCUL17_DY_MG"] = Sample(
   name="MCUL17_DY_MG",
   crabFiles=[
     EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/JetPUId_MCUL17NanoAODv9_"+version+"/*/*/tree_*.root",
-    EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/JetPUId_MCUL17NanoAODv9_ext1_"+version+"/*/*/tree_*.root",
+    #EOSDIR+CRABDIR+"DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/JetPUId_MCUL17NanoAODv9_ext1_"+version+"/*/*/tree_*.root",
   ],
   ntupleFiles=[
     EOSDIR+NTUPDIR+"ntuple_MCUL17_DY_MG.root"

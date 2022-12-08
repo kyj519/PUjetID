@@ -120,8 +120,7 @@ class SkimmerDiLepton(Module):
         return  jet_pt_resolution*jet_pt_resolution_SF
 
     def setupTMVAReader(self):
-        self.tmvaWeightsPath = os.environ['CMSSW_BASE'] + \
-            "/src/PUjetID/Skimmer/data/mvaWeights/"
+        self.tmvaWeightsPath = os.path.join(os.environ['CMSSW_BASE'] ,"/src/PUjetID/Skimmer/data/mvaWeights/")
         #
         # TMVA BDT weights
         #

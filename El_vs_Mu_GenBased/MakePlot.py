@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from helpers import PlotDataMC
-
+import plot_params
 import os
 import glob
 import collections
@@ -15,7 +15,7 @@ ROOT.gROOT.SetBatch(True)
 ROOT.gROOT.LoadMacro(
     "/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Validation/tdrstyle.C")
 ROOT.gROOT.ProcessLine("setTDRStyle();")
-
+doLogY = False
 
 class MyDict(collections.OrderedDict):
     def __missing__(self, key):
@@ -68,6 +68,7 @@ def ApplyBaselineSelection(df, era, syst, isMu):
     # df = df.Define("probeJet_eta2p5To3p0","probeJet_abseta>=2.5f && probeJet_abseta<3.0f")
     # df = df.Define("probeJet_eta2p5To3p0_goodBal", "probeJet_eta2p5To3p0 && probeJet_goodBalance")
     isMC =1 
+    
     if isMC:
         df = df.Define("probeJet_passGenMatch", probeJetStr+"_gen_match")
     if "UL16" in era:
@@ -111,6 +112,7 @@ def ApplyBaselineSelection(df, era, syst, isMu):
     df = df.Define("probeJet_neHEF",probeJetStr+"_neHEF")
     df = df.Define("probeJet_muEF",probeJetStr+"_muEF")
     df = df.Define("probeJet_puIdDiscOTF",probeJetStr+"_puIdDiscOTF")
+    df = df.Define("probeJet_puIdDisc",probeJetStr+"_puIdDisc")
     
     return df
 
@@ -249,10 +251,12 @@ def main():
   parser = argparse.ArgumentParser("")
   parser.add_argument('--era', dest='era', type=str, required=True)
   parser.add_argument('--ncores', dest='ncores', type=int)
+  parser.add_argument('--doLogY', dest='doLogY', action='store_true')
   args = parser.parse_args()
   ncores = args.ncores
   ROOT.ROOT.EnableImplicitMT(ncores)
   era = args.era
+  doLogY = args.doLogY
   if era == "UL17":
     yearStr = "UL2017"
     lumiStr = "41.5"
@@ -448,8 +452,8 @@ def MakeValidation(era, yearStr, lumiStr):
   #
   #
   ######################################################
-  outDir="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/plots_pujetid_datamc_elch/"
-  outDir2="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/plots_pujetid_datamc_much/"
+  outDir="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/nostack/"
+  outDir2="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/stack/"
 
 
 
@@ -459,7 +463,8 @@ def MakeValidation(era, yearStr, lumiStr):
   #
   for cutName in cutNames:
     for hInfo in histoInfos:
-      
+      if not plot_params.doLogY:
+        outDir = outDir2
       MakePlot(histograms_El,histograms_Mu,histoInfos, cutName, hInfo, "Data", mcListFinal, yearStr, lumiStr, outDir, extratext=cutName.replace('_',' ').replace('eta','\eta '))
 
 if __name__ == '__main__':

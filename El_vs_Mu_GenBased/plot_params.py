@@ -1,6 +1,6 @@
 import collections
 import ROOT
-
+from MakePlot import doLogY
 class MyDict(collections.OrderedDict):
     def __missing__(self, key):
         val = self[key] = MyDict()
@@ -39,7 +39,7 @@ def getSamples(era,path_inDir):
     }
   }
   return samples
-doLogY = True
+
 histoInfos = MyDict()
 histoInfos["npv"] = {
   "branch": "PV_npvs",
@@ -47,7 +47,7 @@ histoInfos["npv"] = {
   "doLogy": doLogY,
   "xaxistitle": "NPV",
 }
-histoInfos["probeJet_closestgen_dR"] = {
+histoInfos["closestgen_dR"] = {
   "branch": "probeJet_closestgen_dR",
   "model": ROOT.RDF.TH1DModel("h_probeJet_closestgen_dR", "", 60, 0.0, 1.0),
   "doLogy": doLogY,
@@ -67,7 +67,7 @@ histoInfos["beta_2"] = {
 }
 histoInfos["dR2Mean"] = {
   "branch": "probeJet_puId_dR2Mean",
-  "model": ROOT.RDF.TH1DModel("beta", "", 30, 0, 0.15),
+  "model": ROOT.RDF.TH1DModel("beta", "", 60, 0, 0.15),
   "doLogy": doLogY,
   "xaxistitle": "mean of jet \Delta R^2 (p_T^2 weighted) ",
 }
@@ -103,7 +103,7 @@ histoInfos["jetR"] = {
 }
 histoInfos["jetRchg"] = {
   "branch": "probeJet_puId_jetRchg",
-  "model": ROOT.RDF.TH1DModel("jetRchg", "", 50, 0, 0.5),
+  "model": ROOT.RDF.TH1DModel("jetRchg", "", 100, 0, 0.1),
   "doLogy": doLogY,
   "xaxistitle": "leading chrged con. p_T fraction",
 }
@@ -121,7 +121,7 @@ histoInfos["minW"] = {
 }
 histoInfos["nCharged"] = {
   "branch": "probeJet_puId_nCharged",
-  "model": ROOT.RDF.TH1DModel("nCharged", "", 20, 0, 20),
+  "model": ROOT.RDF.TH1DModel("nCharged", "", 40, 0, 40),
   "doLogy": doLogY,
   "xaxistitle": "n. of Charged con.",
 }
@@ -169,7 +169,49 @@ histoInfos["neHEF"] = {
 }
 histoInfos["puIdDiscOTF"] = {
   "branch": "probeJet_puIdDiscOTF",
-  "model": ROOT.RDF.TH1DModel("puIdDiscOTF", "", 100, 0.6, 1),
+  "model": ROOT.RDF.TH1DModel("puIdDiscOTF", "", 100, 0.5, 1),
   "doLogy": doLogY,
   "xaxistitle": "puId score on the fly",
 }
+histoInfos["puIdDisc"] = {
+  "branch": "probeJet_puIdDisc",
+  "model": ROOT.RDF.TH1DModel("puIdDisc", "", 100, 0.5, 1),
+  "doLogy": doLogY,
+  "xaxistitle": "puId score",
+}
+histoInfos["puIdDiscOTF_2"] = {
+  "branch": "probeJet_puIdDiscOTF",
+  "model": ROOT.RDF.TH1DModel("puIdDiscOTF", "", 100, 0, 0.5),
+  "doLogy": doLogY,
+  "xaxistitle": "puId score on the fly",
+}
+histoInfos["puIdDisc_2"] = {
+  "branch": "probeJet_puIdDisc",
+  "model": ROOT.RDF.TH1DModel("puIdDisc", "", 100, 0, 0.5),
+  "doLogy": doLogY,
+  "xaxistitle": "puId score",
+}
+histoInfos["pt"] = {
+  "branch": "probeJet_pt",
+  "model": ROOT.RDF.TH1DModel("pt", "", 100, 20, 50),
+  "doLogy": doLogY,
+  "xaxistitle": "p_T",
+}
+histoInfos["eta"] = {
+  "branch": "probeJet_eta",
+  "model": ROOT.RDF.TH1DModel("eta", "", 50, -5, 5),
+  "doLogy": doLogY,
+  "xaxistitle": "\eta",
+}
+histoInfos["rho"] = {
+  "branch": "fixedGridRhoFastjetAll",
+  "model": ROOT.RDF.TH1DModel("rho", "", 100, 0, 80),
+  "doLogy": doLogY,
+  "xaxistitle": "#rho",
+}
+# histoInfos["puIdDisc_vs_otf"] = {
+#   "branch": "probeJet_puIdDisc",
+#   "model": ROOT.RDF.TH1DModel("puIdDisc_vs_otf", "", 100, 0.6, 1),
+#   "doLogy": doLogY,
+#   "xaxistitle": "puId score",
+# }

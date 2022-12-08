@@ -3,7 +3,7 @@ import ROOT
 import collections
 import array
 import math
-
+from MakePlot import doLogY
 def PlotDataMC(canvName,mcStack_El,  mcTotal_El, mcStack_Mu,  mcTotal_Mu, leg, xaxistitle, yaxistitle, year, lumi, doLogy, pdfName, extratxt = ''):
   #
   # Make TCanvas
@@ -51,8 +51,12 @@ def PlotDataMC(canvName,mcStack_El,  mcTotal_El, mcStack_Mu,  mcTotal_Mu, leg, x
   #
 
   mcStack_Mu.SetMinimum(0.01)
-  mcStack_El.Draw("hist e")
-  mcStack_Mu.Draw("hist e same")
+  if doLogY:
+    mcStack_El.Draw("hist e nostck")
+    mcStack_Mu.Draw("hist e nostack same")
+  else:
+    mcStack_El.Draw("hist e")
+    mcStack_Mu.Draw("hist e same")
   mcStack_El.GetXaxis().SetTitle(xaxistitle)
   mcStack_El.GetXaxis().SetTitleSize(0.04)
   mcStack_El.GetYaxis().SetTitle(yaxistitle)
