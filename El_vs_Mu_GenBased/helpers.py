@@ -3,8 +3,8 @@ import ROOT
 import collections
 import array
 import math
-from MakePlot import doLogY
-def PlotDataMC(canvName,mcStack_El,  mcTotal_El, mcStack_Mu,  mcTotal_Mu, leg, xaxistitle, yaxistitle, year, lumi, doLogy, pdfName, extratxt = ''):
+
+def PlotDataMC(canvName,mcStack_all,mcStack_El,  mcTotal_El, mcStack_Mu,  mcTotal_Mu, leg, xaxistitle, yaxistitle, year, lumi, pdfName, doLogY,extratxt = ''):
   #
   # Make TCanvas
   #
@@ -49,23 +49,35 @@ def PlotDataMC(canvName,mcStack_El,  mcTotal_El, mcStack_Mu,  mcTotal_Mu, leg, x
   #
   # backgrounds
   #
-
-  mcStack_Mu.SetMinimum(0.01)
-  if doLogY:
-    mcStack_El.Draw("hist e nostck")
-    mcStack_Mu.Draw("hist e nostack same")
-  else:
-    mcStack_El.Draw("hist e")
-    mcStack_Mu.Draw("hist e same")
-  mcStack_El.GetXaxis().SetTitle(xaxistitle)
-  mcStack_El.GetXaxis().SetTitleSize(0.04)
-  mcStack_El.GetYaxis().SetTitle(yaxistitle)
-  mcStack_El.GetYaxis().SetTitleSize(0.04)
-  mcStack_El.GetXaxis().SetLabelSize(0.03)
-  mcStack_El.GetYaxis().SetLabelSize(0.03)
+#####################################################
+  # mcStack_Mu.SetMinimum(0.01)
+  # if doLogY:
+  #   mcStack_Mu.Draw("e nostack")
+  #   mcStack_El.Draw("e nostck same")
+  # else:
+  #   mcStack_Mu.Draw("hist e")
+  #   mcStack_El.Draw("hist e same")
+    
+  # mcStack_El.GetXaxis().SetTitle(xaxistitle)
+  # mcStack_El.GetXaxis().SetTitleSize(0.04)
+  # mcStack_El.GetYaxis().SetTitle(yaxistitle)
+  # mcStack_El.GetYaxis().SetTitleSize(0.04)
+  # mcStack_El.GetXaxis().SetLabelSize(0.03)
+  # mcStack_El.GetYaxis().SetLabelSize(0.03)
   #
   # Draw Error band of total bkgd
+####################################################
+  mcStack_all.SetMinimum(0.01)
 
+  mcStack_all.Draw("hist e1 nostack")
+
+    
+  mcStack_all.GetXaxis().SetTitle(xaxistitle)
+  mcStack_all.GetXaxis().SetTitleSize(0.04)
+  mcStack_all.GetYaxis().SetTitle(yaxistitle)
+  mcStack_all.GetYaxis().SetTitleSize(0.04)
+  mcStack_all.GetXaxis().SetLabelSize(0.03)
+  mcStack_all.GetYaxis().SetLabelSize(0.03)
   #
   # data
   #
@@ -80,19 +92,29 @@ def PlotDataMC(canvName,mcStack_El,  mcTotal_El, mcStack_Mu,  mcTotal_Mu, leg, x
 
   # legend
   #
+  ###################################################
+  # maximum = None 
+  # maximum =mcStack_all.GetMaximum()
+  # mcStack_Mu.SetMaximum(maximum * 1.5)
+  # mcStack_El.SetMaximum(maximum * 1.5)
+  # leg.Draw("same")
+  # if doLogy: 
+  #   canv.SetLogy()
+  #   mcStack_Mu.SetMaximum(maximum * 100)
+  #   mcStack_Mu.SetMinimum(0.1)
+  #   mcStack_El.SetMaximum(maximum * 100)
+  #   mcStack_El.SetMinimum(0.1)
+  #   canv.Update()
+  ####################################################
   maximum = None 
-  maximum =mcStack_Mu.GetMaximum()
+  maximum =mcStack_all.GetMaximum()
   mcStack_Mu.SetMaximum(maximum * 1.5)
-  mcStack_El.SetMaximum(maximum * 1.5)
   leg.Draw("same")
-  if doLogy: 
+  if doLogY: 
     canv.SetLogy()
-    mcStack_Mu.SetMaximum(maximum * 100)
-    mcStack_Mu.SetMinimum(0.1)
-    mcStack_El.SetMaximum(maximum * 100)
-    mcStack_El.SetMinimum(0.1)
+    mcStack_all.SetMaximum(maximum * 100)
+    mcStack_all.SetMinimum(0.1)
     canv.Update()
-  
   #Go to 2nd pad 
 
   #

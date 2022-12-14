@@ -5,10 +5,10 @@ echo Check if TTY
 if [ "`tty`" != "not a tty" ]; then
   echo "YOU SHOULD NOT RUN THIS IN INTERACTIVE, IT DELETES YOUR LOCAL FILES"
 else
-cd $/src
-source /cvmfs/cms.cern.ch/cmsset_default.sh
-cmsenv
-cd -
+# cd $/src
+# source /cvmfs/cms.cern.ch/cmsset_default.sh
+# cmsenv
+# cd -
 ls -lR .
 echo "ENV..................................."
 env 

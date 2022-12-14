@@ -14,7 +14,6 @@ parser.add_argument('--outDir',           type=str, default=".")
 parser.add_argument('--isMC',             type=int ,default=0)
 parser.add_argument('--dataStream',       type=str ,default="")
 parser.add_argument('--inputNanoAOD', type=str,default=0)
-parser.add_argument('--outputFname', type = str, default="")
 
 args        = parser.parse_args()
 era         = args.era
@@ -22,7 +21,6 @@ outDir      = args.outDir
 isMC        = args.isMC
 dataStream  = args.dataStream
 NanoAOD = args.inputNanoAOD
-outputFname = args.outputFname
 
 print "args = ", args
 print "era  = ", era
@@ -50,8 +48,8 @@ CMSXROOTD="root://xrootd-cms.infn.it/"
 files = []
 files.append(NanoAOD)
 
-varTxtFileIn="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Skimmer/script/branches_in.txt"
-varTxtFileOut="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Skimmer/script/branches_out.txt"
+varTxtFileIn="/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Skimmer/script/branches_in.txt"
+varTxtFileOut="/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Skimmer/script/branches_out.txt"
 
 from RunSkimmerHelper import *
 #
@@ -88,9 +86,7 @@ p=PostProcessor(
   provenance=False,
   fwkJobReport=False,
   jsonInput=jsonInput if not(isMC) else None,
-  prefetch=True,
-  outputFname=outputFname,
-  longTermCache=True
+  prefetch=True
 )
 p.run()
 

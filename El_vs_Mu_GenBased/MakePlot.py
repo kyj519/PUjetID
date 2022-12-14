@@ -15,7 +15,6 @@ ROOT.gROOT.SetBatch(True)
 ROOT.gROOT.LoadMacro(
     "/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Validation/tdrstyle.C")
 ROOT.gROOT.ProcessLine("setTDRStyle();")
-doLogY = False
 
 class MyDict(collections.OrderedDict):
     def __missing__(self, key):
@@ -26,7 +25,7 @@ class MyDict(collections.OrderedDict):
 
 prod_tag = "DiLeptonSkim_ULNanoV9_v1p4"
 EOSURL = ""
-path_inDir = "/gv0/Users/yeonjoon/ntuples_JMENano/JetPUId_"+prod_tag+"/ntuples_skim/"
+path_inDir = "/gv0/Users/yeonjoon/ntuples_JMENano_DiLepton_Reskim/JetPUId_"+prod_tag+"/ntuples_skim/"
 
 
 def ApplyBaselineSelection(df, era, syst, isMu):
@@ -186,7 +185,7 @@ def ApplyWeights(df, selLevel="Baseline", isMC=True, normFactor="1.f"):
   return df
 
 
-def MakePlot(histograms_El,histograms_Mu, histoInfos, cutName="", histoName="", dataName="", mcList=[], year="", lumi="", outDir="", extratext=''):
+def MakePlot(doLogY,histograms_El,histograms_Mu, histoInfos, cutName="", histoName="", dataName="", mcList=[], year="", lumi="", outDir="", extratext=''):
     mcListTemp = list(mcList)
 
     xLat, yLat = 0.25, 0.91
@@ -206,7 +205,8 @@ def MakePlot(histograms_El,histograms_Mu, histoInfos, cutName="", histoName="", 
 
     stack_mc_El = ROOT.THStack("stack_"+histoName+"_" +cutName+"_El", histoName+"_"+cutName+"_El")
     stack_mc_Mu = ROOT.THStack("stack_"+histoName+"_" +cutName+"_Mu", histoName+"_"+cutName+"_Mu")
-
+    stack_mc_all = ROOT.THStack("stack_"+histoName+"_" +cutName, histoName+"_"+cutName)
+    
     for mc in mcListTemp:
       alpha = 0 if mc == 'DY_REAL' else 0.5
       h_El = histograms_El[mc][cutName][histoName]
@@ -215,6 +215,7 @@ def MakePlot(histograms_El,histograms_Mu, histoInfos, cutName="", histoName="", 
       hC_El.SetLineWidth(2)
       hC_El.SetFillColorAlpha(colorsDict[mc],alpha)
       hC_El.SetMarkerSize(0)
+    
       stack_mc_El.Add(hC_El)
       histosTemp_El[mc] = hC_El
       h_mc_totalC_El = stack_mc_El.GetStack().Last().Clone(histoName+"_"+cutName+"_TotalMC_El")
@@ -227,6 +228,8 @@ def MakePlot(histograms_El,histograms_Mu, histoInfos, cutName="", histoName="", 
       stack_mc_Mu.Add(hC_Mu)
       histosTemp_Mu[mc] = hC_Mu
       h_mc_totalC_Mu = stack_mc_Mu.GetStack().Last().Clone(histoName+"_"+cutName+"_TotalMC_Mu")
+      stack_mc_all.Add(hC_Mu)
+      stack_mc_all.Add(hC_El)
 
     #
     #
@@ -242,8 +245,8 @@ def MakePlot(histograms_El,histograms_Mu, histoInfos, cutName="", histoName="", 
     if not os.path.exists("%sh_%s/%s" % (outDir, year, cutName)):
       os.makedirs("%sh_%s/%s" % (outDir, year, cutName))
     pdfName = "%sh_%s/%s/%s" % (outDir, year, cutName, histoName)
-    PlotDataMC("h_"+cutName+"_"+histoName, stack_mc_El, h_mc_totalC_El,stack_mc_Mu, h_mc_totalC_Mu,
-                leg, xaxistitle, yaxistitle, year, lumi, histoInfos[histoName]["doLogy"], pdfName, extratxt=extratext)
+    PlotDataMC("h_"+cutName+"_"+histoName, stack_mc_all,stack_mc_El, h_mc_totalC_El,stack_mc_Mu, h_mc_totalC_Mu,
+                leg, xaxistitle, yaxistitle, year, lumi, pdfName, doLogY,extratxt=extratext)
 
 
 def main():
@@ -251,7 +254,7 @@ def main():
   parser = argparse.ArgumentParser("")
   parser.add_argument('--era', dest='era', type=str, required=True)
   parser.add_argument('--ncores', dest='ncores', type=int)
-  parser.add_argument('--doLogY', dest='doLogY', action='store_true')
+  parser.add_argument('--doLogY', dest='doLogY', default=False,action='store_true')
   args = parser.parse_args()
   ncores = args.ncores
   ROOT.ROOT.EnableImplicitMT(ncores)
@@ -272,10 +275,10 @@ def main():
   else:
     raise Exception("Unrecognized era: "+era+". Please check!")
 
-  MakeValidation(era, yearStr, lumiStr)
+  MakeValidation(era, yearStr, lumiStr,doLogY)
 
 
-def MakeValidation(era, yearStr, lumiStr):
+def MakeValidation(era, yearStr, lumiStr, doLogY):
 
 
   samples = getSamples(era,path_inDir)
@@ -452,8 +455,8 @@ def MakeValidation(era, yearStr, lumiStr):
   #
   #
   ######################################################
-  outDir="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/nostack/"
-  outDir2="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/stack/"
+  outDir="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/LogY_DiLeptonReskim/"
+  outDir2="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/LinearY_DiLeptonReskim/"
 
 
 
@@ -463,9 +466,9 @@ def MakeValidation(era, yearStr, lumiStr):
   #
   for cutName in cutNames:
     for hInfo in histoInfos:
-      if not plot_params.doLogY:
+      if not doLogY:
         outDir = outDir2
-      MakePlot(histograms_El,histograms_Mu,histoInfos, cutName, hInfo, "Data", mcListFinal, yearStr, lumiStr, outDir, extratext=cutName.replace('_',' ').replace('eta','\eta '))
+      MakePlot(doLogY,histograms_El,histograms_Mu,histoInfos, cutName, hInfo, "Data", mcListFinal, yearStr, lumiStr, outDir, extratext=cutName.replace('_',' ').replace('eta','\eta '))
 
 if __name__ == '__main__':
   main()

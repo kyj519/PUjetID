@@ -1,6 +1,5 @@
 import collections
 import ROOT
-from MakePlot import doLogY
 class MyDict(collections.OrderedDict):
     def __missing__(self, key):
         val = self[key] = MyDict()
@@ -9,7 +8,7 @@ class MyDict(collections.OrderedDict):
 colorsDict = {
     "DY": ROOT.kGreen+1,
     "DY_REAL": ROOT.kGreen+1,
-    "DY_PU": ROOT.kGreen+2,
+    "DY_PU": ROOT.kGreen+4,
     "TT": ROOT.kOrange+1,
     "VV": ROOT.kBlue+1,
     "Data": ROOT.kBlack
@@ -41,6 +40,7 @@ def getSamples(era,path_inDir):
   return samples
 
 histoInfos = MyDict()
+doLogY=True ##useless line
 histoInfos["npv"] = {
   "branch": "PV_npvs",
   "model": ROOT.RDF.TH1DModel("h_npv", "", 80, 0, 80),
@@ -139,7 +139,7 @@ histoInfos["ptD"] = {
 }
 histoInfos["pull"] = {
   "branch": "probeJet_puId_pull",
-  "model": ROOT.RDF.TH1DModel("pull", "", 30, 0, 2),
+  "model": ROOT.RDF.TH1DModel("pull", "", 30, 0, 0.1),
   "doLogy": doLogY,
   "xaxistitle": "pull vector mag.",
 }

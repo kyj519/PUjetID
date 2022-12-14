@@ -61,7 +61,7 @@ class SkimmerDiLepton(Module):
         if self.doOTFPUJetIDBDT:
             if self.era == "UL2017" or self.era == "UL2018" or self.era == "UL2016APV" or self.era == "UL2016":
                 self.setupTMVAReader()
-                self.calcBDTDiscOTF = True
+                self.calcBDTDiscOTF = True 
 
         ########Loading Jet res file#######
         self.isDATA = not self.isMC
@@ -120,7 +120,8 @@ class SkimmerDiLepton(Module):
         return  jet_pt_resolution*jet_pt_resolution_SF
 
     def setupTMVAReader(self):
-        self.tmvaWeightsPath = os.path.join(os.environ['CMSSW_BASE'] ,"/src/PUjetID/Skimmer/data/mvaWeights/")
+        self.tmvaWeightsPath = os.environ['CMSSW_BASE'] + \
+            "/src/PUjetID/Skimmer/data/mvaWeights/"
         #
         # TMVA BDT weights
         #
@@ -604,13 +605,20 @@ class SkimmerDiLepton(Module):
         #
         # Tight muon selection
         #
+        # event.muonsTight = [x for x in event.muonsVeto
+        #                     if getattr(x, self.muonPtDef) > 20.
+        #                     and x.mediumPromptId and x.pfIsoId >= 4
+        #                     ]
         event.muonsTight = [x for x in event.muonsVeto
-                            if getattr(x, self.muonPtDef) > 20.
+                             if getattr(x, self.muonPtDef) > 10.
                             and x.mediumPromptId and x.pfIsoId >= 4
-                            ]
+                             ]
         event.pass0VetoMuons = len(event.muonsVeto) == 0
         event.pass2VetoMuons = len(event.muonsVeto) == 2
         event.pass2TightMuons = len(event.muonsTight) == 2
+        if event.pass2TightMuons and getattr(event.muonsTight[0], self.muonPtDef) <= 20.:
+            event.pass2TightMuons = False
+        
 
         #######################
         #
@@ -630,8 +638,15 @@ class SkimmerDiLepton(Module):
         #
         # Tight electron selection
         #
+        # event.electronsTight = [x for x in event.electronsVeto
+        #                         if x.pt > 20. and x.mvaFall17V2Iso_WP90
+        #                         and abs(x.deltaEtaSC+x.eta) < 2.5
+        #                         # ignore electrons in gap region
+        #                         and not((abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566))
+        #                         ]
+        
         event.electronsTight = [x for x in event.electronsVeto
-                                if x.pt > 20. and x.mvaFall17V2Iso_WP90
+                                if x.pt > 15. and x.cutBased >= 4
                                 and abs(x.deltaEtaSC+x.eta) < 2.5
                                 # ignore electrons in gap region
                                 and not((abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566))
@@ -640,6 +655,8 @@ class SkimmerDiLepton(Module):
         event.pass0VetoElectrons = len(event.electronsVeto) == 0
         event.pass2VetoElectrons = len(event.electronsVeto) == 2
         event.pass2TightElectrons = len(event.electronsTight) == 2
+        if event.pass2TightElectrons and event.electronsTight[0].pt <= 25.:
+            event.pass2TightElectrons = False 
         #####################################################
         #
         # Di-lepton (Z-boson) reconstruction and selection
@@ -1142,8 +1159,7 @@ class SkimmerDiLepton(Module):
             #
             jetPuIdDiscOTF = -9.
             if self.calcBDTDiscOTF:
-                #jetPuIdDiscOTF = self.calcPUIDBDTDisc(event, jet)
-                jetPuIdDiscOTF = -9.
+                jetPuIdDiscOTF = self.calcPUIDBDTDisc(event, jet)
                 ##########PUID training var#########
                 self.out.fillBranch(jetSystPreFix+"jetSel" +str(i)+"_PV_npvsGood", event.PV_npvsGood)
                 self.out.fillBranch(jetSystPreFix+"jetSel" +

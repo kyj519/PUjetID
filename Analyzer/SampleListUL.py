@@ -11,7 +11,7 @@ version="DiLeptonSkim_ULNanoV9_v1p4"
 
 #EOSURL="root://cluster142.knu.ac.kr/"
 EOSURL=""
-EOSDIR="/gv0/Users/yeonjoon/ntuples_JMENano/"
+EOSDIR="/gv0/Users/yeonjoon/ntuples_JMENano_DiLepton_Reskim_EleCutBased/"
 CRABDIR="JetPUId_"+version+"/CRABOUTPUT/"
 NTUPDIR="JetPUId_"+version+"/ntuples_skim/"
 Samples = collections.OrderedDict()
