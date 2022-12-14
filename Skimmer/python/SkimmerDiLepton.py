@@ -605,13 +605,20 @@ class SkimmerDiLepton(Module):
         #
         # Tight muon selection
         #
+        # event.muonsTight = [x for x in event.muonsVeto
+        #                     if getattr(x, self.muonPtDef) > 20.
+        #                     and x.mediumPromptId and x.pfIsoId >= 4
+        #                     ]
         event.muonsTight = [x for x in event.muonsVeto
-                            if getattr(x, self.muonPtDef) > 20.
+                             if getattr(x, self.muonPtDef) > 10.
                             and x.mediumPromptId and x.pfIsoId >= 4
-                            ]
+                             ]
         event.pass0VetoMuons = len(event.muonsVeto) == 0
         event.pass2VetoMuons = len(event.muonsVeto) == 2
         event.pass2TightMuons = len(event.muonsTight) == 2
+        if event.pass2TightMuons and getattr(event.muonsTight[0], self.muonPtDef) <= 20.:
+            event.pass2TightMuons = False
+        
 
         #######################
         #
@@ -631,8 +638,15 @@ class SkimmerDiLepton(Module):
         #
         # Tight electron selection
         #
+        # event.electronsTight = [x for x in event.electronsVeto
+        #                         if x.pt > 20. and x.mvaFall17V2Iso_WP90
+        #                         and abs(x.deltaEtaSC+x.eta) < 2.5
+        #                         # ignore electrons in gap region
+        #                         and not((abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566))
+        #                         ]
+        
         event.electronsTight = [x for x in event.electronsVeto
-                                if x.pt > 20. and x.mvaFall17V2Iso_WP90
+                                if x.pt > 15. and x.cutBased >= 4
                                 and abs(x.deltaEtaSC+x.eta) < 2.5
                                 # ignore electrons in gap region
                                 and not((abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566))
@@ -641,6 +655,8 @@ class SkimmerDiLepton(Module):
         event.pass0VetoElectrons = len(event.electronsVeto) == 0
         event.pass2VetoElectrons = len(event.electronsVeto) == 2
         event.pass2TightElectrons = len(event.electronsTight) == 2
+        if event.pass2TightElectrons and event.electronsTight[0].pt <= 25.:
+            event.pass2TightElectrons = False 
         #####################################################
         #
         # Di-lepton (Z-boson) reconstruction and selection

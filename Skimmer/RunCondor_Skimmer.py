@@ -112,6 +112,12 @@ if __name__ =="__main__":
 							njobs = 100,
 							dasdataset = '/DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM',
 							fromXROOTD=True)
+	MC_2018_JME =	sample_setting(
+							sample_name="DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8",
+							sample_era="UL2018",
+							njobs = 180,
+							dasdataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL18NanoAODv9-20UL18JMENano_106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM',
+							fromXROOTD=True) 
 	
 	jobmaker(MC_2018_1j)
 	condor_submitter(MC_2018_1j)
