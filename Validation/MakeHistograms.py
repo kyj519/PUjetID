@@ -148,7 +148,6 @@ def ApplySelections(df, df_counts, sample, isMC, etaCutList, puIdWPList, applyPU
     #
     #
     for syst in itersyst:
-      print(sample,syst)
       df[sample][syst]["prePuId"] = df[sample][syst]["Baseline"]
       df_counts[sample][syst]["prePuId"] = df[sample][syst]["prePuId"].Count()
       df[sample][syst]["prePuId"] = ApplyWeights(df[sample][syst]["prePuId"], selLevel="prePuId", isMC=isMC)
@@ -204,7 +203,11 @@ def ApplyWeights(df, selLevel="Baseline", isMC=True, normFactor="1.f"):
 def MakePlot(histograms, histoInfos, cutName="", histoName="", dataName="", mcList=[], year="", lumi="", outDir="", extratext = '',noSF=True):
     mcListTemp = list(mcList)
     syst_list = ['central','SF_up','SF_down','jesTotalDown','jesTotalUp'] 
-    syst_list_woCentral = ['SF_up','SF_down','jesTotalDown','jesTotalUp'] 
+    syst_list_woCentral = ['SF_up',
+                           'SF_down',
+                           'jesTotalDown',
+                           'jesTotalUp'
+                          ] 
     #
     #
     xLat,yLat = 0.25, 0.91
@@ -471,7 +474,7 @@ def MakeValidation(era,yearStr,lumiStr):
   ##
   # ROOT.gSystem.Load("modules/Helpers_h.so")
   # ROOT.gSystem.Load("modules/SFProducerPUJetId_h.so")
-  SetupSFProducerPUJetId("/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Validation/data/result_el_ch.root",era)
+  SetupSFProducerPUJetId("/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Validation/data/result.root",era)
 
   df_pre = MyDict()
   #
@@ -486,12 +489,12 @@ def MakeValidation(era,yearStr,lumiStr):
   # Total MC
   #
   syst_list = ['central','SF_up','SF_down','jesTotalDown','jesTotalUp']
+  df_count_totalMC = {}
   for syst in syst_list:
     df_pre["TotalMC"][syst]["Initial"]  = ROOT.RDataFrame(inTrees["TotalMC"])
     df_pre["TotalMC"][syst]["Baseline"] = ApplyBaselineSelection(df_pre["TotalMC"][syst]["Initial"], era,syst, isMC=True)
     df_pre["TotalMC"][syst]["Baseline"] = ApplyWeights(df_pre["TotalMC"][syst]["Baseline"], "Baseline", isMC=True)
-    if syst =='central':
-      df_count_totalMC = df_pre["TotalMC"][syst]["Baseline"].Sum("evtWeight_Baseline")
+    df_count_totalMC[syst] = df_pre["TotalMC"][syst]["Baseline"].Sum("evtWeight_Baseline")
   #
   # Get the number of events in data and MC
   #
@@ -500,10 +503,9 @@ def MakeValidation(era,yearStr,lumiStr):
   nevents_mc={}
   scalemc2data = {}
   for syst in syst_list:
-    nevents_mc[syst]    = df_count_totalMC.GetValue()
+    nevents_mc[syst]    = df_count_totalMC[syst].GetValue()
     #
     # Use this number to normalize MC to number of events in data
-    
     scalemc2data[syst] = nevents_data/nevents_mc[syst]
     print("mc_%s   = %.2f" %(syst,nevents_mc[syst]))
     print("scalemc2data_%s = %.3f" % (syst,scalemc2data[syst]))
@@ -556,7 +558,6 @@ def MakeValidation(era,yearStr,lumiStr):
 
   for sample in mcList:
     for syst in syst_list:
-      print(sample,syst)
       df[sample][syst]["Initial"] = ROOT.RDataFrame(inTrees[sample])
       df_noSF[sample][syst]["Initial"] = ROOT.RDataFrame(inTrees[sample])
       #
@@ -607,7 +608,6 @@ def MakeValidation(era,yearStr,lumiStr):
         for syst in syst_list:
           hModelTemp = copy.copy(histoInfos[hist]["model"])
           hModelTemp.fName = sample+"_"+cut+"_"+histoInfos[hist]["model"].fName
-          print(syst, sample, cut)
           if "Data" in sample:
             histo1D[sample]['central'][cut][hist] = df[sample]['central'][cut].Histo1D(hModelTemp,histoInfos[hist]["branch"])
           else:
@@ -660,9 +660,9 @@ def MakeValidation(era,yearStr,lumiStr):
     for syst in syst_list:
       if sample == "Data" and syst != 'central':
         continue
+      print(sample, syst)
       nevts = df_counts[sample][syst]["Baseline"].GetValue()
-      print(sample+"_"+syst+":"+str(nevts))
-    
+      print(sample+"_"+syst+":"+str(nevts)) 
 
   #
   # Get histograms
@@ -672,7 +672,6 @@ def MakeValidation(era,yearStr,lumiStr):
       for hist in histoInfos:
         for syst in syst_list:
           if "Data" in sample and syst != 'central': continue
-          print(syst,sample,cut)
           histograms[sample][syst][cut][hist] = histo1D[sample][syst][cut][hist].GetValue()
           
           histograms_noSF[sample][syst][cut][hist] = histo1D_noSF[sample][syst][cut][hist].GetValue()

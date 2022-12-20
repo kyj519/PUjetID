@@ -73,7 +73,7 @@ def readFiles(folder_path,methodN):
 def combine_systerr(syst_hist):
     final_root = ROOT.TFile(final_root_path,'RECREATE')
     for key, item in syst_hist['central'].items():
-        syst_hist['Systuncty_Total'][key] = ROOT.TH2F('%s_Systuncty_Total'% key,'%s_Systuncty_Total'% key,len(ptbin)-1,ptbin,len(etabin)-1,etabin)
+        syst_hist['Systuncty_Total'][key] = ROOT.TH2F('%s_Systuncty'% key,'%s_Systuncty'% key,len(ptbin)-1,ptbin,len(etabin)-1,etabin)
         syst_hist['fitUncty'][key] = ROOT.TH2F('%s_fitUncty'% key,'%s_fitUncty'% key,len(ptbin)-1,ptbin,len(etabin)-1,etabin)
         syst_hist['Systuncty_Total'][key].SetMaximum(0.1)
         syst_hist['fitUncty'][key].SetMaximum(0.05)

@@ -76,8 +76,8 @@ def draw_stack(file_1,file_2,histkey,save_path,param):
     make_not_exist_dir(save_path)
     hist1 = file_1.Get(histkey)
     hist2 = file_2.Get(histkey)
-    errhist1 = file_1.Get(histkey+'_Systuncty_Total')
-    errhist2 = file_2.Get(histkey+'_Systuncty_Total')
+    errhist1 = file_1.Get(histkey+'_Systuncty')
+    errhist2 = file_2.Get(histkey+'_Systuncty')
     if 'gen' in histkey:
         errhist1 = errtoHist(hist1,ptbin,etabin)
         errhist2 = errtoHist(hist2,ptbin,etabin)
@@ -105,8 +105,8 @@ def get_histkey(what, isMC,era,wp):
     return 'h2_%s_%sUL%s_%s' %  (what, 'mc', era, wp) if isMC else 'h2_%s_%sUL%s_%s' %  (what, 'data', era, wp) 
 
 if __name__ == "__main__":
-    target_1 = '/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Fitter/result/Muon_Single_Ch/method3/postprocessed/result.root'
-    target_2 = '/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Fitter/result/Electron_Single_Ch/method3/postprocessed/result.root'
+    target_1 = '/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Fitter/result/Muon_Channel/method3/postprocessed/result.root'
+    target_2 = '/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Fitter/result/Electron_Channel/method3/postprocessed/result.root'
     file_1 = ROOT.TFile(target_1,'READ')
     file_2= ROOT.TFile(target_2,'READ')
     eras = ['2018','2017','2016APV','2016']

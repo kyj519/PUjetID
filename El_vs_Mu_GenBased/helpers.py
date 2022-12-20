@@ -4,134 +4,50 @@ import collections
 import array
 import math
 
-def PlotDataMC(canvName,mcStack_all,mcStack_El,  mcTotal_El, mcStack_Mu,  mcTotal_Mu, leg, xaxistitle, yaxistitle, year, lumi, pdfName, doLogY,extratxt = ''):
+def PlotDataMC(canvName,mcStack_all,mcStack_El,  mcTotal_El,histos_El, mcStack_Mu,  mcTotal_Mu, histos_Mu, leg, xaxistitle, yaxistitle, year, lumi, pdfName, doLogY,extratxt = ''):
   #
   # Make TCanvas
   #
-  canv = ROOT.TCanvas(canvName,"canv", 800, 800)
+  canv = ROOT.TCanvas(canvName,"canv", 800, 1000)
   canv.SetFillStyle( 4000 )
   ROOT.SetOwnership(canv,False)
   #
   # Make upper TPad
   #
-  # the_low_margin = 0.3
-  # pad1 = ROOT.TPad(canvName+"_pad1","pad1",0.0, the_low_margin, 1.0, 1.0)
-  canv.SetFillStyle( 4000 )
-  canv.SetFillColor( 0 )
-  canv.SetFrameFillStyle( 4000 )
-  canv.SetFrameFillColor( 0 )
-  
+  the_low_margin = 0.4
+  pad1 = ROOT.TPad(canvName+"_pad1","pad1",0.0, the_low_margin, 1.0, 1.0)
+  pad1.SetTopMargin( 0.06 )
+  pad1.SetBottomMargin( 0.0 )
+  pad1.SetFillStyle( 4000 )
+  pad1.SetFillColor( 0 )
+  pad1.SetFrameFillStyle( 4000 )
+  pad1.SetFrameFillColor( 0 )
+  pad1.Draw()
   
   #Make lower TPad
   
-  # pad2 = ROOT.TPad(canvName+"_pad2","pad2",0.0, 0.0, 1.0, the_low_margin)
-  # pad2.SetTopMargin( 0.05 )
-  # pad2.SetBottomMargin( 0.325 )
-  # pad2.SetFillStyle( 4000 )
-  # pad2.SetFillColor( 0 )
-  # pad2.SetFrameFillStyle( 4000 )
-  # pad2.SetFrameFillColor( 0 )
-  # pad2.Draw()
+  pad2 = ROOT.TPad(canvName+"_pad2","pad2",0.0, the_low_margin/2, 1.0, the_low_margin)
+  pad2.SetTopMargin( 0.05 )
+  pad2.SetBottomMargin( 0.0 )
+  pad2.SetFillStyle( 4000 )
+  pad2.SetFillColor( 0 )
+  pad2.SetFrameFillStyle( 4000 )
+  pad2.SetFrameFillColor( 0 )
+  pad2.Draw()
+
+  pad3 = ROOT.TPad(canvName+"_pad3","pad3",0.0, 0, 1.0, the_low_margin/2)
+  pad3.SetTopMargin( 0.05 )
+  pad3.SetBottomMargin( 0.325 )
+  pad3.SetFillStyle( 4000 )
+  pad3.SetFillColor( 0 )
+  pad3.SetFrameFillStyle( 4000 )
+  pad3.SetFrameFillColor( 0 )
+  pad3.Draw()
 
   #
   # TLatex for texts
   #
  
-  
-  
-  
-
-  #
-  # Draw histogram in 1st pad
-  #
-  # pad1.cd()
-  # pad1.SetBottomMargin(0.00)
-  #
-  # backgrounds
-  #
-#####################################################
-  # mcStack_Mu.SetMinimum(0.01)
-  # if doLogY:
-  #   mcStack_Mu.Draw("e nostack")
-  #   mcStack_El.Draw("e nostck same")
-  # else:
-  #   mcStack_Mu.Draw("hist e")
-  #   mcStack_El.Draw("hist e same")
-    
-  # mcStack_El.GetXaxis().SetTitle(xaxistitle)
-  # mcStack_El.GetXaxis().SetTitleSize(0.04)
-  # mcStack_El.GetYaxis().SetTitle(yaxistitle)
-  # mcStack_El.GetYaxis().SetTitleSize(0.04)
-  # mcStack_El.GetXaxis().SetLabelSize(0.03)
-  # mcStack_El.GetYaxis().SetLabelSize(0.03)
-  #
-  # Draw Error band of total bkgd
-####################################################
-  mcStack_all.SetMinimum(0.01)
-
-  mcStack_all.Draw("hist e1 nostack")
-
-    
-  mcStack_all.GetXaxis().SetTitle(xaxistitle)
-  mcStack_all.GetXaxis().SetTitleSize(0.04)
-  mcStack_all.GetYaxis().SetTitle(yaxistitle)
-  mcStack_all.GetYaxis().SetTitleSize(0.04)
-  mcStack_all.GetXaxis().SetLabelSize(0.03)
-  mcStack_all.GetYaxis().SetLabelSize(0.03)
-  #
-  # data
-  #
-
-  #
-  # Adjust min and max
-  #
-
-  #pad1.Update()
-  
-  #
-
-  # legend
-  #
-  ###################################################
-  # maximum = None 
-  # maximum =mcStack_all.GetMaximum()
-  # mcStack_Mu.SetMaximum(maximum * 1.5)
-  # mcStack_El.SetMaximum(maximum * 1.5)
-  # leg.Draw("same")
-  # if doLogy: 
-  #   canv.SetLogy()
-  #   mcStack_Mu.SetMaximum(maximum * 100)
-  #   mcStack_Mu.SetMinimum(0.1)
-  #   mcStack_El.SetMaximum(maximum * 100)
-  #   mcStack_El.SetMinimum(0.1)
-  #   canv.Update()
-  ####################################################
-  maximum = None 
-  maximum =mcStack_all.GetMaximum()
-  mcStack_Mu.SetMaximum(maximum * 1.5)
-  leg.Draw("same")
-  if doLogY: 
-    canv.SetLogy()
-    mcStack_all.SetMaximum(maximum * 100)
-    mcStack_all.SetMinimum(0.1)
-    canv.Update()
-  #Go to 2nd pad 
-
-  #
-  # Draw ratio plot
-
-
-  #pad2.Update()
-  #
-  # Draw line (#TEMP)
-  #
-  #line = ROOT.TLine( pad2.GetUxmin(), 1, pad2.GetUxmax(), 1 )
-  #line.SetLineColor( ROOT.kRed + 1 )
-  #line.SetLineWidth( 4 )
-  #line.Draw()
-  #
-  # Draw ratio again
-  #
   latex = ROOT.TLatex()
   latex.SetNDC()
   latex.SetTextFont( 42 )
@@ -152,17 +68,159 @@ def PlotDataMC(canvName,mcStack_all,mcStack_El,  mcTotal_El, mcStack_Mu,  mcTota
   latex.DrawLatex(0.15,0.86,extratext)
   latex.SetTextSize( 0.028 );
   
+  
+
+  
+  #Draw histogram in 1st pad
+  
+  pad1.cd()
+  pad1.SetBottomMargin(0.00)
+  
+  # backgrounds
+  #
+#####################################################
+  # mcStack_Mu.SetMinimum0.01)
+  # if doLogY:
+  #   mcStack_Mu.Draw("e nostack")
+  #   mcStack_El.Draw("e nostck same")
+  # else:
+  #   mcStack_Mu.Draw("hist e")
+  #   mcStack_El.Draw("hist e same")
+    
+  # mcStack_El.GetXaxis().SetTitle(xaxistitle)
+  # mcStack_El.GetXaxis().SetTitleSize(0.04)
+  # mcStack_El.GetYaxis().SetTitle(yaxistitle)
+  # mcStack_El.GetYaxis().SetTitleSize(0.04)
+  # mcStack_El.GetXaxis().SetLabelSize(0.03)
+  # mcStack_El.GetYaxis().SetLabelSize(0.03)
+  #
+  # Draw Error band of total bkgd
+####################################################
+
+  mcStack_all.Draw("hist e1 nostack")
+
+    
+  mcStack_all.GetXaxis().SetTitle(xaxistitle)
+  mcStack_all.GetXaxis().SetTitleSize(0.04)
+  mcStack_all.GetYaxis().SetTitle(yaxistitle)
+  # mcStack_all.GetYaxis().SetTitleSize(0.04)
+  # mcStack_all.GetXaxis().SetLabelSize(0.03)
+  # mcStack_all.GetYaxis().SetLabelSize(0.03)
+  #
+  # data
+  #
+
+  #
+  # Adjust min and max
+  #
+  maximum = None 
+  maximum =mcStack_all.GetMaximum()
+  mcStack_Mu.SetMaximum(maximum * 1.5)
+  leg.Draw("same")
+  if doLogY: 
+    pad1.SetLogy()
+    mcStack_all.SetMaximum(maximum * 100)
+    mcStack_all.SetMinimum(0.1)
+
+  systematics = []
+  Syst = GetSystematicUncertaintyBand(histos_El['DY_PU'],systematics)
+  Syst.SetFillColor( ROOT.kBlack )
+  Syst.SetFillStyle( 3001 )
+  Syst.SetLineColor( ROOT.kWhite )
+  Syst.SetMarkerStyle( 1 )
+  #Syst.Draw( 'E2same' )
+
+  pad1.Update()
+    #Go to 2nd pad 
+  #
+
+  # legend
+  #
+  ###################################################
+  # maximum = None 
+  # maximum =mcStack_all.GetMaximum()
+  # mcStack_Mu.SetMaximum(maximum * 1.5)
+  # mcStack_El.SetMaximum(maximum * 1.5)
+  # leg.Draw("same")
+  # if doLogy: 
+  #   canv.SetLogy()
+  #   mcStack_Mu.SetMaximum(maximum * 100)
+  #   mcStack_Mu.SetMinimum(0.1)
+  #   mcStack_El.SetMaximum(maximum * 100)
+  #   mcStack_El.SetMinimum(0.1)
+  #   canv.Update()
+  ####################################################
+
+
+  #
+  # Draw ratio plot
+  pad2.cd()
+  pad2.SetGridy()
+  Ratio, SystBand = GetRatioHistogram( histos_El['DY_PU'], histos_Mu['DY_PU'], Syst )
+  
+  SetDataStyle( Ratio )
+  #Ratio.GetXaxis().SetTitle(histos_El['DY_PU'].GetXaxis().GetTitle())
+  #
+  # Draw ratio plot
+  #
+  Ratio.Draw()
+  #
+  # Draw systematics band
+  #
+  SystBand.SetFillColor( ROOT.kBlack )
+  SystBand.SetFillStyle( 3001 )
+  SystBand.SetLineColor( ROOT.kWhite )
+  SystBand.SetMarkerStyle( 1 )
+  #SystBand.Draw( 'same' )
+
+  pad2.Update()
+
+  pad3.cd()
+  pad3.SetGridy()
+  Ratio2, SystBand2 = GetRatioHistogram( histos_El['DY_REAL'], histos_Mu['DY_REAL'], Syst )
+ 
+  SetDataStyle( Ratio2 )
+  Ratio2.GetXaxis().SetTitle(histos_El['DY_PU'].GetXaxis().GetTitle())
+  #
+  # Draw ratio plot
+  #
+  Ratio2.Draw()
+  #
+  # Draw systematics band
+  #
+  SystBand2.SetFillColor( ROOT.kBlack )
+  SystBand2.SetFillStyle( 3001 )
+  SystBand2.SetLineColor( ROOT.kWhite )
+  SystBand2.SetMarkerStyle( 1 )
+  #SystBand2.Draw( 'same' )
+
+  pad3.Update()
+
+
+  
+  #Draw line (#TEMP)
+  
+  # line = ROOT.TLine( pad2.GetUxmin(), 1, pad2.GetUxmax(), 1 )
+  # line.SetLineColor( ROOT.kRed + 1 )
+  # line.SetLineWidth( 4 )
+  # line.Draw()
+  #
+  # Draw ratio again
+  #
+  #Ratio.Draw('same')
+  
+  
 
   canv.Print( pdfName + ".pdf")
   canv.Print( pdfName + ".eps")
-  mcStack_Mu.GetHists().Delete()
   del mcStack_Mu
   #del dataHist
   del mcTotal_Mu
-  mcStack_El.GetHists().Delete()
   del mcStack_El
   #del dataHist
   del mcTotal_El
+  del mcStack_all
+  
   del canv
   
 def GetSystematicUncertaintyBand(nom,systematics):
@@ -263,10 +321,12 @@ def GetRatioHistogram( Data, MonteCarlo, Syst ):
   Result.SetLineColor( ROOT.kBlack )
   Result.SetMarkerSize( 0.8 )
   Result.GetYaxis().SetNdivisions( 5, 3, 0 )
-  Result.SetMaximum( 1.50 )
-  Result.SetMinimum( 0.50 )
+  maxVal = Result.GetMaximum()
+  minVal = Result.GetMinimum()
+  Result.SetMaximum( maxVal )
+  Result.SetMinimum( minVal )
   #Result.GetYaxis().SetTitle( '#frac{Data}{Pred}' )
-  Result.GetYaxis().SetTitle( 'Data/Pred.' )
+  Result.GetYaxis().SetTitle( 'El/Mu' )
   Result.GetYaxis().CenterTitle( True )
   
   return (Result,SystBandFinal)

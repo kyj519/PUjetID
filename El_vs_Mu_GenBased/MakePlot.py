@@ -25,7 +25,7 @@ class MyDict(collections.OrderedDict):
 
 prod_tag = "DiLeptonSkim_ULNanoV9_v1p4"
 EOSURL = ""
-path_inDir = "/gv0/Users/yeonjoon/ntuples_JMENano_DiLepton_Reskim/JetPUId_"+prod_tag+"/ntuples_skim/"
+path_inDir = "/gv0/Users/yeonjoon/ntuples_JMENano/JetPUId_"+prod_tag+"/ntuples_skim/"
 
 
 def ApplyBaselineSelection(df, era, syst, isMu):
@@ -245,7 +245,7 @@ def MakePlot(doLogY,histograms_El,histograms_Mu, histoInfos, cutName="", histoNa
     if not os.path.exists("%sh_%s/%s" % (outDir, year, cutName)):
       os.makedirs("%sh_%s/%s" % (outDir, year, cutName))
     pdfName = "%sh_%s/%s/%s" % (outDir, year, cutName, histoName)
-    PlotDataMC("h_"+cutName+"_"+histoName, stack_mc_all,stack_mc_El, h_mc_totalC_El,stack_mc_Mu, h_mc_totalC_Mu,
+    PlotDataMC("h_"+cutName+"_"+histoName, stack_mc_all,stack_mc_El, h_mc_totalC_El,histosTemp_El, stack_mc_Mu, h_mc_totalC_Mu, histosTemp_Mu,
                 leg, xaxistitle, yaxistitle, year, lumi, pdfName, doLogY,extratxt=extratext)
 
 
@@ -455,8 +455,8 @@ def MakeValidation(era, yearStr, lumiStr, doLogY):
   #
   #
   ######################################################
-  outDir="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/LogY_DiLeptonReskim/"
-  outDir2="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/LinearY_DiLeptonReskim/"
+  outDir="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/LogY/"
+  outDir2="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/LinearY/"
 
 
 

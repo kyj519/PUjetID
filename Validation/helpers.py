@@ -147,6 +147,7 @@ def PlotDataMC(canvName, mcStack, dataHist, mcTotal,mcTotal_syst, leg, xaxistitl
   #
   Ratio.Draw( 'same' )      
   canv.Print( pdfName + ".eps")
+  canv.Print( pdfName + ".pdf")
 
   mcStack.GetHists().Delete()
   del mcStack

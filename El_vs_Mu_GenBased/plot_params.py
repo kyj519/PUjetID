@@ -8,7 +8,7 @@ class MyDict(collections.OrderedDict):
 colorsDict = {
     "DY": ROOT.kGreen+1,
     "DY_REAL": ROOT.kGreen+1,
-    "DY_PU": ROOT.kGreen+4,
+    "DY_PU": ROOT.kGreen+3,
     "TT": ROOT.kOrange+1,
     "VV": ROOT.kBlue+1,
     "Data": ROOT.kBlack
@@ -17,7 +17,7 @@ colorsDict = {
 colorsDict_2 = {
     "DY": ROOT.kGreen+1,
     "DY_REAL": ROOT.kOrange+1,
-    "DY_PU": ROOT.kOrange+4,
+    "DY_PU": ROOT.kOrange+3,
     "TT": ROOT.kOrange+1,
     "VV": ROOT.kBlue+1,
     "Data": ROOT.kBlack
