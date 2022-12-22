@@ -602,7 +602,7 @@ class SkimmerDiLepton(Module):
         #muons with miniisoloose
         event.muonsVeto = [x for x in event.muonsAll
                            if getattr(x, self.muonPtDef) > 10. and abs(x.eta) < 2.4
-                           and x.looseId and x.Muon_miniPFRelIso_all <= 0.4 and x.isPFcand
+                           and x.looseId and x.miniPFRelIso_all <= 0.4 and x.isPFcand
                            ]
         event.muonsVeto.sort(key=lambda x: getattr(
             x, self.muonPtDef), reverse=True)
@@ -617,7 +617,7 @@ class SkimmerDiLepton(Module):
         #muons with minisio tight
         event.muonsTight = [x for x in event.muonsVeto
                              if getattr(x, self.muonPtDef) > 10.
-                            and x.mediumPromptId and x.Muon_miniPFRelIso_all <= 0.1
+                            and x.mediumPromptId and x.miniPFRelIso_all <= 0.1
                              ]
         event.pass0VetoMuons = len(event.muonsVeto) == 0
         event.pass2VetoMuons = len(event.muonsVeto) == 2
