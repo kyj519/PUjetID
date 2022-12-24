@@ -603,8 +603,8 @@ class SkimmerDiLepton(Module):
         event.muonsVeto = [x for x in event.muonsAll
                            if getattr(x, self.muonPtDef) > 10. and abs(x.eta) < 2.4
                            and x.looseId 
-                           #and x.miniPFRelIso_all <= 0.4 and 
-                           x.isPFcand
+                           #and x.miniPFRelIso_all <= 0.4 
+                           and x.isPFcand
                            ]
         event.muonsVeto.sort(key=lambda x: getattr(
             x, self.muonPtDef), reverse=True)
