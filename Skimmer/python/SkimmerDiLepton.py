@@ -251,9 +251,11 @@ class SkimmerDiLepton(Module):
             raise ValueError(
                 "ERROR: eta_bins length not the same as tmvaWeightFilenames length. Please check!")
 
-    def calcPUIDBDTDisc(self, event, jet):
+    def calcPUIDBDTDisc(self, event, jet,jetSyst):
         #
-        jet_pt = jet.pt
+
+        
+        jet_pt = self.getUndoJERandCORR(jetSyst,jet)
         jet_eta = jet.eta
         #
         self.tmva_s_jetPt[0] = jet_pt
@@ -640,8 +642,8 @@ class SkimmerDiLepton(Module):
         # Veto electron selection
         #
         event.electronsVeto = [x for x in event.electronsAll
-                               if x.pt > 10. and x.cutBased >= 1 and abs(x.deltaEtaSC+x.eta) < 2.5
-                               ]
+                               if x.pt > 10. and x.mvaFall17V2noIso_WPL and abs(x.deltaEtaSC+x.eta) < 2.5
+                               ]#cutbased >=1
         event.electronsVeto.sort(key=lambda x: x.pt, reverse=True)
 
         #
@@ -1168,7 +1170,7 @@ class SkimmerDiLepton(Module):
             #
             jetPuIdDiscOTF = -9.
             if self.calcBDTDiscOTF:
-                jetPuIdDiscOTF = self.calcPUIDBDTDisc(event, jet)
+                jetPuIdDiscOTF = self.calcPUIDBDTDisc(event, jet,jetSyst)
                 ##########PUID training var#########
                 self.out.fillBranch(jetSystPreFix+"jetSel" +str(i)+"_PV_npvsGood", event.PV_npvsGood)
                 self.out.fillBranch(jetSystPreFix+"jetSel" +
