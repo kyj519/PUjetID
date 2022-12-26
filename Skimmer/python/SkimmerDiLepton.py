@@ -655,7 +655,7 @@ class SkimmerDiLepton(Module):
         #                         ]
         
         event.electronsTight = [x for x in event.electronsVeto
-                                if x.pt > 15. and x.mvaFall17V2Iso_WP90
+                                if x.pt > 15. and x.mvaFall17V2noIso_WP90
                                 and abs(x.deltaEtaSC+x.eta) < 2.5
                                 # ignore electrons in gap region
                                 and not((abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566))
