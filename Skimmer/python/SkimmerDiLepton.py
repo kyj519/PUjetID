@@ -605,7 +605,7 @@ class SkimmerDiLepton(Module):
         event.muonsVeto = [x for x in event.muonsAll
                            if getattr(x, self.muonPtDef) > 10. and abs(x.eta) < 2.4
                            and x.looseId 
-                           #and x.miniPFRelIso_all <= 0.4 
+                           and x.miniPFRelIso_all <= 0.4 
                            and x.isPFcand
                            ]
         event.muonsVeto.sort(key=lambda x: getattr(
@@ -622,7 +622,7 @@ class SkimmerDiLepton(Module):
         event.muonsTight = [x for x in event.muonsVeto
                              if getattr(x, self.muonPtDef) > 10.
                             and x.mediumPromptId 
-                            #and x.miniPFRelIso_all <= 0.1
+                            and x.miniPFRelIso_all <= 0.05
                              ]
         event.pass0VetoMuons = len(event.muonsVeto) == 0
         event.pass2VetoMuons = len(event.muonsVeto) == 2
@@ -642,7 +642,7 @@ class SkimmerDiLepton(Module):
         # Veto electron selection
         #
         event.electronsVeto = [x for x in event.electronsAll
-                               if x.pt > 10. and x.mvaFall17V2noIso_WPL and abs(x.deltaEtaSC+x.eta) < 2.5
+                               if x.pt > 10. and x.cutBased >= 1 and abs(x.deltaEtaSC+x.eta) < 2.5
                                ]#cutbased >=1
         event.electronsVeto.sort(key=lambda x: x.pt, reverse=True)
 
@@ -658,6 +658,7 @@ class SkimmerDiLepton(Module):
         
         event.electronsTight = [x for x in event.electronsVeto
                                 if x.pt > 15. and x.mvaFall17V2noIso_WP90
+                                and x.miniPFRelIso_all <= 0.05
                                 and abs(x.deltaEtaSC+x.eta) < 2.5
                                 # ignore electrons in gap region
                                 and not((abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566))
