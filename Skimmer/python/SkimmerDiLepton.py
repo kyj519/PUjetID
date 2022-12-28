@@ -621,7 +621,7 @@ class SkimmerDiLepton(Module):
         #muons with minisio tight
         event.muonsTight = [x for x in event.muonsVeto
                              if getattr(x, self.muonPtDef) > 10.
-                            and x.TightPromptId 
+                            and x.tightId 
                             and x.miniPFRelIso_all <= 0.1
                              ]
         event.pass0VetoMuons = len(event.muonsVeto) == 0
