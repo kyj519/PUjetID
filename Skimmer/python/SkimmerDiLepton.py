@@ -621,8 +621,8 @@ class SkimmerDiLepton(Module):
         #muons with minisio tight
         event.muonsTight = [x for x in event.muonsVeto
                              if getattr(x, self.muonPtDef) > 10.
-                            and x.mediumPromptId 
-                            and x.miniPFRelIso_all <= 0.05
+                            and x.TightPromptId 
+                            and x.miniPFRelIso_all <= 0.1
                              ]
         event.pass0VetoMuons = len(event.muonsVeto) == 0
         event.pass2VetoMuons = len(event.muonsVeto) == 2
@@ -657,8 +657,8 @@ class SkimmerDiLepton(Module):
         #                         ]
         
         event.electronsTight = [x for x in event.electronsVeto
-                                if x.pt > 15. and x.mvaFall17V2noIso_WP90
-                                and x.miniPFRelIso_all <= 0.05
+                                if x.pt > 15. and x.mvaFall17V2noIso_WP80
+                                and x.miniPFRelIso_all <= 1
                                 and abs(x.deltaEtaSC+x.eta) < 2.5
                                 # ignore electrons in gap region
                                 and not((abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566))
