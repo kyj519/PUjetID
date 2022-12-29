@@ -547,7 +547,9 @@ class SkimmerDiLepton(Module):
                 event.passElectronTrig |= event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
         elif (self.era == "2018" or self.era == "UL2018"):
             if hasattr(event, 'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL'):
-                event.passElectronTrig |= event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
+                #event.passElectronTrig |= event.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
+                event.passElectronTrig |= event.HLT_Ele32_WPTight_Gsf
+                
 
         return event.passElectronTrig
 
@@ -571,7 +573,8 @@ class SkimmerDiLepton(Module):
                 event.passMuonTrig |= event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8
         elif (self.era == "2018" or self.era == "UL2018"):
             if hasattr(event, 'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8'):
-                event.passMuonTrig |= event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
+                #event.passMuonTrig |= event.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
+                event.passMuonTrig |= event.HLT_IsoMu24
 
         return event.passMuonTrig
 
@@ -605,7 +608,7 @@ class SkimmerDiLepton(Module):
         event.muonsVeto = [x for x in event.muonsAll
                            if getattr(x, self.muonPtDef) > 10. and abs(x.eta) < 2.4
                            and x.looseId 
-                           and x.miniPFRelIso_all <= 0.4 
+                           and x.pfIsoId >= 1
                            and x.isPFcand
                            ]
         event.muonsVeto.sort(key=lambda x: getattr(
@@ -620,15 +623,16 @@ class SkimmerDiLepton(Module):
         #                     ]
         #muons with minisio tight
         event.muonsTight = [x for x in event.muonsVeto
-                             if getattr(x, self.muonPtDef) > 10.
-                            and x.tightId 
-                            and x.miniPFRelIso_all <= 0.1
+                             #if getattr(x, self.muonPtDef) > 10.
+                             if getattr(x, self.muonPtDef) > 27.
+                            and x.mediumPromptId
+                            and x.pfIsoId >= 4
                              ]
         event.pass0VetoMuons = len(event.muonsVeto) == 0
         event.pass2VetoMuons = len(event.muonsVeto) == 2
         event.pass2TightMuons = len(event.muonsTight) == 2
-        if event.pass2TightMuons and getattr(event.muonsTight[0], self.muonPtDef) <= 20.:
-            event.pass2TightMuons = False
+        # if event.pass2TightMuons and getattr(event.muonsTight[0], self.muonPtDef) <= 20.:
+        #     event.pass2TightMuons = False
         
 
         #######################
@@ -657,8 +661,8 @@ class SkimmerDiLepton(Module):
         #                         ]
         
         event.electronsTight = [x for x in event.electronsVeto
-                                if x.pt > 15. and x.mvaFall17V2noIso_WP80
-                                and x.miniPFRelIso_all <= 1
+                                if x.pt > 35.
+                                and x.mvaFall17V2_WP90
                                 and abs(x.deltaEtaSC+x.eta) < 2.5
                                 # ignore electrons in gap region
                                 and not((abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566))
@@ -667,8 +671,8 @@ class SkimmerDiLepton(Module):
         event.pass0VetoElectrons = len(event.electronsVeto) == 0
         event.pass2VetoElectrons = len(event.electronsVeto) == 2
         event.pass2TightElectrons = len(event.electronsTight) == 2
-        if event.pass2TightElectrons and event.electronsTight[0].pt <= 25.:
-            event.pass2TightElectrons = False 
+        # if event.pass2TightElectrons and event.electronsTight[0].pt <= 25.:
+        #     event.pass2TightElectrons = False 
         #####################################################
         #
         # Di-lepton (Z-boson) reconstruction and selection
