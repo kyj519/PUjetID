@@ -63,3 +63,5 @@ keep HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8
 keep HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8
 keep HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
 keep HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL
+keep HLT_Ele32_WPTight_Gsf
+keep HLT_IsoMu24
