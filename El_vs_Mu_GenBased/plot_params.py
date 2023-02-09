@@ -55,13 +55,13 @@ histoInfos["closestgen_dR"] = {
 }
 histoInfos["beta"] = {
   "branch": "probeJet_puId_beta",
-  "model": ROOT.RDF.TH1DModel("beta", "", 30, 0, 0.1),
+  "model": ROOT.RDF.TH1DModel("beta", "", 30, 0, 1.),
   "doLogy": doLogY,
   "xaxistitle": "#beta",
 }
 histoInfos["beta_2"] = {
   "branch": "probeJet_puId_beta",
-  "model": ROOT.RDF.TH1DModel("beta_2", "", 30, 0.7, 1.0),
+  "model": ROOT.RDF.TH1DModel("beta_2", "", 30, 0.5, 1.0),
   "doLogy": doLogY,
   "xaxistitle": "#beta",
 }
@@ -209,6 +209,55 @@ histoInfos["rho"] = {
   "doLogy": doLogY,
   "xaxistitle": "#rho",
 }
+histoInfos["lep0_pfRelIso03_all"] = {
+  "branch": "lep0_pfRelIso03_all",
+  "model": ROOT.RDF.TH1DModel("h_lep0_pfRelIso03_all", "", 100, 0, 0.8),
+  "doLogy": doLogY,
+  "xaxistitle": "Leading lepton pfIso",
+}
+histoInfos["lep0_miniPFRelIso_all"] = {
+  "branch": "lep0_miniPFRelIso_all",
+  "model": ROOT.RDF.TH1DModel("h_lep0_miniPFRelIso_all", "", 100, 0, 0.8),
+  "doLogy": doLogY,
+  "xaxistitle": "Leading lepton miniIso",
+}
+histoInfos["lep1_pfRelIso03_all"] = {
+  "branch": "lep0_pfRelIso03_all",
+  "model": ROOT.RDF.TH1DModel("h_lep1_pfRelIso03_all", "", 100, 0, 0.8),
+  "doLogy": doLogY,
+  "xaxistitle": "Subleading lepton pfIso",
+}
+histoInfos["lep1_miniPFRelIso_all"] = {
+  "branch": "lep1_miniPFRelIso_all",
+  "model": ROOT.RDF.TH1DModel("h_lep1_miniPFRelIso_all", "", 100, 0, 0.8),
+  "doLogy": doLogY,
+  "xaxistitle": "Subleading lepton miniIso",
+}
+histoInfos["lep0_pt"] = {
+  "branch": "lep0_pt",
+  "model": ROOT.RDF.TH1DModel("h_lep0_pt", "", 10, 15, 70),
+  "doLogy": doLogY,
+  "xaxistitle": "Leading lepton p_T",
+}
+histoInfos["lep0_eta"] = {
+  "branch": "lep0_eta",
+  "model": ROOT.RDF.TH1DModel("h_lep0_eta", "", 20, -2.5, 2.5),
+  "doLogy": doLogY,
+  "xaxistitle": "Leading lepton #eta",
+}
+histoInfos["lep1_pt"] = {
+  "branch": "lep1_pt",
+  "model": ROOT.RDF.TH1DModel("h_lep1_pt", "", 10, 15, 70),
+  "doLogy": doLogY,
+  "xaxistitle": "Subleading lepton p_T",
+}
+histoInfos["lep1_eta"] = {
+  "branch": "lep1_eta",
+  "model": ROOT.RDF.TH1DModel("h_lep1_eta", "", 20, -2.5, 2.5),
+  "doLogy": doLogY,
+  "xaxistitle": "Subleading lepton #eta",
+}
+
 # histoInfos["puIdDisc_vs_otf"] = {
 #   "branch": "probeJet_puIdDisc",
 #   "model": ROOT.RDF.TH1DModel("puIdDisc_vs_otf", "", 100, 0.6, 1),

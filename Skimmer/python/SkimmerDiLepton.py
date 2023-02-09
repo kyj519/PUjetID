@@ -316,12 +316,16 @@ class SkimmerDiLepton(Module):
         self.out.branch("lep0_mass",    "F")
         self.out.branch("lep0_charge",  "I")
         self.out.branch("lep0_pdgId",   "I")
+        self.out.branch("lep0_pfRelIso03_all",   "F")
+        self.out.branch("lep0_miniPFRelIso_all",   "F")
         self.out.branch("lep1_pt",      "F")
         self.out.branch("lep1_eta",     "F")
         self.out.branch("lep1_phi",     "F")
         self.out.branch("lep1_mass",    "F")
         self.out.branch("lep1_charge",  "I")
         self.out.branch("lep1_pdgId",   "I")
+        self.out.branch("lep1_pfRelIso03_all",   "F")
+        self.out.branch("lep1_miniPFRelIso_all",   "F")
         #
         # Jet branches
         #
@@ -492,7 +496,7 @@ class SkimmerDiLepton(Module):
         #
         # Reconstruct Z->ll and apply selection
         #
-        if self.passZBosonSelection(event) is False:
+        if self.passZBosonSelection_usingLHE(event) is False:
             return False
 
         self.fillZBosonBranches(event)
@@ -617,17 +621,17 @@ class SkimmerDiLepton(Module):
         #
         # Tight muon selection
         #
-        # event.muonsTight = [x for x in event.muonsVeto
-        #                     if getattr(x, self.muonPtDef) > 20.
-        #                     and x.mediumPromptId and x.pfIsoId >= 4
-        #                     ]
-        #muons with minisio tight
         event.muonsTight = [x for x in event.muonsVeto
-                             #if getattr(x, self.muonPtDef) > 10.
-                             if getattr(x, self.muonPtDef) > 27.
-                            and x.mediumPromptId
-                            and x.pfIsoId >= 4
-                             ]
+                            if getattr(x, self.muonPtDef) > 20.
+                            and x.mediumPromptId and x.pfIsoId >= 4
+                            ]
+        #muons with minisio tight
+        # event.muonsTight = [x for x in event.muonsVeto
+        #                      #if getattr(x, self.muonPtDef) > 10.
+        #                      if getattr(x, self.muonPtDef) > 27.
+        #                     and x.mediumPromptId
+        #                     and x.pfIsoId >= 4
+        #                      ]
         event.pass0VetoMuons = len(event.muonsVeto) == 0
         event.pass2VetoMuons = len(event.muonsVeto) == 2
         event.pass2TightMuons = len(event.muonsTight) == 2
@@ -653,24 +657,25 @@ class SkimmerDiLepton(Module):
         #
         # Tight electron selection
         #
-        # event.electronsTight = [x for x in event.electronsVeto
-        #                         if x.pt > 20. and x.mvaFall17V2Iso_WP90
-        #                         and abs(x.deltaEtaSC+x.eta) < 2.5
-        #                         # ignore electrons in gap region
-        #                         and not((abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566))
-        #                         ]
-        
         event.electronsTight = [x for x in event.electronsVeto
-                                if x.pt > 35.
-                                and x.mvaFall17V2_WP90
+                                if x.pt > 20. and x.mvaFall17V2Iso_WP90
                                 and abs(x.deltaEtaSC+x.eta) < 2.5
                                 # ignore electrons in gap region
                                 and not((abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566))
                                 ]
+        
+        # event.electronsTight = [x for x in event.electronsVeto
+        #                         if x.pt > 35.
+        #                         and x.mvaFall17V2Iso_WP90
+        #                         and abs(x.deltaEtaSC+x.eta) < 2.5
+        #                         # ignore electrons in gap region
+        #                         and not((abs(x.deltaEtaSC+x.eta) >= 1.4442) and (abs(x.deltaEtaSC+x.eta) < 1.566))
+        #                         ]
 
         event.pass0VetoElectrons = len(event.electronsVeto) == 0
         event.pass2VetoElectrons = len(event.electronsVeto) == 2
         event.pass2TightElectrons = len(event.electronsTight) == 2
+
         # if event.pass2TightElectrons and event.electronsTight[0].pt <= 25.:
         #     event.pass2TightElectrons = False 
         #####################################################
@@ -729,6 +734,10 @@ class SkimmerDiLepton(Module):
             event.lep1_charge = event.muonsTight[1].charge
             event.lep0_pdgId = event.muonsTight[0].pdgId
             event.lep1_pdgId = event.muonsTight[1].pdgId
+            event.lep0_miniPFRelIso_all = event.muonsTight[0].miniPFRelIso_all
+            event.lep0_pfRelIso03_all = event.muonsTight[0].pfRelIso03_all
+            event.lep1_miniPFRelIso_all = event.muonsTight[1].miniPFRelIso_all
+            event.lep1_pfRelIso03_all = event.muonsTight[1].pfRelIso03_all
         # ============================================
         #
         # Check if pass dielectron selection
@@ -766,6 +775,10 @@ class SkimmerDiLepton(Module):
             event.lep1_charge = event.electronsTight[1].charge
             event.lep0_pdgId = event.electronsTight[0].pdgId
             event.lep1_pdgId = event.electronsTight[1].pdgId
+            event.lep0_miniPFRelIso_all = event.electronsTight[0].miniPFRelIso_all
+            event.lep0_pfRelIso03_all = event.electronsTight[0].pfRelIso03_all
+            event.lep1_miniPFRelIso_all = event.electronsTight[1].miniPFRelIso_all
+            event.lep1_pfRelIso03_all = event.electronsTight[1].pfRelIso03_all
         # ============================================
         #
         # Fail both channels
@@ -820,6 +833,56 @@ class SkimmerDiLepton(Module):
         # ======================================================================================
         event.dilep_p4 = event.lep0_p4 + event.lep1_p4
         return True if event.dilep_p4.M() > 70. and event.dilep_p4.M() < 110. else False
+    
+    
+    def passZBosonSelection_usingLHE(self, event):
+        #####################################################
+        #
+        # selection using LHEPart
+        #
+        #################################################### 
+  
+        event.LHEPartAll = Collection(event, "LHEPart")
+        event.LHEeleAll = [x for x in event.LHEPartAll if abs(getattr(x,'pdgId'))==11]
+        event.LHEmuAll = [x for x in event.LHEPartAll if abs(getattr(x,'pdgId'))==13]
+        if len(event.eleLHEAll) == 2 and len(event.muonLHEAll) == 0:
+            event.pass2LHEele = True
+            event.pass2LHEmuon = False
+        elif len(event.eleLHEAll) == 0 and len(event.muonLHEAll) == 2: 
+            event.pass2LHEele = False
+            event.pass2LHEmuon = True
+        else:
+            return
+        
+        if event.pass2LHEele:
+            if getattr(event.LHEeleAll[0],'pt') > getattr(event.LHEeleAll[1],'pt'):
+                lep0 = event.LHEeleAll[0]
+                lep1 = event.LHEeleAll[1]
+            else:
+                lep0 = event.LHEeleAll[1]
+                lep1 = event.LHEeleAll[0]
+        if event.pass2LHEmuon:
+            if getattr(event.LHEmuAll[0],'pt') > getattr(event.LHEmuAll[1],'pt'):
+                lep0 = event.LHEmuAll[0]
+                lep1 = event.LHEmuAll[1]
+            else:
+                lep0 = event.LHEmuAll[1]
+                lep1 = event.LHEmuAll[0]
+        event.lep0_p4 = ROOT.Math.PtEtaPhiMVector(getattr(lep0,"pt"), getattr(lep0,"eta"), getattr(lep0,"phi"), getattr(lep0,"mass"))
+        event.lep1_p4 = ROOT.Math.PtEtaPhiMVector(getattr(lep1,"pt"), getattr(lep1,"eta"), getattr(lep1,"phi"), getattr(lep1,"mass"))
+        event.dilep_p4 = event.lep0_p4 + event.lep1_p4
+        event.lep0_pdgId = getattr(lep0,'pdgId')
+        event.lep1_pdgId = getattr(lep1,'pdgId')
+        event.lep0_charge = ((event.lep0_pdgId > 0) - 0.5) * 2
+        event.lep1_charge = ((event.lep1_pdgId > 0) - 0.5) * 2
+        event.lep0_miniPFRelIso_all = -9.
+        event.lep0_pfRelIso03_all = -9.
+        event.lep1_miniPFRelIso_all = -9.
+        event.lep1_pfRelIso03_all = -9.
+
+        return True if event.dilep_p4.M() > 70. and event.dilep_p4.M() < 110. else False
+            
+
 
     def getUndoJERandCORR(self,jetSyst,this_jet,return_CORR = False):
         ## note for jes and jer systematic##
@@ -929,12 +992,16 @@ class SkimmerDiLepton(Module):
         self.out.fillBranch("lep0_mass",     event.lep0_p4.M())
         self.out.fillBranch("lep0_charge",   event.lep0_charge)
         self.out.fillBranch("lep0_pdgId",    event.lep0_pdgId)
+        self.out.fillBranch("lep0_pfRelIso03_all", event.lep0_pfRelIso03_all)
+        self.out.fillBranch("lep0_miniPFRelIso_all", event.lep0_miniPFRelIso_all)
         self.out.fillBranch("lep1_pt",       event.lep1_p4.Pt())
         self.out.fillBranch("lep1_eta",      event.lep1_p4.Eta())
         self.out.fillBranch("lep1_phi",      event.lep1_p4.Phi())
         self.out.fillBranch("lep1_mass",     event.lep1_p4.M())
         self.out.fillBranch("lep1_charge",   event.lep1_charge)
         self.out.fillBranch("lep1_pdgId",    event.lep1_pdgId)
+        self.out.fillBranch("lep1_pfRelIso03_all", event.lep1_pfRelIso03_all)
+        self.out.fillBranch("lep1_miniPFRelIso_all", event.lep1_miniPFRelIso_all)
 
     def resetJetBranches(self, event, jetSyst):
         #  reset jet branches

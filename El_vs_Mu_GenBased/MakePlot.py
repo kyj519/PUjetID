@@ -8,6 +8,7 @@ import copy
 import itertools
 import argparse
 import ROOT
+import numpy as np
 
 from plot_params import colorsDict, colorsDict_2, histoInfos, getSamples
 ROOT.gROOT.SetBatch(True)
@@ -23,9 +24,10 @@ class MyDict(collections.OrderedDict):
 
 
 
-prod_tag = "DiLeptonSkim_ULNanoV9_v1p4"
+#prod_tag = "DiLeptonSkim_ULNanoV9_v1p4"
 EOSURL = ""
-path_inDir = "/gv0/Users/yeonjoon/ntuples_JMENano/JetPUId_"+prod_tag+"/ntuples_skim/"
+#path_inDir = "/gv0/Users/yeonjoon/ntuples_JMENano_DiLepton_Reskim_MuonNoIso/JetPUId_"+prod_tag+"/ntuples_skim/"
+
 
 
 def ApplyBaselineSelection(df, era, syst, isMu):
@@ -66,6 +68,12 @@ def ApplyBaselineSelection(df, era, syst, isMu):
     df = df.Define("probeJet_etaForward", "probeJet_abseta>=2.5f")
     # df = df.Define("probeJet_eta2p5To3p0","probeJet_abseta>=2.5f && probeJet_abseta<3.0f")
     # df = df.Define("probeJet_eta2p5To3p0_goodBal", "probeJet_eta2p5To3p0 && probeJet_goodBalance")
+    # df = df.Define("probeJet_lep0_dphi","AbsDeltaPhi("+probeJetStr+"_phi,lep0_phi)")
+    # df = df.Define("probeJet_lep1_dphi","AbsDeltaPhi("+probeJetStr+"_phi,lep1_phi)")
+    # df = df.Define("probeJet_lep0_deltaR","sqrt((lep0_eta-probeJet_eta)*(lep0_eta-probeJet_eta)+probeJet_lep0_dphi*probeJet_lep0_dphi)")
+    # df = df.Define("probeJet_lep1_deltaR","sqrt((lep1_eta-probeJet_eta)*(lep1_eta-probeJet_eta)+probeJet_lep1_dphi*probeJet_lep1_dphi)")
+    # df = df.Filter("probeJet_lep0_deltaR >= 3.0")
+    # df = df.Filter("probeJet_lep1_deltaR >= 3.0")
     isMC =1 
     
     if isMC:
@@ -112,7 +120,6 @@ def ApplyBaselineSelection(df, era, syst, isMu):
     df = df.Define("probeJet_muEF",probeJetStr+"_muEF")
     df = df.Define("probeJet_puIdDiscOTF",probeJetStr+"_puIdDiscOTF")
     df = df.Define("probeJet_puIdDisc",probeJetStr+"_puIdDisc")
-    
     return df
 
 
@@ -255,11 +262,15 @@ def main():
   parser.add_argument('--era', dest='era', type=str, required=True)
   parser.add_argument('--ncores', dest='ncores', type=int)
   parser.add_argument('--doLogY', dest='doLogY', default=False,action='store_true')
+  parser.add_argument('--path_inDir', dest='path_inDir', type = str)
+  parser.add_argument('--outDir', dest='outDir', type = str)
   args = parser.parse_args()
   ncores = args.ncores
   ROOT.ROOT.EnableImplicitMT(ncores)
   era = args.era
   doLogY = args.doLogY
+  path_inDir = args.path_inDir
+  outDir = args.outDir
   if era == "UL17":
     yearStr = "UL2017"
     lumiStr = "41.5"
@@ -274,11 +285,11 @@ def main():
     lumiStr = "19.5"
   else:
     raise Exception("Unrecognized era: "+era+". Please check!")
+  print(path_inDir,outDir,era,doLogY)
+  MakeValidation(era, yearStr, lumiStr,doLogY,path_inDir,outDir)
 
-  MakeValidation(era, yearStr, lumiStr,doLogY)
 
-
-def MakeValidation(era, yearStr, lumiStr, doLogY):
+def MakeValidation(era, yearStr, lumiStr, doLogY, path_inDir, outDir):
 
 
   samples = getSamples(era,path_inDir)
@@ -333,6 +344,8 @@ def MakeValidation(era, yearStr, lumiStr, doLogY):
   print("El = %f"  %nevents_El)
 
   scaleEl2Mu = nevents_Mu/nevents_El
+  scaleMuto1 = 1/nevents_Mu
+  scaleElto1 = 1/nevents_El
   print("scaleEl2Mu = %.3f" % scaleEl2Mu)
   ####################################################
   #
@@ -362,11 +375,11 @@ def MakeValidation(era, yearStr, lumiStr, doLogY):
       #
       #
       df_El[sample]["Baseline"] = ApplyBaselineSelection(df_El[sample]["Initial"], era, syst='central', isMu=False)
-      df_El[sample]["Baseline"] = ApplyWeights(df_El[sample]["Baseline"], selLevel="Baseline",normFactor=str(scaleEl2Mu))
+      df_El[sample]["Baseline"] = ApplyWeights(df_El[sample]["Baseline"], selLevel="Baseline",normFactor=str(scaleElto1))
       df_counts_El[sample]["Baseline"] = df_El[sample]["Baseline"].Sum("evtWeight_Baseline")
 
       df_Mu[sample]["Baseline"] = ApplyBaselineSelection(df_Mu[sample]["Initial"], era, syst='central', isMu=True)
-      df_Mu[sample]["Baseline"] = ApplyWeights(df_Mu[sample]["Baseline"], selLevel="Baseline")
+      df_Mu[sample]["Baseline"] = ApplyWeights(df_Mu[sample]["Baseline"], selLevel="Baseline",normFactor=str(scaleMuto1))
       df_counts_Mu[sample]["Baseline"] = df_Mu[sample]["Baseline"].Sum("evtWeight_Baseline")
       #
       #
@@ -394,7 +407,58 @@ def MakeValidation(era, yearStr, lumiStr, doLogY):
   ]
   puIdSelList = ["passPuId"+wp for wp in puIdWPList]
   cutNames +=  ['_'.join(cuts) for cuts in list(itertools.product(etaCutList, puIdSelList))]
+  for sample in ['DY_REAL','DY_PU']:
+    columnlist = ["probeJet_closestgen_dR",
+                  "probeJet_puId_beta",
+                  "probeJet_puId_dR2Mean",
+                  "probeJet_puId_frac01",
+                  "probeJet_puId_frac02",
+                  "probeJet_puId_frac03",
+                  "probeJet_puId_frac04",
+                  "probeJet_puId_majW",
+                  "probeJet_puId_minW",
+                  "probeJet_puId_jetR",
+                  "probeJet_puId_jetRchg",
+                  "probeJet_nConstituents",
+                  "probeJet_puId_nCharged",
+                  "probeJet_puId_ptD",
+                  "probeJet_puId_pull",
+                  "probeJet_chEmEF",
+                  "probeJet_chHEF",
+                  "probeJet_neEmEF",
+                  "probeJet_neHEF",
+                  "probeJet_muEF",
+                  "probeJet_puIdDiscOTF",
+                  "probeJet_puIdDisc",
+                  "probeJet_pt",
+                  "probeJet_eta",
+                  "probeJet_abseta",
+                  "probeJet_phi",
+                  "probeJet_dilep_dphi",
+                  "lep0_pt",
+                  "lep0_eta",
+                  "lep0_pfRelIso03_all",
+                  "lep0_miniPFRelIso_all",
+                  "lep1_pt",
+                  "lep1_eta",
+                  "lep1_pfRelIso03_all",
+                  "lep1_miniPFRelIso_all"
+                  ]
 
+    
+    #df_El[sample]["Baseline"].Snapshot('Events','/gv0/Users/yeonjoon/tree/'+sample+'_'+path_inDir.split('/')[4]+'_El.root')
+    elnp = df_El[sample]["Baseline"].AsNumpy(columns=columnlist)
+    np.save('/gv0/Users/yeonjoon/tree/'+sample+'_'+path_inDir.split('/')[4]+'_El',elnp)
+    print('/gv0/Users/yeonjoon/tree/'+sample+'_'+path_inDir.split('/')[4]+'_El')
+    del elnp
+    #df_Mu[sample]["Baseline"].Snapshot('Events','/gv0/Users/yeonjoon/tree/'+sample+'_'+path_inDir.split('/')[4]+'_Mu.root')
+    munp = df_Mu[sample]["Baseline"].AsNumpy(columns=columnlist)
+    np.save('/gv0/Users/yeonjoon/tree/'+sample+'_'+path_inDir.split('/')[4]+'_Mu',munp)
+    print('/gv0/Users/yeonjoon/tree/'+sample+'_'+path_inDir.split('/')[4]+'_Mu')
+    del munp
+    
+    print('/gv0/Users/yeonjoon/tree/'+sample+'_'+path_inDir.split('/')[4]+'_Mu')
+    
   histograms_El = MyDict()
   histo1D_El = MyDict()
 
@@ -439,7 +503,8 @@ def MakeValidation(era, yearStr, lumiStr, doLogY):
   print("Baseline")
   for sample in mcListFinal:
     nevts_El = df_counts_El[sample]["Baseline"].GetValue()
-    nevts_Mu = df_counts_Mu[sample]["Baseline"].GetValue() 
+    nevts_Mu = df_counts_Mu[sample]["Baseline"].GetValue()
+    
 
   #
   # Get histograms
@@ -455,11 +520,10 @@ def MakeValidation(era, yearStr, lumiStr, doLogY):
   #
   #
   ######################################################
-  outDir="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/LogY/"
-  outDir2="/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/El_vs_Mu_GenBased/LinearY/"
 
 
-
+  
+ 
 
   #
   #
@@ -467,7 +531,7 @@ def MakeValidation(era, yearStr, lumiStr, doLogY):
   for cutName in cutNames:
     for hInfo in histoInfos:
       if not doLogY:
-        outDir = outDir2
+        outDir=outDir.replace("LogY","LinearY")
       MakePlot(doLogY,histograms_El,histograms_Mu,histoInfos, cutName, hInfo, "Data", mcListFinal, yearStr, lumiStr, outDir, extratext=cutName.replace('_',' ').replace('eta','\eta '))
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@ def PlotDataMC(canvName,mcStack_all,mcStack_El,  mcTotal_El,histos_El, mcStack_M
   the_low_margin = 0.4
   pad1 = ROOT.TPad(canvName+"_pad1","pad1",0.0, the_low_margin, 1.0, 1.0)
   pad1.SetTopMargin( 0.06 )
-  pad1.SetBottomMargin( 0.0 )
+  pad1.SetBottomMargin( 0.2 )
   pad1.SetFillStyle( 4000 )
   pad1.SetFillColor( 0 )
   pad1.SetFrameFillStyle( 4000 )
@@ -26,16 +26,16 @@ def PlotDataMC(canvName,mcStack_all,mcStack_El,  mcTotal_El,histos_El, mcStack_M
   
   #Make lower TPad
   
-  pad2 = ROOT.TPad(canvName+"_pad2","pad2",0.0, the_low_margin/2, 1.0, the_low_margin)
+  pad2 = ROOT.TPad(canvName+"_pad2","pad2",0.0, the_low_margin*0.51, 1.0, the_low_margin)
   pad2.SetTopMargin( 0.05 )
-  pad2.SetBottomMargin( 0.0 )
+  pad2.SetBottomMargin( 0.0325 )
   pad2.SetFillStyle( 4000 )
   pad2.SetFillColor( 0 )
   pad2.SetFrameFillStyle( 4000 )
   pad2.SetFrameFillColor( 0 )
   pad2.Draw()
 
-  pad3 = ROOT.TPad(canvName+"_pad3","pad3",0.0, 0, 1.0, the_low_margin/2)
+  pad3 = ROOT.TPad(canvName+"_pad3","pad3",0.0, 0, 1.0, the_low_margin*0.49)
   pad3.SetTopMargin( 0.05 )
   pad3.SetBottomMargin( 0.325 )
   pad3.SetFillStyle( 4000 )
@@ -119,7 +119,7 @@ def PlotDataMC(canvName,mcStack_all,mcStack_El,  mcTotal_El,histos_El, mcStack_M
   leg.Draw("same")
   if doLogY: 
     pad1.SetLogy()
-    mcStack_all.SetMaximum(maximum * 100)
+    mcStack_all.SetMaximum(maximum)
     mcStack_all.SetMinimum(0.1)
 
   systematics = []
@@ -180,7 +180,7 @@ def PlotDataMC(canvName,mcStack_all,mcStack_El,  mcTotal_El,histos_El, mcStack_M
   Ratio2, SystBand2 = GetRatioHistogram( histos_El['DY_REAL'], histos_Mu['DY_REAL'], Syst )
  
   SetDataStyle( Ratio2 )
-  Ratio2.GetXaxis().SetTitle(histos_El['DY_PU'].GetXaxis().GetTitle())
+  Ratio2.GetXaxis().SetTitle(xaxistitle)
   #
   # Draw ratio plot
   #
@@ -234,7 +234,7 @@ def GetSystematicUncertaintyBand(nom,systematics):
   x=[]; ex_up=[]; ex_down=[]
   y=[]; ey_up=[]; ey_down=[]
 
-  for i in xrange(1, n_bins_combined+1, 1):
+  for i in range(1, n_bins_combined+1, 1):
     
     up = 0.0
     down = 0.0

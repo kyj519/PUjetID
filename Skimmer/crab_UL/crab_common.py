@@ -12,8 +12,8 @@ reqNamePrefix="JetPUId"
 # Change this PATH where the crab directories are stored
 # Example: config.General.workArea = '/afs/cern.ch/work/n/nbinnorj/private/crab_projects/'
 #
-#config.General.workArea        = '/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Skimmer/crab_UL/crab_projects/'
-config.General.workArea        = '/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Skimmer/crab_UL/crab_projects/'
+config.General.workArea        = '/data6/Users/yeonjoon/CMSSW_10_6_30/src/PUjetID/Skimmer/crab_UL/crab_projects/'
+#config.General.workArea        = '/u/user/yeonjoon/working_dir/PileUpJetIDSF/CMSSW_10_6_30/src/PUjetID/Skimmer/crab_UL/crab_projects/'
 config.General.transferOutputs = True
 config.General.transferLogs    = False
 #
